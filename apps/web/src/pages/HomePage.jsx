@@ -181,7 +181,7 @@ const HomePage = () => {
           className="relative min-h-[100dvh] flex items-center pt-[80px]"
           style={{
           backgroundImage: isMobile
-          ? 'linear-gradient(rgba(255,255,255,0.20), rgba(255,255,255,0.20)), url("https://i.pinimg.com/736x/b0/8c/4d/b08c4de880dc5aa695efd9fa13214fc6.jpg")'
+          ? 'linear-gradient(rgba(255,255,255,0.20), rgba(255,255,255,0.20)), url("https://i.pinimg.com/736x/51/f0/9a/51f09aa54ab809c11c73279f02889b79.jpg")'
           : 'linear-gradient(rgba(255,255,255,0.20), rgba(255,255,255,0.20)), url("https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/780897d1452054cf07dbbf10bd981152.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: isMobile ? 'top' : 'center',
