@@ -181,12 +181,13 @@ const HomePage = () => {
           className="relative min-h-[100dvh] flex items-center pt-[80px]"
           style={{
           backgroundImage: isMobile
-          ? 'linear-gradient(rgba(rgba(0,0,0,0.5), rgba(rgba(0,0,0,0.5)), url("https://i.pinimg.com/736x/51/f0/9a/51f09aa54ab809c11c73279f02889b79.jpg")'
-          : 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/780897d1452054cf07dbbf10bd981152.jpg")',
+          ? 'linear-gradient(rgba(rgba(255,255,255,0.20), rgba(rgba(255,255,255,0.20)), url("https://i.pinimg.com/736x/51/f0/9a/51f09aa54ab809c11c73279f02889b79.jpg")'
+          : 'linear-gradient(rgba(255,255,255,0.20), rgba(255,255,255,0.20)), url("https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/780897d1452054cf07dbbf10bd981152.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: isMobile ? 'top' : 'center',
           }}
         >
+          <div className="absolute inset-0 backdrop-blur-sm bg-black/30"></div>
           <div className="container-custom relative z-10">
             <div className="grid lg:grid-cols-2 gap-10 md:gap-12 items-center">
               <div className={`order-2 lg:order-1 hero-content ${heroVisible ? 'animate-slide-in-left' : 'opacity-0'}`}>
