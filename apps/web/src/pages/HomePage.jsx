@@ -178,7 +178,7 @@ const HomePage = () => {
         {/* 1. Hero Section */}
         <section
           ref={heroRef}
-          className="relative min-h-[100dvh] flex items-center pt-[80px]"
+          className="relative min-h-[100dvh] flex items-center pt-[0px]"
           style={{
           backgroundImage: isMobile
           ? 'linear-gradient(rgba(255,255,255,0.20), rgba(255,255,255,0.20)), url("https://i.pinimg.com/736x/51/f0/9a/51f09aa54ab809c11c73279f02889b79.jpg")'
