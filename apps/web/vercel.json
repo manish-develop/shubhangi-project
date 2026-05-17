@@ -1,5 +1,12 @@
 {
   "routes": [
+    {
+      "src": "http://(.*)",
+      "headers": {
+        "Location": "https://$1"
+      },
+      "status": 301
+    },
     { "handle": "filesystem" },
     { "src": "/.*", "dest": "/index.html" }
   ]
