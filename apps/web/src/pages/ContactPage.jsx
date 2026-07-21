@@ -117,7 +117,7 @@ const ContactPage = () => {
   return (
     <>
       <Helmet>
-        <title>Contact Us & Book Consultation | Maharana's Homeopathy Clinic</title>
+        <title>Contact Us & Book Consultation | Maharana Wellness Clinic</title>
         <meta name="description" content="Book an online or in-clinic homeopathy consultation with Dr. Shubhangi Maharana. Secure booking, flexible timings, and medicine delivery across India." />
       </Helmet>
 
@@ -413,6 +413,27 @@ const ContactPage = () => {
 
             </div>
           )}
+        </section>
+
+        <section className="section-medium bg-muted/40">
+          <div className="container-custom">
+            <h2 className="section-title heading-serif">Our Clinic</h2>
+            <p className="section-subtitle text-lg md:text-xl text-muted-foreground body-text">
+              A calm, comfortable space designed for your healing journey
+            </p>
+
+            <div className="grid sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {[
+                { src: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80', alt: 'Clinic reception area' },
+                { src: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80', alt: 'Consultation room' },
+                { src: 'https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?auto=format&fit=crop&w=800&q=80', alt: 'Clinic waiting area' },
+              ].map((img, i) => (
+                <div key={i} className="rounded-2xl overflow-hidden card-shadow-lg border border-border aspect-[4/3] hover-lift">
+                  <img src={img.src} alt={img.alt} className="w-full h-full object-cover" loading="lazy" />
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
       </main>
 

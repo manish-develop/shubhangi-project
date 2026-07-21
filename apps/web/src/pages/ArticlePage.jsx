@@ -40,7 +40,7 @@ const ArticlePage = () => {
   return (
     <>
       <Helmet>
-        <title>{`${article.title} | Maharana's Clinic Blog`}</title>
+        <title>{`${article.title} | Maharana Wellness Clinic Blog`}</title>
         <meta name="description" content={article.excerpt} />
         <meta property="og:title" content={article.title} />
         <meta property="og:description" content={article.excerpt} />
@@ -117,7 +117,7 @@ const ArticlePage = () => {
           <div className="mt-16 p-6 md:p-8 bg-muted rounded-2xl border border-border flex flex-col sm:flex-row gap-6 items-center sm:items-start">
             <div className="w-24 h-24 rounded-full overflow-hidden flex-shrink-0 border-4 border-background shadow-sm bg-white flex items-center justify-center">
               <LazyImage 
-                src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/eb0cd3d7f6f74bf598708e9dd019dd35.jpg" 
+                src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-potrait.jpeg" 
                 alt="Dr. Shubhangi Maharana" 
                 className="doctor-image"
               />

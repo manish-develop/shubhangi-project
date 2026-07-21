@@ -1,14 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useNavigate } from 'react-router-dom';
-import { Award, Users, Heart, Star, Phone, Mail, ChevronLeft, ChevronRight, Search, Sparkles, Shield, Baby, Activity, CheckCircle2, Package, Video } from 'lucide-react';
+import { Award, Users, Heart, Star, Phone, Mail, ArrowRight, ChevronRight, Sparkles, Shield, Baby, Activity, CheckCircle2, Package, Video } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import StatCounter from '@/components/StatCounter.jsx';
 import BlogCard from '@/components/BlogCard.jsx';
-import TestimonialCard from '@/components/TestimonialCard.jsx';
+import ReviewsSection from '@/components/ReviewsSection.jsx';
 import LazyImage from '@/components/LazyImage.jsx';
 import BeforeAfterSlideshow from '@/components/BeforeAfterSlideshow.jsx';
+import YouTubeSection from '@/components/YouTubeSection.jsx';
+import ExpandingSearchDock from '@/components/ExpandingSearchDock.jsx';
+import InteractiveHoverButton from '@/components/InteractiveHoverButton.jsx';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation.js';
 import { validateEmail, validatePhone, validateRequired } from '@/utils/validation.js';
 import { toast } from 'sonner';
@@ -16,6 +19,7 @@ import { blogArticles } from '@/data/blogArticles.js';
 import { diseaseDatabase } from '@/data/diseaseDatabase.js';
 import { specializationDatabase } from '@/data/specializationDatabase.js';
 import { sendAppointmentEmail } from '@/utils/emailService.js';
+import { ClinicImages } from '@/constants/clinicImages.js';
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,23 +35,10 @@ const HomePage = () => {
   const [specializationsRef, specializationsVisible] = useScrollAnimation(0.2);
   const [appointmentRef, appointmentVisible] = useScrollAnimation(0.2);
   const [blogRef, blogVisible] = useScrollAnimation(0.2);
-  const [testimonialsRef, testimonialsVisible] = useScrollAnimation(0.2);
 
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-  const handleResize = () => {
-    setIsMobile(window.innerWidth <= 768);
-  };
-
-  handleResize();
-  window.addEventListener("resize", handleResize);
-
-  return () => window.removeEventListener("resize", handleResize);
-  }, []);
-  
   // Updated state keys to perfectly match EmailJS template variables
   const [formData, setFormData] = useState({
     consultation_type: 'Online Consultation',
@@ -64,43 +55,7 @@ const HomePage = () => {
   });
 
   const [showSuccess, setShowSuccess] = useState(false);
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [diseaseSearch, setDiseaseSearch] = useState('');
-  const [testimonialItemsPerView, setTestimonialItemsPerView] = useState(3);
-
-  const updateTestimonialView = useCallback(() => {
-    if (window.innerWidth >= 1024) {
-      setTestimonialItemsPerView(3);
-    } else if (window.innerWidth >= 768) {
-      setTestimonialItemsPerView(2);
-    } else {
-      setTestimonialItemsPerView(1);
-    }
-  }, []);
-
-  useEffect(() => {
-    updateTestimonialView();
-    window.addEventListener('resize', updateTestimonialView);
-    return () => window.removeEventListener('resize', updateTestimonialView);
-  }, [updateTestimonialView]);
-
-  const testimonials = [
-    { name: 'Priya Sharma', city: 'Delhi', rating: 5, testimonial: 'I had been struggling with PCOS for over 3 years. The irregular cycles and weight gain were taking a toll on me. Dr. Shubhangi\'s homoeopathic treatment brought my cycles back to normal within 4 months.', condition: 'PCOS' },
-    { name: 'Neha Kapoor', city: 'Gurgaon', rating: 5, testimonial: 'My acne and dark spots were affecting my confidence. I tried many creams but nothing worked permanently. The holistic approach here cleared my skin from within. Highly recommended!', condition: 'Acne & Pigmentation' },
-    { name: 'Rajesh Verma', city: 'Ludhiana', rating: 5, testimonial: 'I suffered from psoriasis for 7 years. The itching and scaling were unbearable during winters. After starting treatment at Maharana\'s, I have seen a 90% reduction in my patches.', condition: 'Psoriasis' },
-    { name: 'Simran Kaur', city: 'Chandigarh', rating: 5, testimonial: 'I was losing hair rapidly after my pregnancy. The customized homoeopathic medicines stopped my hair fall completely in just 2 months and I can see new growth now.', condition: 'Hair Fall' },
-    { name: 'Amit Joshi', city: 'Mumbai', rating: 5, testimonial: 'Living with vitiligo was emotionally difficult. Dr. Shubhangi was very patient and her treatment has successfully stopped the spread. Some patches have even started regaining color.', condition: 'Vitiligo' },
-    { name: 'Kavita Mehra', city: 'Pune', rating: 5, testimonial: 'Dr. Shubhangi helped me with my hypothyroidism. My energy levels are back, my weight is stable, and my recent reports show perfectly normal TSH levels. Thank you doctor!', condition: 'Thyroid & Weight Management' },
-  ];
-
-  const maxTestimonialIndex = Math.max(0, testimonials.length - testimonialItemsPerView);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev >= maxTestimonialIndex ? 0 : prev + 1));
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [maxTestimonialIndex]);
 
   const handleAppointmentSubmit = async (e) => {
     e.preventDefault();
@@ -168,60 +123,71 @@ const HomePage = () => {
   return (
     <>
       <Helmet>
-        <title>Maharana's — The House of Homoeopathy & Facial Aesthetics | Dr. Shubhangi Maharana</title>
-        <meta name="description" content="Welcome to Maharana's — Expert homoeopathic treatment and facial aesthetics by Dr. Shubhangi Maharana (BHMS, MD Hom., DNHE, MPMU, FMC Germany). 8+ years experience. Online & in-clinic consultations available. Book your appointment today." />
+        <title>Maharana Wellness Clinic | Dr. Shubhangi Maharana</title>
+        <meta name="description" content="Welcome to Maharana Wellness Clinic — Expert homoeopathic treatment and facial aesthetics by Dr. Shubhangi Maharana (BHMS, MD Hom., DNHE, MPMU, FMC Germany). 8+ years experience. Online & in-clinic consultations available. Book your appointment today." />
       </Helmet>
 
       <Header />
 
       <main>
         {/* 1. Hero Section */}
-        <section
-          ref={heroRef}
-          className="relative min-h-[100dvh] flex items-center pt-[20px]"
-          style={{
-          backgroundImage: isMobile
-          ? 'linear-gradient(rgba(255,255,255,0.20), rgba(255,255,255,0.20)), url("https://i.pinimg.com/736x/51/f0/9a/51f09aa54ab809c11c73279f02889b79.jpg")'
-          : 'linear-gradient(rgba(255,255,255,0.20), rgba(255,255,255,0.20)), url("https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/780897d1452054cf07dbbf10bd981152.jpg")',
-          backgroundSize: 'cover',
-          backgroundPosition: isMobile ? 'top' : 'center',
-          }}
-        >
-          <div className="absolute inset-0 backdrop-blur-sm bg-black/30"></div>
-          <div className="container-custom relative z-10">
-            <div className="grid lg:grid-cols-2 gap-10 md:gap-12 items-center">
-              <div className={`order-2 lg:order-1 hero-content ${heroVisible ? 'animate-slide-in-left' : 'opacity-0'}`}>
-                <div className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-xs md:text-sm font-medium mb-4 md:mb-6 border border-primary/20 heading-sans backdrop-blur-sm">
-                  ⚕️ The House of Homoeopathy & Facial Aesthetics
+        <section ref={heroRef} className="relative overflow-hidden pt-28 md:pt-36 pb-16 md:pb-24">
+          <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(35%_60%_at_20%_0%,hsl(var(--primary)/0.12),transparent)]" />
+          </div>
+
+          <div className="container-custom">
+            <div className={`max-w-2xl flex flex-col gap-5 ${heroVisible ? 'animate-fade-in' : 'opacity-0'}`}>
+              <Link
+                to="/appointment"
+                className="group flex w-fit items-center gap-3 rounded-full border border-primary/20 bg-card p-1 pr-4 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <span className="rounded-full bg-primary text-primary-foreground px-3 py-1 text-xs font-bold tracking-wide heading-sans">NOW</span>
+                <span className="text-xs md:text-sm text-foreground font-medium">Accepting new patients</span>
+                <ArrowRight className="w-3.5 h-3.5 text-primary -translate-x-0.5 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+
+              <h1 className="text-primary heading-serif text-4xl md:text-5xl lg:text-6xl leading-tight">
+                Heal Naturally.<br className="hidden md:block" /> Live Fully.
+              </h1>
+
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-lg body-text">
+                Experience the gentle power of Homoeopathy with <span className="doctor-name font-semibold text-primary">Dr. Shubhangi Maharana</span>. Personalized treatment for chronic conditions, women's health, and holistic wellness.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <a href="tel:+919625030958" className="btn-outline inline-flex items-center gap-2">
+                  <Phone className="w-4 h-4" /> Call Now
+                </a>
+                <InteractiveHoverButton to="/appointment">
+                  Book Appointment
+                </InteractiveHoverButton>
+              </div>
+
+              <div className="flex flex-wrap gap-4 md:gap-6 text-xs md:text-sm text-foreground font-medium heading-sans pt-2">
+                <div className="flex items-center gap-2">
+                  <Award className="w-4 h-4 text-primary" />
+                  <span>8+ Years Experience</span>
                 </div>
-                <h1 className="mb-4 md:mb-6 text-primary heading-serif">
-                  Heal Naturally.<br className="hidden md:block" /> Live Fully.
-                </h1>
-                <p className="text-lg md:text-xl text-foreground font-medium mb-6 md:mb-8 leading-relaxed max-w-lg body-text">
-                  Experience the gentle power of Homoeopathy with <span className="doctor-name font-semibold text-primary">Dr. Shubhangi Maharana</span>. Personalized treatment for chronic conditions, women's health, and holistic wellness.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mb-8">
-                  <Link to="/appointment" className="btn-primary w-full sm:w-auto">
-                    Book Consultation
-                  </Link>
-                  <Link to="/about" className="btn-outline w-full sm:w-auto bg-white/50 backdrop-blur-sm">
-                    Learn More
-                  </Link>
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-primary" />
+                  <span>1000+ Happy Patients</span>
                 </div>
-                <div className="flex flex-wrap justify-center sm:justify-start gap-4 md:gap-6 text-xs md:text-sm text-foreground font-medium heading-sans">
-                  <div className="flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                    <Award className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-                    <span>8+ Years Experience</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                    <Users className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-                    <span>500+ Happy Patients</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                    <Star className="w-4 h-4 md:w-5 md:h-5 text-yellow-500 fill-yellow-500" />
-                    <span>4.9 Rating</span>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                  <span>4.9 Rating</span>
                 </div>
+              </div>
+            </div>
+
+            <div className={`relative mt-12 md:mt-16 ${heroVisible ? 'animate-fade-in' : 'opacity-0'}`}>
+              <div className="absolute -inset-x-10 inset-y-0 -translate-y-1/4 scale-125 rounded-full bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.15),transparent_70%)] blur-3xl -z-10" />
+              <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border border-border bg-card p-2 shadow-xl">
+                <LazyImage
+                  src={ClinicImages.heroBackgroundDesktop}
+                  alt="Maharana Wellness Clinic"
+                  className="w-full aspect-[16/9] object-cover rounded-xl"
+                />
               </div>
             </div>
           </div>
@@ -231,14 +197,12 @@ const HomePage = () => {
         <section ref={conditionsRef} className="section-white relative search-bar-section">
           <div className="container-custom">
             <div className={`flex flex-col md:flex-row items-center gap-6 ${conditionsVisible ? 'animate-fade-in' : 'opacity-0'}`}>
-              <div className="w-full md:w-1/3 relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  type="text"
+              <div className="w-full md:w-1/3">
+                <ExpandingSearchDock
                   value={diseaseSearch}
                   onChange={(e) => setDiseaseSearch(e.target.value)}
                   placeholder="Search a condition..."
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-muted text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 body-text"
+                  className="max-w-sm"
                 />
               </div>
               <div className="w-full md:w-2/3 flex flex-wrap gap-3 justify-center md:justify-start">
@@ -269,7 +233,7 @@ const HomePage = () => {
           <div className="container-custom">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
               <StatCounter end={8} suffix="+" label="Years Experience" icon={Award} />
-              <StatCounter end={500} suffix="+" label="Patients Treated" icon={Users} />
+              <StatCounter end={1000} suffix="+" label="Patients Treated" icon={Users} />
               <StatCounter end={100} suffix="+" label="Conditions Treated" icon={Heart} />
               <StatCounter end={4.9} label="Average Rating" icon={Star} suffix="★" />
             </div>
@@ -334,7 +298,7 @@ const HomePage = () => {
                   <div className="absolute -inset-4 bg-primary/10 rounded-full blur-3xl" />
                   <div className="relative rounded-2xl overflow-hidden card-shadow-xl border border-border w-full flex justify-center bg-white p-4">
                     <LazyImage
-                      src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/eb0cd3d7f6f74bf598708e9dd019dd35.jpg"
+                      src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-potrait.jpeg"
                       alt="Dr. Shubhangi Maharana - Homoeopathic Physician"
                       className="doctor-image max-h-[600px] object-contain rounded-xl w-full"
                     />
@@ -366,23 +330,32 @@ const HomePage = () => {
               {specializationDatabase.map((spec, index) => {
                 const icons = [Heart, Sparkles, Activity, Shield, Baby];
                 const Icon = icons[index % icons.length];
-                
+                const image = ClinicImages.specializationsBySlug[spec.slug];
+
                 return (
                   <div
                     key={spec.slug}
                     style={{ animationDelay: `${index * 100}ms` }}
-                    className={`card hover-lift cursor-pointer ${specializationsVisible ? 'animate-slide-up' : 'opacity-0'}`}
+                    className={`card !p-0 overflow-hidden hover-lift cursor-pointer ${specializationsVisible ? 'animate-slide-up' : 'opacity-0'}`}
                     onClick={() => navigate(`/specialization/${spec.slug}`)}
                   >
-                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                      <Icon className="w-6 h-6 md:w-7 md:h-7 text-primary" />
-                    </div>
-                    <h3 className="card-title text-xl font-semibold mb-3 text-foreground heading-sans">{spec.title}</h3>
-                    <p className="card-description text-muted-foreground leading-relaxed mb-6 flex-grow body-text">
-                      {spec.introduction.substring(0, 100)}...
-                    </p>
-                    <div className="mt-auto text-primary font-medium flex items-center justify-center w-full gap-2 group heading-sans">
-                      Read More <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    {image && (
+                      <div className="relative h-40 w-full overflow-hidden">
+                        <LazyImage src={image} alt={spec.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                        <div className="absolute bottom-3 left-3 w-11 h-11 rounded-xl bg-white/90 backdrop-blur-sm flex items-center justify-center">
+                          <Icon className="w-5 h-5 text-primary" />
+                        </div>
+                      </div>
+                    )}
+                    <div className="p-6 flex flex-col flex-grow">
+                      <h3 className="card-title text-xl font-semibold mb-3 text-foreground heading-sans">{spec.title}</h3>
+                      <p className="card-description text-muted-foreground leading-relaxed mb-6 flex-grow body-text">
+                        {spec.introduction.substring(0, 100)}...
+                      </p>
+                      <div className="mt-auto text-primary font-medium flex items-center justify-center w-full gap-2 group heading-sans">
+                        Read More <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
                     </div>
                   </div>
                 );
@@ -391,62 +364,9 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section ref={testimonialsRef} className="section-medium">
-          <div className="container-custom">
-            <h2 className="section-title heading-serif">What Our Patients Say</h2>
-            <p className="section-subtitle text-lg md:text-xl text-muted-foreground body-text">
-              Real stories from real people who found healing through homoeopathy
-            </p>
+        <ReviewsSection />
 
-            <div className="relative max-w-6xl mx-auto px-0 md:px-12">
-              <div className="overflow-hidden">
-                <div
-                  className="flex transition-transform duration-500 ease-out"
-                  style={{ transform: `translateX(-${currentTestimonial * (100 / testimonialItemsPerView)}%)` }}
-                >
-                  {testimonials.map((testimonial, index) => (
-                    <div 
-                      key={index} 
-                      className="flex-shrink-0 px-4 md:px-3"
-                      style={{ width: `${100 / testimonialItemsPerView}%` }}
-                    >
-                      <TestimonialCard {...testimonial} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <button
-                onClick={() => setCurrentTestimonial((prev) => (prev === 0 ? maxTestimonialIndex : prev - 1))}
-                className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-card card-shadow-lg flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 z-10 border border-border"
-                aria-label="Previous testimonial"
-              >
-                <ChevronLeft className="w-4 h-4 md:w-6 md:h-6" />
-              </button>
-
-              <button
-                onClick={() => setCurrentTestimonial((prev) => (prev >= maxTestimonialIndex ? 0 : prev + 1))}
-                className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-card card-shadow-lg flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 z-10 border border-border"
-                aria-label="Next testimonial"
-              >
-                <ChevronRight className="w-4 h-4 md:w-6 md:h-6" />
-              </button>
-
-              <div className="flex justify-center gap-2 mt-8">
-                {Array.from({ length: maxTestimonialIndex + 1 }).map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentTestimonial(index)}
-                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                      currentTestimonial === index ? 'bg-primary w-8' : 'bg-primary/20 hover:bg-primary/50'
-                    }`}
-                    aria-label={`Go to testimonial ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+        <YouTubeSection />
 
         <section ref={blogRef} className="section-white">
           <div className="container-custom">
@@ -713,12 +633,8 @@ const HomePage = () => {
                   <h3 className="card-title text-lg font-semibold mb-4 text-foreground heading-sans">Clinic Timings</h3>
                   <div className="card-content space-y-3 text-sm md:text-base body-text">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Monday - Friday</span>
-                      <span className="font-medium text-foreground">10:00 AM - 7:00 PM</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Saturday</span>
-                      <span className="font-medium text-foreground">10:00 AM - 5:00 PM</span>
+                      <span className="text-muted-foreground">Monday - Saturday</span>
+                      <span className="font-medium text-foreground">11:00 AM - 8:00 PM</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Sunday</span>

@@ -6,75 +6,75 @@
 
 @layer base {
   :root {
-    /* Blue & White Theme */
+    /* Cherry Red & White Theme — primary matched to logo's exact red (#9e0000) */
     --background: 0 0% 100%;
-    --foreground: 0 0% 11%;
-    
+    --foreground: 0 15% 12%;
+
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 11%;
-    
+    --card-foreground: 0 15% 12%;
+
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 11%;
-    
-    --primary: 204 64% 28%;
+    --popover-foreground: 0 15% 12%;
+
+    --primary: 0 100% 31%;
     --primary-foreground: 0 0% 100%;
-    
-    --secondary: 204 61% 47%;
+
+    --secondary: 0 75% 42%;
     --secondary-foreground: 0 0% 100%;
-    
-    --muted: 208 100% 97%;
-    --muted-foreground: 211 24% 30%;
-    
-    --accent: 168 76% 42%;
-    --accent-foreground: 0 0% 11%;
-    
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    
-    --border: 204 70% 81%;
-    --input: 204 70% 81%;
-    --ring: 204 64% 28%;
-    
+
+    --muted: 0 45% 97%;
+    --muted-foreground: 0 10% 40%;
+
+    --accent: 0 45% 95%;
+    --accent-foreground: 0 100% 31%;
+
+    --destructive: 24 90% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 30% 88%;
+    --input: 0 30% 88%;
+    --ring: 0 100% 31%;
+
     --radius: 0.75rem;
-    
+
     /* Custom Accents */
-    --light-accent: 204 70% 91%;
-    --footer-bg: 204 64% 23%;
+    --light-accent: 0 45% 95%;
+    --footer-bg: 0 75% 16%;
     --footer-text: 0 0% 100%;
-    
+
     /* Typography Tokens */
     --font-serif: 'Merriweather', serif;
     --font-sans: 'Lato', sans-serif;
   }
 
   .dark {
-    --background: 204 64% 10%;
+    --background: 0 45% 9%;
     --foreground: 0 0% 98%;
-    
-    --card: 204 64% 15%;
+
+    --card: 0 45% 14%;
     --card-foreground: 0 0% 98%;
-    
-    --popover: 204 64% 15%;
+
+    --popover: 0 45% 14%;
     --popover-foreground: 0 0% 98%;
-    
-    --primary: 204 61% 47%;
+
+    --primary: 0 85% 45%;
     --primary-foreground: 0 0% 100%;
-    
-    --secondary: 204 64% 28%;
+
+    --secondary: 0 60% 30%;
     --secondary-foreground: 0 0% 98%;
-    
-    --muted: 204 64% 15%;
-    --muted-foreground: 211 15% 70%;
-    
-    --accent: 168 76% 42%;
-    --accent-foreground: 0 0% 11%;
-    
-    --destructive: 0 84% 60%;
+
+    --muted: 0 45% 14%;
+    --muted-foreground: 0 15% 70%;
+
+    --accent: 0 60% 30%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 24 90% 55%;
     --destructive-foreground: 0 0% 98%;
-    
-    --border: 204 64% 28%;
-    --input: 204 64% 28%;
-    --ring: 204 61% 47%;
+
+    --border: 0 45% 24%;
+    --input: 0 45% 24%;
+    --ring: 0 85% 45%;
   }
 
   *, *::before, *::after {

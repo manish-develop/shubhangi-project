@@ -1,16 +1,16 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { Search, ChevronRight } from 'lucide-react';
+import { ChevronRight, Stethoscope } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
+import ExpandingSearchDock from '@/components/ExpandingSearchDock.jsx';
 import { diseaseDatabase } from '@/data/diseaseDatabase.js';
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 const DiseasesPage = () => {
   const [diseaseSearch, setDiseaseSearch] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
   const [activeLetter, setActiveLetter] = useState('');
   const navigate = useNavigate();
 
@@ -92,7 +92,7 @@ const DiseasesPage = () => {
   return (
     <>
       <Helmet>
-        <title>Diseases Treated with Homoeopathy A-Z | Maharana's Clinic</title>
+        <title>Diseases Treated with Homoeopathy A-Z | Maharana Wellness Clinic</title>
         <meta name="description" content="Browse our complete A-Z list of 300+ diseases and conditions treated with homoeopathy by Dr. Shubhangi Maharana. Search your condition and learn about homoeopathic treatment options." />
       </Helmet>
 
@@ -113,19 +113,14 @@ const DiseasesPage = () => {
           <div className="container-custom">
             {/* Search Bar */}
             <div className="max-w-3xl mx-auto mb-10 relative z-50">
-              <div className={`relative transition-all duration-300 ${isFocused ? 'scale-[1.02] shadow-lg' : 'shadow-sm'}`}>
-                <Search className={`absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 transition-colors ${isFocused ? 'text-primary' : 'text-muted-foreground'}`} />
-                <input
-                  type="text"
-                  value={diseaseSearch}
-                  onChange={(e) => setDiseaseSearch(e.target.value)}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-                  placeholder="🔍 Search any condition..."
-                  className="w-full pl-14 pr-6 py-4 rounded-2xl border-2 border-border bg-card text-lg text-foreground focus:outline-none focus:border-primary transition-all duration-300"
-                />
-                
-                {isFocused && diseaseSearch.trim() && (
+              <ExpandingSearchDock
+                value={diseaseSearch}
+                onChange={(e) => setDiseaseSearch(e.target.value)}
+                placeholder="Search any condition..."
+                className="mx-auto"
+                inputClassName="text-lg"
+              >
+                {diseaseSearch.trim() && (
                   <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-xl overflow-hidden max-h-80 overflow-y-auto">
                     {searchResults.length > 0 ? (
                       searchResults.map(disease => (
@@ -148,7 +143,7 @@ const DiseasesPage = () => {
                     )}
                   </div>
                 )}
-              </div>
+              </ExpandingSearchDock>
             </div>
           </div>
         </section>
@@ -191,18 +186,27 @@ const DiseasesPage = () => {
                 return (
                   <div key={letter} id={`letter-${letter}`} className="scroll-mt-40 section">
                     <div className="flex items-center gap-4 mb-6">
-                      <h2 className="text-4xl md:text-5xl font-bold text-primary heading-serif m-0">{letter}</h2>
+                      <span className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-primary text-primary-foreground text-2xl md:text-3xl font-bold heading-serif shrink-0">
+                        {letter}
+                      </span>
                       <div className="h-px bg-border flex-grow"></div>
+                      <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider shrink-0">
+                        {diseases.length} condition{diseases.length !== 1 ? 's' : ''}
+                      </span>
                     </div>
-                    
-                    <div className="flex flex-wrap gap-3 md:gap-4">
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                       {diseases.map(disease => (
                         <Link
                           key={disease.id}
                           to={`/disease/${disease.id}`}
-                          className="inline-flex items-center justify-center px-5 py-2.5 rounded-full text-sm md:text-base font-medium transition-all duration-300 bg-card text-primary border border-primary hover:bg-primary hover:text-primary-foreground shadow-sm hover:shadow-md heading-sans w-full sm:w-auto"
+                          className="group flex items-center justify-between gap-2 px-5 py-3.5 rounded-xl text-sm md:text-base font-medium transition-all duration-300 bg-card text-foreground border border-border hover:border-primary hover:bg-primary hover:text-primary-foreground shadow-sm hover:shadow-md heading-sans"
                         >
-                          {disease.name}
+                          <span className="flex items-center gap-2.5">
+                            <Stethoscope className="w-4 h-4 text-primary group-hover:text-primary-foreground/80 shrink-0" />
+                            {disease.name}
+                          </span>
+                          <ChevronRight className="w-4 h-4 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0" />
                         </Link>
                       ))}
                     </div>

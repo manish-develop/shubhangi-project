@@ -1,8 +1,20 @@
 import React from 'react';
-import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Routes, BrowserRouter as Router, Outlet } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Toaster } from 'sonner';
 import ScrollToTop from './components/ScrollToTop.jsx';
+import { AdminAuthProvider } from './admin/context/AdminAuthContext.jsx';
+import { ProtectedRoute } from './admin/components/ProtectedRoute.jsx';
+import { AdminLayout } from './admin/components/AdminLayout.jsx';
+import AdminLoginPage from './admin/pages/LoginPage.jsx';
+import AdminDashboardPage from './admin/pages/DashboardPage.jsx';
+import AdminBlogsPage from './admin/pages/BlogsPage.jsx';
+import AdminTestimonialsPage from './admin/pages/TestimonialsAdminPage.jsx';
+import AdminReviewsPage from './admin/pages/ReviewsAdminPage.jsx';
+import AdminDiseasesPage from './admin/pages/DiseasesAdminPage.jsx';
+import AdminVideosPage from './admin/pages/VideosAdminPage.jsx';
+import AdminPatientsPage from './admin/pages/PatientsPage.jsx';
+import AdminPatientDetailPage from './admin/pages/PatientDetailPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import AboutPage from './pages/AboutPage.jsx';
 import ServicesPage from './pages/ServicesPage.jsx';
@@ -29,44 +41,33 @@ function App() {
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
-            "name": "Maharana's - The House of Homoeopathy & Facial Aesthetics",
+            "name": "Maharana Wellness Clinic",
             "image": "https://images.unsplash.com/photo-1675270714610-11a5cadcc7b3",
-            "description": "Homoeopathy clinic specializing in chronic diseases, women's health, and facial aesthetics. 8+ years experience, 500+ patients treated.",
+            "description": "Homoeopathy clinic specializing in chronic diseases, women's health, and facial aesthetics. 8+ years experience, 1000+ patients treated.",
             "address": {
               "@type": "PostalAddress",
-              "streetAddress": "123 Wellness Street, Green Park",
-              "addressLocality": "Mumbai",
-              "addressRegion": "Maharashtra",
-              "postalCode": "400001",
+              "streetAddress": "F-42, Block F, Kirti Nagar",
+              "addressLocality": "New Delhi",
+              "addressRegion": "Delhi",
+              "postalCode": "110015",
               "addressCountry": "IN"
             },
             "geo": {
               "@type": "GeoCoordinates",
-              "latitude": 19.0344,
-              "longitude": 72.8456
+              "latitude": 28.6519,
+              "longitude": 77.1414
             },
-            "telephone": "+919876543210",
-            "email": "drshubhangi@example.com",
+            "telephone": "+919625030958",
+            "email": "drshubhangi.econsultation@gmail.com",
             "openingHoursSpecification": [
               {
                 "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-                "opens": "10:00",
-                "closes": "19:00"
-              },
-              {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": "Saturday",
-                "opens": "10:00",
-                "closes": "17:00"
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                "opens": "11:00",
+                "closes": "20:00"
               }
             ],
-            "priceRange": "₹₹",
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.9",
-              "reviewCount": "500"
-            }
+            "priceRange": "₹₹"
           })}
         </script>
         <script type="application/ld+json">
@@ -109,7 +110,22 @@ function App() {
         <Route path="/scientific-basis" element={<ScientificBasisPage />} />
         <Route path="/criticism" element={<CriticismPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-        
+
+        {/* Admin */}
+        <Route path="/admin" element={<AdminAuthProvider><Outlet /></AdminAuthProvider>}>
+          <Route path="login" element={<AdminLoginPage />} />
+          <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+            <Route index element={<AdminDashboardPage />} />
+            <Route path="blogs" element={<AdminBlogsPage />} />
+            <Route path="testimonials" element={<AdminTestimonialsPage />} />
+            <Route path="reviews" element={<AdminReviewsPage />} />
+            <Route path="diseases" element={<AdminDiseasesPage />} />
+            <Route path="videos" element={<AdminVideosPage />} />
+            <Route path="patients" element={<AdminPatientsPage />} />
+            <Route path="patients/:id" element={<AdminPatientDetailPage />} />
+          </Route>
+        </Route>
+
         <Route path="*" element={
           <div className="min-h-screen flex items-center justify-center bg-background">
             <div className="text-center">

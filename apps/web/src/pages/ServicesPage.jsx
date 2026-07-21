@@ -90,7 +90,7 @@ const ServicesPage = () => {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="Dr. Shubhangi Maharana" />
-        <title>Homoeopathy Services & Facial Aesthetics Treatments | Maharana's Clinic</title>
+        <title>Homoeopathy Services & Facial Aesthetics Treatments | Maharana Wellness Clinic</title>
         <meta name="description" content="Explore our specialized services — Women's Health, Facial Aesthetics, Chronic Diseases, Skin Disorders, Hair Treatments, Diet & Nutrition. Expert homoeopathic care by Dr. Shubhangi Maharana." />
       </Helmet>
 

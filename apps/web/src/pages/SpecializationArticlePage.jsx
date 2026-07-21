@@ -40,7 +40,7 @@ const SpecializationArticlePage = () => {
   return (
     <>
       <Helmet>
-        <title>{`${specialization?.title || 'Specialization'} | Maharana's Clinic`}</title>
+        <title>{`${specialization?.title || 'Specialization'} | Maharana Wellness Clinic`}</title>
         <meta name="description" content={specialization?.introduction || 'Specialization details'} />
       </Helmet>
 
@@ -176,7 +176,7 @@ const SpecializationArticlePage = () => {
           <div className="mt-16p-6 md:p-8 bg-muted rounded-2xl border border-border flex flex-col sm:flex-row gap-6 items-center sm:items-start info-box">
             <div className="w-24 h-24 rounded-full overflow-hidden flex-shrink-0 border-4 border-background shadow-sm bg-white flex items-center justify-center">
               <LazyImage 
-                src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/eb0cd3d7f6f74bf598708e9dd019dd35.jpg" 
+                src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-potrait.jpeg" 
                 alt="Dr. Shubhangi Maharana" 
                 className="doctor-image"
               />

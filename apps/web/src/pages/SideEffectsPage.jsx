@@ -18,8 +18,8 @@ const SideEffectsPage = () => {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="Dr. Shubhangi Maharana" />
-        <title>Side Effects | Maharana's Homoeopathy Clinic</title>
-        <meta name="description" content="Read about side effects and risks of homoeopathy at Maharana's Clinic by Dr. Shubhangi Maharana." />
+        <title>Side Effects | Maharana Wellness Clinic</title>
+        <meta name="description" content="Read about side effects and risks of homoeopathy at Maharana Wellness Clinic by Dr. Shubhangi Maharana." />
       </Helmet>
 
       <Header />

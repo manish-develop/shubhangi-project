@@ -117,7 +117,7 @@ const AppointmentPage = () => {
   return (
     <>
       <Helmet>
-        <title>Book Your Consultation | Maharana's Homeopathy Clinic</title>
+        <title>Book Your Consultation | Maharana Wellness Clinic</title>
         <meta name="description" content="Book an online or in-clinic homeopathy consultation with Dr. Shubhangi Maharana. Secure booking, flexible timings, and medicine delivery across India." />
       </Helmet>
 

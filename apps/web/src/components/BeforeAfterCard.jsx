@@ -1,17 +1,19 @@
 import React from 'react';
 import LazyImage from './LazyImage.jsx';
 
-const BeforeAfterCard = ({ imageUrl, caseTitle, onImageClick }) => {
+const BeforeAfterCard = ({ beforeImage, afterImage, caseTitle, onImageClick }) => {
+  const imageUrl = beforeImage || afterImage;
+
   return (
     <div className="card overflow-hidden !p-0 hover-lift border border-border">
-      <div 
+      <div
         className="relative h-48 md:h-56 w-full overflow-hidden bg-muted cursor-pointer lightbox-trigger"
         onClick={() => onImageClick(imageUrl, caseTitle)}
       >
-        <LazyImage 
-          src={imageUrl} 
-          alt={caseTitle} 
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+        <LazyImage
+          src={imageUrl}
+          alt={caseTitle}
+          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
         />
       </div>
       <div className="p-4 md:p-5 text-center w-full">

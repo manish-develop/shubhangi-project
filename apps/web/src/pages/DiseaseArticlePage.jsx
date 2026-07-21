@@ -71,7 +71,7 @@ const DiseaseArticlePage = () => {
         <li><strong>Safe for All Ages:</strong> Suitable for children, pregnant women, and the elderly.</li>
       </ul>
 
-      <h2>Treatment Process at Maharana's Clinic</h2>
+      <h2>Treatment Process at Maharana Wellness Clinic</h2>
       <p>
         Under the expert care of <span class="doctor-name">Dr. Shubhangi Maharana</span>, your treatment for ${disease.name} will begin with a comprehensive consultation. This detailed case-taking allows for the selection of a constitutional remedy perfectly matched to your unique symptom profile.
       </p>
@@ -84,7 +84,7 @@ const DiseaseArticlePage = () => {
   return (
     <>
       <Helmet>
-        <title>{`Homoeopathic Treatment for ${disease.name} | Maharana's Clinic`}</title>
+        <title>{`Homoeopathic Treatment for ${disease.name} | Maharana Wellness Clinic`}</title>
         <meta name="description" content={`Learn about the effective, natural homoeopathic treatment for ${disease.name} by Dr. Shubhangi Maharana. Safe, holistic care without side effects.`} />
       </Helmet>
 
@@ -166,7 +166,7 @@ const DiseaseArticlePage = () => {
           <div className="mt-16 p-6 md:p-8 bg-muted rounded-2xl border border-border flex flex-col sm:flex-row gap-6 items-center sm:items-start">
             <div className="w-24 h-24 rounded-full overflow-hidden flex-shrink-0 border-4 border-background shadow-sm bg-white flex items-center justify-center">
               <LazyImage 
-                src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/eb0cd3d7f6f74bf598708e9dd019dd35.jpg" 
+                src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-potrait.jpeg" 
                 alt="Dr. Shubhangi Maharana" 
                 className="doctor-image"
               />

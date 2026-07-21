@@ -18,8 +18,8 @@ const DisclaimerPage = () => {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="Dr. Shubhangi Maharana" />
-        <title>Disclaimer | Maharana's Homoeopathy Clinic</title>
-        <meta name="description" content="Read the legal disclaimer, privacy policy, side effects information, scientific basis and criticism of homoeopathy at Maharana's Clinic by Dr. Shubhangi Maharana." />
+        <title>Disclaimer | Maharana Wellness Clinic</title>
+        <meta name="description" content="Read the legal disclaimer, privacy policy, side effects information, scientific basis and criticism of homoeopathy at Maharana Wellness Clinic by Dr. Shubhangi Maharana." />
       </Helmet>
 
       <Header />

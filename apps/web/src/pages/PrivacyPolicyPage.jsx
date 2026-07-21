@@ -18,8 +18,8 @@ const PrivacyPolicyPage = () => {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="Dr. Shubhangi Maharana" />
-        <title>Privacy Policy | Maharana's Homoeopathy Clinic</title>
-        <meta name="description" content="Read the privacy policy of Maharana's Clinic by Dr. Shubhangi Maharana." />
+        <title>Privacy Policy | Maharana Wellness Clinic</title>
+        <meta name="description" content="Read the privacy policy of Maharana Wellness Clinic by Dr. Shubhangi Maharana." />
       </Helmet>
 
       <Header />
@@ -43,7 +43,7 @@ const PrivacyPolicyPage = () => {
 
             <div className="card p-8">
               <p className="mb-4 text-muted-foreground body-text leading-relaxed">
-                We really value your decision for considering us. We at Maharana's assure you that all your personal information (name, e-mail, address) remains confidential with us.
+                We really value your decision for considering us. We at Maharana Wellness Clinic assure you that all your personal information (name, e-mail, address) remains confidential with us.
               </p>
               
               <p className="mb-4 text-muted-foreground body-text leading-relaxed">

@@ -33,15 +33,15 @@ const Footer = () => {
     href: 'https://youtube.com/@dr.shubhangimaharana',
     label: 'YouTube'
   }];
-  return <footer className="bg-[#154360] text-white">
+  return <footer className="text-white" style={{ backgroundColor: 'hsl(var(--footer-bg))' }}>
       <div className="container-custom py-12 md:py-16">
         
         {/* Mobile Format Native Structure */}
         <div className="md:hidden">
           <div className="footer-brand">
             <Link to="/" className="inline-block">
-              <img src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/ba2251e0bacb65c428be0ab880a6e708.png" alt="Maharana's Logo" />
-              <p>The House of Homoeopathy & Facial Aesthetics</p>
+              <img src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/maharana-logo-white.jpg" alt="Maharana Wellness Clinic Logo" />
+              <p>Wellness Clinic</p>
             </Link>
           </div>
 
@@ -67,7 +67,7 @@ const Footer = () => {
             </div>
             <div className="flex items-center justify-center gap-2 mb-2">
               <Clock className="w-4 h-4 text-white/80" />
-              <span>Mon-Sat: 10:00 AM - 7:00 PM</span>
+              <span>Mon-Sat: 11:00 AM - 8:00 PM</span>
             </div>
           </div>
 
@@ -83,7 +83,7 @@ const Footer = () => {
               <Link to="/disclaimer" className="text-white/80 hover:text-white underline">Disclaimer</Link>
             </div>
             <div className="flex flex-col gap-3 text-white/80">
-              <p className="text-center">&copy; 2026 Maharana's. All rights reserved.</p>
+              <p className="text-center">&copy; 2026 Maharana Wellness Clinic. All rights reserved.</p>
               <p className="text-center">All treatments are performed by a qualified Homoeopathic physician Dr. Shubhangi Maharana trained in medical cosmetology. Procedures are selected based on patient suitability and within the practitioner's scope of practice.</p>
             </div>
           </div>
@@ -93,15 +93,15 @@ const Footer = () => {
         <div className="hidden md:grid md:grid-cols-4 gap-12">
           <div className="col-span-1">
             <Link to="/" className="flex items-center gap-3 mb-4">
-              <img src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/ba2251e0bacb65c428be0ab880a6e708.png" alt="Maharana's Logo" className="h-[60px] w-auto object-contain" />
+              <img src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/maharana-logo-white.jpg" alt="Maharana Wellness Clinic Logo" className="h-[60px] w-auto object-contain" />
               <div className="flex flex-col justify-center">
                 <div className="text-2xl font-bold text-white" style={{
                 fontFamily: 'Playfair Display, serif'
               }}>
-                  Maharana's
+                  Maharana
                 </div>
                 <div className="text-xs font-medium tracking-wide text-white/90 leading-tight">
-                  The House of Homoeopathy<br />& Facial Aesthetics
+                  Wellness Clinic
                 </div>
               </div>
             </Link>
@@ -118,7 +118,10 @@ const Footer = () => {
           }}>Quick Links</h3>
             <ul className="space-y-3">
               {quickLinks.map((link, index) => <li key={index}>
-                  <Link to={link.path} className="text-white/80 hover:text-white transition-colors">{link.label}</Link>
+                  <Link to={link.path} className="group inline-flex items-center gap-1.5 text-white/70 hover:text-white transition-colors">
+                    <span className="w-0 group-hover:w-2.5 h-px bg-white transition-all duration-300" />
+                    {link.label}
+                  </Link>
                 </li>)}
             </ul>
           </div>
@@ -129,7 +132,10 @@ const Footer = () => {
           }}>Conditions</h3>
             <ul className="space-y-3">
               {conditions.map((condition, index) => <li key={index}>
-                  <Link to="/diseases" className="text-white/80 hover:text-white transition-colors">{condition}</Link>
+                  <Link to="/diseases" className="group inline-flex items-center gap-1.5 text-white/70 hover:text-white transition-colors">
+                    <span className="w-0 group-hover:w-2.5 h-px bg-white transition-all duration-300" />
+                    {condition}
+                  </Link>
                 </li>)}
             </ul>
           </div>
@@ -150,7 +156,7 @@ const Footer = () => {
               <li className="flex items-start gap-3 text-white/80">
                 <Clock className="w-5 h-5 mt-0.5 flex-shrink-0 text-white" />
                 <div>
-                  <div>Mon-Sat: 10:00 AM - 7:00 PM</div>
+                  <div>Mon-Sat: 11:00 AM - 8:00 PM</div>
                   <div>Sunday: Closed</div>
                 </div>
               </li>
@@ -161,12 +167,12 @@ const Footer = () => {
         {/* Desktop Copyright */}
         <div className="hidden md:flex mt-12 pt-8 border-t border-white/10 items-start justify-between text-sm text-white/80">
           <div className="flex flex-col gap-3 flex-grow pr-8">
-            <p>&copy; 2026 Maharana's. All rights reserved.</p>
+            <p>&copy; 2026 Maharana Wellness Clinic. All rights reserved.</p>
             <p>All treatments are performed by a qualified Homoeopathic physician Dr. Shubhangi Maharana trained in medical cosmetology. Procedures are selected based on patient suitability and within the practitioner's scope of practice.</p>
           </div>
           <div className="flex gap-6 flex-shrink-0 ml-6 items-center">
-            <Link to="/privacy-policy" className="hover:text-white whitespace-nowrap">Privacy Policy</Link>
-            <Link to="/disclaimer" className="hover:text-white whitespace-nowrap">Disclaimer</Link>
+            <Link to="/privacy-policy" className="underline decoration-white/30 hover:decoration-white hover:text-white whitespace-nowrap transition-colors">Privacy Policy</Link>
+            <Link to="/disclaimer" className="underline decoration-white/30 hover:decoration-white hover:text-white whitespace-nowrap transition-colors">Disclaimer</Link>
           </div>
         </div>
       </div>

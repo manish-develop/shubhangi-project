@@ -59,7 +59,7 @@ const AboutPage = () => {
               <div className="doctor-photo relative w-full">
                 <div className="absolute -inset-4 bg-primary/10 rounded-full blur-3xl" />
                 <div className="relative rounded-2xl overflow-hidden card-shadow-xl border border-border w-full flex justify-center bg-white p-4">
-                  <LazyImage src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/eb0cd3d7f6f74bf598708e9dd019dd35.jpg" alt="Dr. Shubhangi Maharana - Homoeopathic Physician" className="doctor-image w-full h-auto max-h-[600px] object-contain rounded-xl" />
+                  <LazyImage src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-potrait.jpeg" alt="Dr. Shubhangi Maharana - Homoeopathic Physician" className="doctor-image w-full h-auto max-h-[600px] object-contain rounded-xl" />
                 </div>
                 <div className="absolute top-4 right-4 md:top-6 md:right-6 bg-card p-3 md:p-4 rounded-xl card-shadow-lg border border-border">
                   <div className="text-xs md:text-sm font-medium text-muted-foreground mb-1">Qualified</div>
@@ -71,11 +71,11 @@ const AboutPage = () => {
                 <h2 className="mb-4 md:mb-6 heading-serif">My Journey in Homoeopathy</h2>
                 
                 <p className="text-muted-foreground mb-4 leading-relaxed">
-                  <span className="doctor-name font-medium">Dr. Shubhangi Maharana</span> is a highly qualified homoeopathic physician holding BHMS, MD (Hom.), DNHE, MPMU, and FMC (Germany) — bringing a rare blend of homoeopathic training and international medical exposure to her practice at Maharana's.
+                  <span className="doctor-name font-medium">Dr. Shubhangi Maharana</span> is a highly qualified homoeopathic physician holding BHMS, MD (Hom.), DNHE, MPMU, and FMC (Germany) — bringing a rare blend of homoeopathic training and international medical exposure to her practice at Maharana Wellness Clinic.
                 </p>
 
                 <p className="text-muted-foreground mb-4 leading-relaxed">
-                  With over 8+ years of clinical experience, she has had the privilege of treating over 500+ patients, witnessing remarkable transformations in their health and well-being. Each patient's journey reinforces her conviction that true healing addresses not just physical symptoms, but the emotional and mental aspects of health as well.
+                  With over 8+ years of clinical experience, she has had the privilege of treating over 1000+ patients, witnessing remarkable transformations in their health and well-being. Each patient's journey reinforces her conviction that true healing addresses not just physical symptoms, but the emotional and mental aspects of health as well.
                 </p>
 
                 <p className="text-muted-foreground mb-4 leading-relaxed">
@@ -139,24 +139,24 @@ const AboutPage = () => {
 
             <div className={`grid md:grid-cols-2 gap-8 max-w-5xl mx-auto ${pubVisible ? 'animate-fade-in' : 'opacity-0'}`}>
               <div className="card !p-0 overflow-hidden hover-lift flex flex-col border border-border">
-                <div className="relative h-64 md:h-80 w-full overflow-hidden bg-muted cursor-pointer lightbox-trigger" onClick={() => openLightbox("https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/9fcc68d332b55bafb24f01c47b55eb03.jpg", "Annals of the Bhandarkar Oriental Research Institute — 2025")}>
-                  <LazyImage src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/9fcc68d332b55bafb24f01c47b55eb03.jpg" alt="Annals of the Bhandarkar Oriental Research Institute — 2025" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                <div className="relative h-64 md:h-80 w-full overflow-hidden bg-muted cursor-pointer lightbox-trigger" onClick={() => openLightbox("https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-article.jpeg", "Annals of the Bhandarkar Oriental Research Institute — 2025")}>
+                  <LazyImage src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-article.jpeg" alt="Annals of the Bhandarkar Oriental Research Institute — 2025" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
                 </div>
                 <div className="p-6 flex flex-col items-center text-center flex-grow card-content w-full">
                   <span className="text-sm font-medium text-muted-foreground mb-4">Published Research · 2025</span>
-                  <button onClick={() => openLightbox("https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/9fcc68d332b55bafb24f01c47b55eb03.jpg", "Annals of the Bhandarkar Oriental Research Institute — 2025")} className="mt-auto btn-outline w-full">
+                  <button onClick={() => openLightbox("https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-article.jpeg", "Annals of the Bhandarkar Oriental Research Institute — 2025")} className="mt-auto btn-outline w-full">
                     View Publication →
                   </button>
                 </div>
               </div>
 
               <div className="card !p-0 overflow-hidden hover-lift flex flex-col border border-border">
-                <div className="relative h-64 md:h-80 w-full overflow-hidden bg-muted cursor-pointer lightbox-trigger" onClick={() => openLightbox("https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/fc0e80410cc4c62fa496beef9830e5ea.jpg", "International Journal of Applied Science — 2025")}>
-                  <LazyImage src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/fc0e80410cc4c62fa496beef9830e5ea.jpg" alt="International Journal of Applied Science — 2025" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                <div className="relative h-64 md:h-80 w-full overflow-hidden bg-muted cursor-pointer lightbox-trigger" onClick={() => openLightbox("https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-article1.jpeg", "International Journal of Applied Science — 2025")}>
+                  <LazyImage src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-article1.jpeg" alt="International Journal of Applied Science — 2025" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
                 </div>
                 <div className="p-6 flex flex-col items-center text-center flex-grow card-content w-full">
                   <span className="text-sm font-medium text-muted-foreground mb-4">Published Research · 2025</span>
-                  <button onClick={() => openLightbox("https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/fc0e80410cc4c62fa496beef9830e5ea.jpg", "International Journal of Applied Science — 2025")} className="mt-auto btn-outline w-full">
+                  <button onClick={() => openLightbox("https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-article1.jpeg", "International Journal of Applied Science — 2025")} className="mt-auto btn-outline w-full">
                     View Publication →
                   </button>
                 </div>
@@ -180,14 +180,14 @@ const AboutPage = () => {
                   <Mic className="w-6 h-6" />
                 </div>
                 <h3 className="card-title text-xl font-semibold text-center mt-6 mb-4 text-foreground heading-sans">Invited as Guest Speaker</h3>
-                <div className="rounded-xl overflow-hidden mb-3 h-40 cursor-pointer group relative w-full lightbox-trigger" onClick={() => openLightbox("https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/a908fbfad83d8dfdf8fc76fef836bc32.jpg", "Invited as Guest Speaker — JBM Group 2025")}>
-                  <LazyImage src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/a908fbfad83d8dfdf8fc76fef836bc32.jpg" alt="Invited as Guest Speaker — JBM Group 2025" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="rounded-xl overflow-hidden mb-3 h-40 cursor-pointer group relative w-full lightbox-trigger" onClick={() => openLightbox("https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/invitedasaguest.jpeg", "Invited as Guest Speaker — JBM Group 2025")}>
+                  <LazyImage src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/invitedasaguest.jpeg" alt="Invited as Guest Speaker — JBM Group 2025" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Search className="w-8 h-8 text-white" />
                   </div>
                 </div>
-                <div className="rounded-xl overflow-hidden mb-4 h-24 cursor-pointer group relative w-full lightbox-trigger" onClick={() => openLightbox("https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/3710721f3ec5570d6b0f3561f1827e3c.jpg", "Invited as Guest Speaker — JBM Group 2025")}>
-                  <LazyImage src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/3710721f3ec5570d6b0f3561f1827e3c.jpg" alt="Invited as Guest Speaker — JBM Group 2025" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="rounded-xl overflow-hidden mb-4 h-24 cursor-pointer group relative w-full lightbox-trigger" onClick={() => openLightbox("https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/invitedasaguest1.jpeg", "Invited as Guest Speaker — JBM Group 2025")}>
+                  <LazyImage src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/invitedasaguest1.jpeg" alt="Invited as Guest Speaker — JBM Group 2025" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Search className="w-6 h-6 text-white" />
                   </div>
@@ -202,8 +202,8 @@ const AboutPage = () => {
                   <Medal className="w-6 h-6" />
                 </div>
                 <h3 className="card-title text-xl font-semibold text-center mt-6 mb-4 text-foreground heading-sans">Homoeopathic Award of the Year 2022</h3>
-                <div className="rounded-xl overflow-hidden mb-4 h-64 cursor-pointer group relative w-full lightbox-trigger" onClick={() => openLightbox("https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/78455e45874dcba53d5303b91764e6f7.jpg", "Homoeopathic Award of the Year 2022")}>
-                  <LazyImage src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/78455e45874dcba53d5303b91764e6f7.jpg" alt="Homoeopathic Award of the Year 2022" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="rounded-xl overflow-hidden mb-4 h-64 cursor-pointer group relative w-full lightbox-trigger" onClick={() => openLightbox("https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/homeopathicaward-2022.jpeg", "Homoeopathic Award of the Year 2022")}>
+                  <LazyImage src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/homeopathicaward-2022.jpeg" alt="Homoeopathic Award of the Year 2022" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Search className="w-8 h-8 text-white" />
                   </div>

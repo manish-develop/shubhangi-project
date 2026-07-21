@@ -25,7 +25,7 @@ const ServiceArticlePage = () => {
           Chronic diseases require a comprehensive, long-term approach that addresses the root cause rather than just suppressing symptoms. Homoeopathy offers a gentle yet powerful way to manage and often reverse chronic conditions.
         </p>
         <h2>Our Approach to Chronic Care</h2>
-        <p>At Maharana's Clinic, we believe that chronic diseases are manifestations of a deeper internal imbalance. Our constitutional homoeopathic approach involves:</p>
+        <p>At Maharana Wellness Clinic, we believe that chronic diseases are manifestations of a deeper internal imbalance. Our constitutional homoeopathic approach involves:</p>
         <ul>
           <li>Detailed case taking (often lasting 60-90 minutes)</li>
           <li>Understanding your physical, mental, and emotional makeup</li>
@@ -87,8 +87,8 @@ const ServiceArticlePage = () => {
   return (
     <>
       <Helmet>
-        <title>{`${service.title} | Maharana's Clinic`}</title>
-        <meta name="description" content={`Learn about our ${service.title} services at Maharana's Homoeopathy Clinic.`} />
+        <title>{`${service.title} | Maharana Wellness Clinic`}</title>
+        <meta name="description" content={`Learn about our ${service.title} services at Maharana Wellness Clinic.`} />
       </Helmet>
 
       <Header />
@@ -169,7 +169,7 @@ const ServiceArticlePage = () => {
           <div className="mt-16 p-6 md:p-8 bg-muted rounded-2xl border border-border flex flex-col sm:flex-row gap-6 items-center sm:items-start">
             <div className="w-24 h-24 rounded-full overflow-hidden flex-shrink-0 border-4 border-background shadow-sm bg-white flex items-center justify-center">
               <LazyImage 
-                src="https://horizons-cdn.hostinger.com/f2268395-5bcb-4cfc-98ed-965a4845c225/eb0cd3d7f6f74bf598708e9dd019dd35.jpg" 
+                src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-potrait.jpeg" 
                 alt="Dr. Shubhangi Maharana" 
                 className="doctor-image"
               />

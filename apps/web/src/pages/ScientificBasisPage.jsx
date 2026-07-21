@@ -18,8 +18,8 @@ const ScientificBasisPage = () => {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="Dr. Shubhangi Maharana" />
-        <title>Scientific Basis | Maharana's Homoeopathy Clinic</title>
-        <meta name="description" content="Read about the scientific basis of homoeopathy at Maharana's Clinic by Dr. Shubhangi Maharana." />
+        <title>Scientific Basis | Maharana Wellness Clinic</title>
+        <meta name="description" content="Read about the scientific basis of homoeopathy at Maharana Wellness Clinic by Dr. Shubhangi Maharana." />
       </Helmet>
 
       <Header />

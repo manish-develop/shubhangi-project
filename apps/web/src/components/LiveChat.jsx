@@ -10,21 +10,21 @@ const LiveChat = () => {
       label: 'WhatsApp Us',
       action: () => {
         const message = encodeURIComponent("Hello Dr. Shubhangi, I'd like to book an appointment.");
-        window.open(`https://wa.me/919876543210?text=${message}`, '_blank');
+        window.open(`https://wa.me/919625030958?text=${message}`, '_blank');
       },
     },
     {
       icon: Phone,
       label: 'Call Now',
       action: () => {
-        window.location.href = 'tel:+919876543210';
+        window.location.href = 'tel:+919625030958';
       },
     },
     {
       icon: Mail,
       label: 'Email Us',
       action: () => {
-        window.location.href = 'mailto:drshubhangi@example.com';
+        window.location.href = 'mailto:drshubhangi.econsultation@gmail.com';
       },
     },
   ];
