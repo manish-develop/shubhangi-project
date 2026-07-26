@@ -35,9 +35,18 @@ process.on('SIGTERM', async () => {
 	process.exit();
 });
 
+const allowedOrigins = [
+	process.env.CORS_ORIGIN,
+	'http://localhost:3000',
+	'http://127.0.0.1:3000',
+].filter(Boolean);
+
 app.use(helmet());
 app.use(cors({
-	origin: process.env.CORS_ORIGIN,
+	origin(origin, callback) {
+		if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+		callback(new Error(`Origin ${origin} not allowed by CORS`));
+	},
 	credentials: true,
 }));
 app.use(morgan('combined'));
