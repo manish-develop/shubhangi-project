@@ -3,6 +3,8 @@ import healthCheck from './health-check.js';
 import authRoutes from './auth.js';
 import patientRoutes from './patients.js';
 import prescriptionRoutes from './prescriptions.js';
+import notificationRoutes from './notifications.js';
+import eventRoutes from './events.js';
 import { publicRouter as publicBlogs, adminRouter as adminBlogs } from './blogs.js';
 import { publicRouter as publicTestimonials, adminRouter as adminTestimonials } from './testimonials.js';
 import { publicRouter as publicDiseases, adminRouter as adminDiseases } from './diseases.js';
@@ -29,6 +31,8 @@ export default () => {
 	router.use('/admin/reviews', adminReviews);
 	router.use('/admin/patients', patientRoutes());
 	router.use('/admin/prescriptions', prescriptionRoutes());
+	router.use('/admin/notifications', notificationRoutes());
+	router.use('/admin/events', eventRoutes());
 
 	return router;
 };

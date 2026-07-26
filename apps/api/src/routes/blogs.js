@@ -64,14 +64,14 @@ adminRouter.get('/:id', async (req, res, next) => {
 
 adminRouter.post('/', upload.single('cover_image'), async (req, res, next) => {
 	try {
-		const { title, excerpt, content, category, author, published } = req.body;
+		const { title, excerpt, content, category, author, published, cover_image_url } = req.body;
 
 		if (!title || !content) {
 			return res.status(400).json({ error: 'Title and content are required' });
 		}
 
 		const slug = await ensureUniqueSlug('blogs', title);
-		const cover_image = req.file ? await uploadToMedia(req.file, 'blogs') : null;
+		const cover_image = req.file ? await uploadToMedia(req.file, 'blogs') : (cover_image_url || null);
 
 		const { data, error } = await supabase
 			.from('blogs')
@@ -97,11 +97,12 @@ adminRouter.post('/', upload.single('cover_image'), async (req, res, next) => {
 
 adminRouter.put('/:id', upload.single('cover_image'), async (req, res, next) => {
 	try {
-		const { title, excerpt, content, category, author, published } = req.body;
+		const { title, excerpt, content, category, author, published, cover_image_url } = req.body;
 		const updates = { title, excerpt, content, category, author };
 
 		if (published !== undefined) updates.published = published === 'false' ? false : true;
 		if (req.file) updates.cover_image = await uploadToMedia(req.file, 'blogs');
+		else if (cover_image_url) updates.cover_image = cover_image_url;
 
 		const { data, error } = await supabase
 			.from('blogs')

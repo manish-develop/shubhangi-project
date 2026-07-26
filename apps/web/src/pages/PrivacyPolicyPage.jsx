@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/SEO.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header.jsx';
@@ -14,13 +14,11 @@ const PrivacyPolicyPage = () => {
 
   return (
     <>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="author" content="Dr. Shubhangi Maharana" />
-        <title>Privacy Policy | Maharana Wellness Clinic</title>
-        <meta name="description" content="Read the privacy policy of Maharana Wellness Clinic by Dr. Shubhangi Maharana." />
-      </Helmet>
+      <SEO
+        title="Privacy Policy | Maharana Wellness Clinic"
+        description="Read the privacy policy of Maharana Wellness Clinic by Dr. Shubhangi Maharana."
+        path="/privacy-policy"
+      />
 
       <Header />
 

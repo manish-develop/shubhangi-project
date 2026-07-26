@@ -1,690 +1,359 @@
-import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet';
+import React, { useState, useEffect, useMemo } from 'react';
+import SEO from '@/components/SEO.jsx';
+import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Award, Users, Heart, Star, Phone, Mail, ArrowRight, ChevronRight, Sparkles, Shield, Baby, Activity, CheckCircle2, Package, Video } from 'lucide-react';
+import { Award, Users, Heart, Star, Phone, Mail, ChevronRight, Shield, Clock, MapPin, ArrowRight, Sparkles } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import StatCounter from '@/components/StatCounter.jsx';
 import BlogCard from '@/components/BlogCard.jsx';
 import ReviewsSection from '@/components/ReviewsSection.jsx';
-import LazyImage from '@/components/LazyImage.jsx';
+import DoctorPortrait from '@/components/DoctorPortrait.jsx';
 import BeforeAfterSlideshow from '@/components/BeforeAfterSlideshow.jsx';
 import YouTubeSection from '@/components/YouTubeSection.jsx';
-import ExpandingSearchDock from '@/components/ExpandingSearchDock.jsx';
+import { ActionSearchBar } from '@/components/ui/action-search-bar.jsx';
+import { DiaTextReveal } from '@/components/ui/dia-text.jsx';
+import { VariableFontCursorProximity } from '@/components/ui/m-variable-font-cursor-proximity.jsx';
+import { ShiningText } from '@/components/ui/shining-text.jsx';
 import InteractiveHoverButton from '@/components/InteractiveHoverButton.jsx';
+import { CircularShowcase } from '@/components/ui/circular-showcase.jsx';
+import { Button } from '@/components/ui/button.jsx';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation.js';
-import { validateEmail, validatePhone, validateRequired } from '@/utils/validation.js';
-import { toast } from 'sonner';
-import { blogArticles } from '@/data/blogArticles.js';
+import { fetchPublishedBlogs, getAllStaticArticles } from '@/lib/blogs.js';
 import { diseaseDatabase } from '@/data/diseaseDatabase.js';
 import { specializationDatabase } from '@/data/specializationDatabase.js';
-import { sendAppointmentEmail } from '@/utils/emailService.js';
 import { ClinicImages } from '@/constants/clinicImages.js';
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-
 const HomePage = () => {
-  const navigate = useNavigate();
-  const [heroRef, heroVisible] = useScrollAnimation(0.2);
-  const [conditionsRef, conditionsVisible] = useScrollAnimation(0.2);
-  const [aboutRef, aboutVisible] = useScrollAnimation(0.2);
-  const [specializationsRef, specializationsVisible] = useScrollAnimation(0.2);
-  const [appointmentRef, appointmentVisible] = useScrollAnimation(0.2);
-  const [blogRef, blogVisible] = useScrollAnimation(0.2);
+	const navigate = useNavigate();
+	const [conditionsRef, conditionsVisible] = useScrollAnimation(0.2);
+	const [aboutRef, aboutVisible] = useScrollAnimation(0.2);
+	const [specializationsRef, specializationsVisible] = useScrollAnimation(0.2);
+	const [blogRef, blogVisible] = useScrollAnimation(0.2);
+	const [dbBlogs, setDbBlogs] = useState([]);
 
-  const [currentStep, setCurrentStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+	useEffect(() => {
+		fetchPublishedBlogs().then(setDbBlogs);
+	}, []);
 
-  // Updated state keys to perfectly match EmailJS template variables
-  const [formData, setFormData] = useState({
-    consultation_type: 'Online Consultation',
-    patient_name: '',
-    phone: '',
-    email: '',
-    city: '',
-    age: '',
-    health_concern: '',
-    problem_duration: '',
-    preferred_date: '',
-    preferred_time: '',
-    heard_from: '',
-  });
+	const latestBlogs = useMemo(
+		() => [...dbBlogs, ...getAllStaticArticles()].sort((a, b) => new Date(b.sortDate) - new Date(a.sortDate)).slice(0, 3),
+		[dbBlogs]
+	);
 
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [diseaseSearch, setDiseaseSearch] = useState('');
+	return (
+		<>
+			<SEO
+				title="Maharana Wellness Clinic | Dr. Shubhangi Maharana"
+				description="Welcome to Maharana Wellness Clinic — Expert homoeopathic treatment and facial aesthetics by Dr. Shubhangi Maharana. Personalized treatment for chronic conditions, women's health, and holistic wellness."
+				path="/"
+			/>
 
-  const handleAppointmentSubmit = async (e) => {
-    e.preventDefault();
+			<Header />
 
-    if (currentStep === 1) {
-      setCurrentStep(2);
-    } else if (currentStep === 2) {
-      if (!validateRequired(formData.patient_name) || !validateRequired(formData.city) || !validateRequired(formData.age)) {
-        toast.error('Please fill in all required fields');
-        return;
-      }
-      if (!validatePhone(formData.phone)) {
-        toast.error('Please enter a valid 10-digit phone number');
-        return;
-      }
-      if (formData.email && !validateEmail(formData.email)) {
-        toast.error('Please enter a valid email address');
-        return;
-      }
-      setCurrentStep(3);
-    } else if (currentStep === 3) {
-      if (!validateRequired(formData.health_concern) || !validateRequired(formData.problem_duration)) {
-        toast.error('Please provide health details');
-        return;
-      }
-      setCurrentStep(4);
-    } else if (currentStep === 4) {
-      if (!validateRequired(formData.preferred_date) || !validateRequired(formData.preferred_time) || !validateRequired(formData.heard_from)) {
-        toast.error('Please complete all preference selections');
-        return;
-      }
+			<main className="overflow-x-hidden">
+				{/* 1. Hero */}
+				<section
+					className="relative flex min-h-[92vh] items-center bg-cover bg-center bg-no-repeat !p-0"
+					style={{
+						backgroundImage: `linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.55)), url(${ClinicImages.heroSection})`,
+					}}
+				>
+					<div className="mx-auto w-full max-w-7xl px-6 py-20 lg:px-12">
+						<div className="mx-auto max-w-lg text-center lg:ml-0 lg:max-w-2xl lg:text-left">
+							<p className="flex flex-wrap items-baseline justify-center gap-1.5 text-sm font-semibold uppercase tracking-wider text-primary lg:justify-start">
+								<span>The House of Homoeopathy &amp;</span>
+								<DiaTextReveal words={['Facial Aesthetics', 'Pain Rehabilitation', 'Skin', 'Hair', 'Wellness Care']} />
+							</p>
+							<VariableFontCursorProximity
+								as="h1"
+								label="Heal Naturally. Live Fully."
+								className="mt-4 max-w-2xl text-balance text-5xl md:text-6xl xl:text-7xl text-foreground"
+								fromWeight={400}
+								toWeight={800}
+								style={{ fontFamily: 'Merriweather, serif' }}
+							/>
+							<p className="mt-6 max-w-2xl text-balance text-lg text-muted-foreground">
+								Experience the gentle power of Homoeopathy with{' '}
+								<span className="font-semibold text-primary">Dr. Shubhangi Maharana</span>. Personalized
+								treatment for chronic conditions, women's health, and holistic wellness.
+							</p>
 
-      setIsSubmitting(true);
-      try {
-        await sendAppointmentEmail(formData);
-        
-        setShowSuccess(true);
-        toast.success('Appointment request sent successfully!');
-      } catch (error) {
-        toast.error('Failed to send appointment request. Please try again later.');
-      } finally {
-        setIsSubmitting(false);
-      }
-    }
-  };
+							<div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
+								<Button asChild size="lg" className="h-12 rounded-full pl-5 pr-3 text-base">
+									<Link to="/appointment">
+										<span className="text-nowrap">Book Consultation</span>
+										<ChevronRight className="ml-1" />
+									</Link>
+								</Button>
+								<Button asChild size="lg" variant="ghost" className="h-12 rounded-full px-5 text-base">
+									<Link to="/about">
+										<span className="text-nowrap">Learn More</span>
+									</Link>
+								</Button>
+							</div>
 
-  const handleAgeChange = (e) => {
-    let val = e.target.value;
-    if (val === '') {
-      setFormData({...formData, age: ''});
-      return;
-    }
-    let num = parseInt(val, 10);
-    if (!isNaN(num)) {
-      if (num < 1) num = 1;
-      if (num > 120) num = 120;
-      setFormData({...formData, age: num.toString()});
-    }
-  };
+							<div className="mt-10 flex flex-wrap items-center justify-center gap-4 md:gap-6 text-xs md:text-sm text-foreground font-medium heading-sans lg:justify-start">
+								<div className="flex items-center gap-2">
+									<Award className="w-4 h-4 text-primary" />
+									<span>8+ Years Experience</span>
+								</div>
+								<div className="flex items-center gap-2">
+									<Users className="w-4 h-4 text-primary" />
+									<span>1000+ Happy Patients</span>
+								</div>
+								<div className="flex items-center gap-2">
+									<Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+									<span>4.9 Rating</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
 
-  const filteredDiseases = diseaseDatabase.filter((disease) => 
-    disease.name.toLowerCase().includes(diseaseSearch.toLowerCase())
-  );
+				{/* 2. Conditions Search Strip */}
+				<section ref={conditionsRef} className="section-white relative search-bar-section">
+					<div className="container-custom">
+						<div className={`mx-auto max-w-xl text-center ${conditionsVisible ? 'animate-fade-in' : 'opacity-0'}`}>
+							<h2 className="mb-2 text-2xl font-bold text-foreground heading-serif">Looking for a Condition?</h2>
+							<p className="mb-6 text-muted-foreground body-text">Search 100+ conditions treated homoeopathically</p>
+							<ActionSearchBar
+								actions={diseaseDatabase}
+								placeholder="Search a condition... (e.g. Migraine, PCOS, Asthma)"
+								onSelect={(disease) => navigate(`/disease/${disease.id}`)}
+							/>
+						</div>
+					</div>
+				</section>
 
-  return (
-    <>
-      <Helmet>
-        <title>Maharana Wellness Clinic | Dr. Shubhangi Maharana</title>
-        <meta name="description" content="Welcome to Maharana Wellness Clinic — Expert homoeopathic treatment and facial aesthetics by Dr. Shubhangi Maharana (BHMS, MD Hom., DNHE, MPMU, FMC Germany). 8+ years experience. Online & in-clinic consultations available. Book your appointment today." />
-      </Helmet>
+				{/* 3. Before / After Results */}
+				<BeforeAfterSlideshow />
 
-      <Header />
+				{/* 4. Stats Strip */}
+				<section className="stats-strip">
+					<div className="container-custom">
+						<div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+							<StatCounter end={8} suffix="+" label="Years Experience" icon={Award} />
+							<StatCounter end={1000} suffix="+" label="Patients Treated" icon={Users} />
+							<StatCounter end={100} suffix="+" label="Conditions Treated" icon={Heart} />
+							<StatCounter end={4.9} label="Average Rating" icon={Star} suffix="★" />
+						</div>
+					</div>
+				</section>
 
-      <main>
-        {/* 1. Hero Section */}
-        <section ref={heroRef} className="relative overflow-hidden pt-28 md:pt-36 pb-16 md:pb-24">
-          <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(35%_60%_at_20%_0%,hsl(var(--primary)/0.12),transparent)]" />
-          </div>
+				{/* 5. About Preview */}
+				<section ref={aboutRef} className="section-white">
+					<div className="container-custom">
+						<div className="about-preview-section flex flex-col lg:grid lg:grid-cols-2 gap-10 md:gap-12 items-center">
+							<div className={`about-intro order-1 lg:order-2 ${aboutVisible ? 'animate-slide-in-right' : 'opacity-0'}`}>
+								<div className="mb-4 md:mb-6 text-center lg:text-left">
+									<span className="text-lg md:text-xl font-medium text-muted-foreground block mb-2 heading-sans">About</span>
+									<h2 className="font-bold text-primary heading-serif doctor-name">Dr. Shubhangi Maharana</h2>
+								</div>
+								<p className="text-muted-foreground mb-4 leading-relaxed body-text text-center lg:text-left">
+									With over 8+ years of dedicated practice in Homoeopathy, <span className="doctor-name font-medium">Dr. Shubhangi Maharana</span> has helped hundreds of patients achieve lasting health through gentle, natural treatment.
+								</p>
+								<p className="text-muted-foreground mb-4 leading-relaxed body-text text-center lg:text-left">
+									Her approach combines deep understanding of homoeopathic principles with modern diagnostic methods, ensuring comprehensive care tailored to each individual's unique constitution.
+								</p>
 
-          <div className="container-custom">
-            <div className={`max-w-2xl flex flex-col gap-5 ${heroVisible ? 'animate-fade-in' : 'opacity-0'}`}>
-              <Link
-                to="/appointment"
-                className="group flex w-fit items-center gap-3 rounded-full border border-primary/20 bg-card p-1 pr-4 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <span className="rounded-full bg-primary text-primary-foreground px-3 py-1 text-xs font-bold tracking-wide heading-sans">NOW</span>
-                <span className="text-xs md:text-sm text-foreground font-medium">Accepting new patients</span>
-                <ArrowRight className="w-3.5 h-3.5 text-primary -translate-x-0.5 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
+								<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 md:mb-8 text-left">
+									<div className="flex items-start gap-3">
+										<Award className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0 mt-1" />
+										<div>
+											<div className="font-semibold mb-1 text-sm md:text-base text-foreground heading-sans">BHMS Degree</div>
+											<div className="text-xs md:text-sm text-muted-foreground body-text">Bachelor of Homoeopathic Medicine</div>
+										</div>
+									</div>
+									<div className="flex items-start gap-3">
+										<Award className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0 mt-1" />
+										<div>
+											<div className="font-semibold mb-1 text-sm md:text-base text-foreground heading-sans">MD Homoeopathy</div>
+											<div className="text-xs md:text-sm text-muted-foreground body-text">Post-graduate specialization</div>
+										</div>
+									</div>
+									<div className="flex items-start gap-3">
+										<Shield className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0 mt-1" />
+										<div>
+											<div className="font-semibold mb-1 text-sm md:text-base text-foreground heading-sans">Council Registered</div>
+											<div className="text-xs md:text-sm text-muted-foreground body-text">Licensed practitioner</div>
+										</div>
+									</div>
+									<div className="flex items-start gap-3">
+										<Users className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0 mt-1" />
+										<div>
+											<div className="font-semibold mb-1 text-sm md:text-base text-foreground heading-sans">8+ Years</div>
+											<div className="text-xs md:text-sm text-muted-foreground body-text">Clinical experience</div>
+										</div>
+									</div>
+								</div>
 
-              <h1 className="text-primary heading-serif text-4xl md:text-5xl lg:text-6xl leading-tight">
-                Heal Naturally.<br className="hidden md:block" /> Live Fully.
-              </h1>
+								<div className="hidden lg:block">
+									<Link to="/about" className="btn-primary w-full sm:w-auto">
+										Know More About Me
+									</Link>
+								</div>
+							</div>
 
-              <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-lg body-text">
-                Experience the gentle power of Homoeopathy with <span className="doctor-name font-semibold text-primary">Dr. Shubhangi Maharana</span>. Personalized treatment for chronic conditions, women's health, and holistic wellness.
-              </p>
+							<div className={`about-image order-2 lg:order-1 ${aboutVisible ? 'animate-slide-in-left' : 'opacity-0'}`}>
+								<div className="relative w-full flex justify-center">
+									<div className="absolute -inset-4 bg-primary/10 rounded-full blur-3xl" />
+									<DoctorPortrait className="aspect-[3/4] h-[420px] sm:h-[500px] md:h-[600px]" />
+								</div>
+							</div>
 
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <a href="tel:+919625030958" className="btn-outline inline-flex items-center gap-2">
-                  <Phone className="w-4 h-4" /> Call Now
-                </a>
-                <InteractiveHoverButton to="/appointment">
-                  Book Appointment
-                </InteractiveHoverButton>
-              </div>
+							<div className="about-cta-btn order-3 lg:hidden w-full">
+								<Link to="/about" className="btn-primary w-full">
+									Know More About Me
+								</Link>
+							</div>
+						</div>
+					</div>
+				</section>
 
-              <div className="flex flex-wrap gap-4 md:gap-6 text-xs md:text-sm text-foreground font-medium heading-sans pt-2">
-                <div className="flex items-center gap-2">
-                  <Award className="w-4 h-4 text-primary" />
-                  <span>8+ Years Experience</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-primary" />
-                  <span>1000+ Happy Patients</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                  <span>4.9 Rating</span>
-                </div>
-              </div>
-            </div>
+				{/* 6. Specializations */}
+				<section ref={specializationsRef} className="section-light">
+					<div className="container-custom">
+						<h2 className="section-title heading-serif">Areas of Specialization</h2>
+						<p className="section-subtitle text-lg md:text-xl text-muted-foreground body-text">
+							Expert care in conditions where homoeopathy and holistic aesthetics excel
+						</p>
 
-            <div className={`relative mt-12 md:mt-16 ${heroVisible ? 'animate-fade-in' : 'opacity-0'}`}>
-              <div className="absolute -inset-x-10 inset-y-0 -translate-y-1/4 scale-125 rounded-full bg-[radial-gradient(ellipse_at_center,hsl(var(--primary)/0.15),transparent_70%)] blur-3xl -z-10" />
-              <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border border-border bg-card p-2 shadow-xl">
-                <LazyImage
-                  src={ClinicImages.heroBackgroundDesktop}
-                  alt="Maharana Wellness Clinic"
-                  className="w-full aspect-[16/9] object-cover rounded-xl"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
+						<CircularShowcase
+							items={specializationDatabase.map((spec) => ({
+								slug: spec.slug,
+								title: spec.title,
+								category: 'Specialization',
+								description: spec.introduction.length > 200 ? `${spec.introduction.slice(0, 200)}...` : spec.introduction,
+								image: ClinicImages.specializationsBySlug[spec.slug],
+							}))}
+							onSelect={(item) => navigate(`/specialization/${item.slug}`)}
+						/>
+					</div>
+				</section>
 
-        {/* 2. Conditions Strip */}
-        <section ref={conditionsRef} className="section-white relative search-bar-section">
-          <div className="container-custom">
-            <div className={`flex flex-col md:flex-row items-center gap-6 ${conditionsVisible ? 'animate-fade-in' : 'opacity-0'}`}>
-              <div className="w-full md:w-1/3">
-                <ExpandingSearchDock
-                  value={diseaseSearch}
-                  onChange={(e) => setDiseaseSearch(e.target.value)}
-                  placeholder="Search a condition..."
-                  className="max-w-sm"
-                />
-              </div>
-              <div className="w-full md:w-2/3 flex flex-wrap gap-3 justify-center md:justify-start">
-                {filteredDiseases.slice(0, 8).map((disease) => (
-                  <button
-                    key={disease.id}
-                    onClick={() => navigate(`/disease/${disease.id}`)}
-                    className="pill-tag text-sm font-medium px-4 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 border border-border"
-                  >
-                    {disease.name}
-                  </button>
-                ))}
-                {filteredDiseases.length > 8 && (
-                  <button onClick={() => navigate('/diseases')} className="pill-tag text-sm font-medium px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all duration-300">
-                    View All +
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
+				{/* 7. Reviews */}
+				<ReviewsSection />
 
-        <section className="section-light">
-          <BeforeAfterSlideshow />
-        </section>
+				{/* 8. YouTube */}
+				<YouTubeSection />
 
-        <section className="stats-strip">
-          <div className="container-custom">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-              <StatCounter end={8} suffix="+" label="Years Experience" icon={Award} />
-              <StatCounter end={1000} suffix="+" label="Patients Treated" icon={Users} />
-              <StatCounter end={100} suffix="+" label="Conditions Treated" icon={Heart} />
-              <StatCounter end={4.9} label="Average Rating" icon={Star} suffix="★" />
-            </div>
-          </div>
-        </section>
+				{/* 9. Blog Preview */}
+				<section ref={blogRef} className="section-white">
+					<div className="container-custom">
+						<h2 className="section-title heading-serif">Latest from Our Blog</h2>
+						<p className="section-subtitle text-lg md:text-xl text-muted-foreground body-text">
+							Expert insights on health, wellness, and homoeopathy
+						</p>
 
-        <section ref={aboutRef} className="section-white">
-          <div className="container-custom">
-            <div className="about-preview-section flex flex-col lg:grid lg:grid-cols-2 gap-10 md:gap-12 items-center">
-              <div className={`about-intro order-1 lg:order-2 ${aboutVisible ? 'animate-slide-in-right' : 'opacity-0'}`}>
-                <div className="mb-4 md:mb-6 text-center lg:text-left">
-                  <span className="text-lg md:text-xl font-medium text-muted-foreground block mb-2 heading-sans">About</span>
-                  <h2 className="font-bold text-primary heading-serif doctor-name">Dr. Shubhangi Maharana</h2>
-                </div>
-                <p className="text-muted-foreground mb-4 leading-relaxed body-text text-center lg:text-left">
-                  With over 8+ years of dedicated practice in Homoeopathy, <span className="doctor-name font-medium">Dr. Shubhangi Maharana</span> has helped hundreds of patients achieve lasting health through gentle, natural treatment.
-                </p>
-                <p className="text-muted-foreground mb-4 leading-relaxed body-text text-center lg:text-left">
-                  Her approach combines deep understanding of homoeopathic principles with modern diagnostic methods, ensuring comprehensive care tailored to each individual's unique constitution.
-                </p>
+						<div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 ${blogVisible ? 'animate-fade-in' : 'opacity-0'}`}>
+							{latestBlogs.map((blog, index) => (
+								<div
+									key={blog.id}
+									style={{ animationDelay: `${index * 100}ms` }}
+									className={blogVisible ? 'animate-slide-up' : 'opacity-0'}
+								>
+									<BlogCard {...blog} />
+								</div>
+							))}
+						</div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 md:mb-8 text-left">
-                  <div className="flex items-start gap-3">
-                    <Award className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0 mt-1" />
-                    <div>
-                      <div className="font-semibold mb-1 text-sm md:text-base text-foreground heading-sans">BHMS Degree</div>
-                      <div className="text-xs md:text-sm text-muted-foreground body-text">Bachelor of Homoeopathic Medicine</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Award className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0 mt-1" />
-                    <div>
-                      <div className="font-semibold mb-1 text-sm md:text-base text-foreground heading-sans">MD Homoeopathy</div>
-                      <div className="text-xs md:text-sm text-muted-foreground body-text">Post-graduate specialization</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Shield className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0 mt-1" />
-                    <div>
-                      <div className="font-semibold mb-1 text-sm md:text-base text-foreground heading-sans">Council Registered</div>
-                      <div className="text-xs md:text-sm text-muted-foreground body-text">Licensed practitioner</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Users className="w-5 h-5 md:w-6 md:h-6 text-primary flex-shrink-0 mt-1" />
-                    <div>
-                      <div className="font-semibold mb-1 text-sm md:text-base text-foreground heading-sans">8+ Years</div>
-                      <div className="text-xs md:text-sm text-muted-foreground body-text">Clinical experience</div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="hidden lg:block">
-                  <Link to="/about" className="btn-primary w-full sm:w-auto">
-                    Know More About Me
-                  </Link>
-                </div>
-              </div>
+						<div className="text-center mt-10 md:mt-12">
+							<Link to="/blog" className="btn-primary w-full sm:w-auto">
+								View All Articles
+							</Link>
+						</div>
+					</div>
+				</section>
 
-              <div className={`about-image order-2 lg:order-1 ${aboutVisible ? 'animate-slide-in-left' : 'opacity-0'}`}>
-                <div className="relative w-full flex justify-center">
-                  <div className="absolute -inset-4 bg-primary/10 rounded-full blur-3xl" />
-                  <div className="relative rounded-2xl overflow-hidden card-shadow-xl border border-border w-full flex justify-center bg-white p-4">
-                    <LazyImage
-                      src="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-potrait.jpeg"
-                      alt="Dr. Shubhangi Maharana - Homoeopathic Physician"
-                      className="doctor-image max-h-[600px] object-contain rounded-xl w-full"
-                    />
-                  </div>
-                  <div className="absolute top-4 right-4 md:top-6 md:right-6 bg-card p-3 md:p-4 rounded-xl card-shadow-lg border border-border">
-                    <div className="text-xs md:text-sm font-medium text-muted-foreground mb-1 heading-sans">Qualified</div>
-                    <div className="text-base md:text-lg font-bold text-primary heading-sans">BHMS, MD</div>
-                  </div>
-                </div>
-              </div>
+				{/* 10. Book Appointment CTA */}
+				<section className="section-light">
+					<div className="container-custom">
+						<div className="card md:flex-row md:items-center md:justify-between gap-6 md:gap-10">
+							<div className="text-center md:text-left">
+								<Sparkles className="mx-auto md:mx-0 mb-2 h-6 w-6 text-primary" />
+								<h2 className="section-title md:text-left heading-serif mb-2">
+									<ShiningText text="Ready to Start Your Healing Journey?" />
+								</h2>
+								<p className="text-muted-foreground body-text mb-1 flex items-center justify-center md:justify-start gap-2">
+									<Clock className="w-4 h-4 text-primary flex-shrink-0" /> Mon–Sun: 11:00 AM – 8:00 PM
+								</p>
+								<p className="text-muted-foreground body-text flex items-center justify-center md:justify-start gap-2">
+									<Phone className="w-4 h-4 text-primary flex-shrink-0" />
+									<a href="tel:+919625030958" className="hover:text-primary transition-colors">9625030958</a>
+									<span className="mx-1">·</span>
+									<Mail className="w-4 h-4 text-primary flex-shrink-0" />
+									<a href="mailto:drshubhangi.econsultation@gmail.com" className="hover:text-primary transition-colors break-all">drshubhangi.econsultation@gmail.com</a>
+								</p>
+							</div>
+							<div className="w-full md:w-auto flex flex-col sm:flex-row gap-3 mt-6 md:mt-0">
+								<InteractiveHoverButton to="/appointment" className="w-full sm:w-auto justify-center">
+									Book Appointment
+								</InteractiveHoverButton>
+							</div>
+						</div>
+					</div>
+				</section>
+				{/* 11. Location / Map */}
+				<section className="section-white">
+					<div className="container-custom">
+						<div className="grid md:grid-cols-2 gap-10 md:gap-12 items-center max-w-6xl mx-auto">
+							<motion.div
+								initial={{ opacity: 0, y: 16 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: true }}
+								transition={{ duration: 0.6 }}
+								className="text-center md:text-left"
+							>
+								<div className="flex items-center justify-center md:justify-start gap-2 text-sm font-medium text-muted-foreground mb-3">
+									<MapPin className="w-4 h-4 text-primary" />
+									<span>Find Us</span>
+								</div>
+								<h2 className="text-3xl md:text-4xl font-bold text-foreground heading-serif mb-4">
+									Visit Our Clinic
+								</h2>
+								<p className="text-muted-foreground leading-relaxed mb-2">
+									F-42, Block F, Kirti Nagar, New Delhi, Delhi 110015
+								</p>
+								<p className="text-muted-foreground leading-relaxed mb-2">
+									Mon–Sun: 11:00 AM – 8:00 PM
+								</p>
+								<p className="text-muted-foreground leading-relaxed mb-6">
+									<a href="tel:+919625030958" className="hover:text-primary transition-colors">9625030958</a>
+								</p>
+								<a
+									href="https://www.google.com/maps/dir/?api=1&destination=F-42,+Block+F,+Kirti+Nagar,+New+Delhi,+Delhi+110015"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="btn-primary inline-flex items-center gap-2"
+								>
+									Get Directions <ArrowRight className="w-4 h-4" />
+								</a>
+							</motion.div>
 
-              <div className="about-cta-btn order-3 lg:hidden w-full">
-                <Link to="/about" className="btn-primary w-full">
-                  Know More About Me
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+							<motion.div
+								initial={{ opacity: 0, scale: 0.96 }}
+								whileInView={{ opacity: 1, scale: 1 }}
+								viewport={{ once: true }}
+								transition={{ duration: 0.6, delay: 0.15 }}
+								className="rounded-2xl overflow-hidden card-shadow-xl border border-border"
+							>
+								<iframe
+									title="Maharana Wellness Clinic Location"
+									src="https://www.google.com/maps?q=Maharana+Wellness+Clinic,+F-42+Block+F+Kirti+Nagar+New+Delhi+110015&output=embed"
+									className="w-full h-[350px] md:h-[420px] border-0"
+									loading="lazy"
+									referrerPolicy="no-referrer-when-downgrade"
+								/>
+							</motion.div>
+						</div>
+					</div>
+				</section>
+			</main>
 
-        <section ref={specializationsRef} className="section-light">
-          <div className="container-custom">
-            <h2 className="section-title heading-serif">Areas of Specialization</h2>
-            <p className="section-subtitle text-lg md:text-xl text-muted-foreground body-text">
-              Expert care in conditions where homoeopathy and holistic aesthetics excel
-            </p>
-
-            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${specializationsVisible ? 'animate-fade-in' : 'opacity-0'}`}>
-              {specializationDatabase.map((spec, index) => {
-                const icons = [Heart, Sparkles, Activity, Shield, Baby];
-                const Icon = icons[index % icons.length];
-                const image = ClinicImages.specializationsBySlug[spec.slug];
-
-                return (
-                  <div
-                    key={spec.slug}
-                    style={{ animationDelay: `${index * 100}ms` }}
-                    className={`card !p-0 overflow-hidden hover-lift cursor-pointer ${specializationsVisible ? 'animate-slide-up' : 'opacity-0'}`}
-                    onClick={() => navigate(`/specialization/${spec.slug}`)}
-                  >
-                    {image && (
-                      <div className="relative h-40 w-full overflow-hidden">
-                        <LazyImage src={image} alt={spec.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                        <div className="absolute bottom-3 left-3 w-11 h-11 rounded-xl bg-white/90 backdrop-blur-sm flex items-center justify-center">
-                          <Icon className="w-5 h-5 text-primary" />
-                        </div>
-                      </div>
-                    )}
-                    <div className="p-6 flex flex-col flex-grow">
-                      <h3 className="card-title text-xl font-semibold mb-3 text-foreground heading-sans">{spec.title}</h3>
-                      <p className="card-description text-muted-foreground leading-relaxed mb-6 flex-grow body-text">
-                        {spec.introduction.substring(0, 100)}...
-                      </p>
-                      <div className="mt-auto text-primary font-medium flex items-center justify-center w-full gap-2 group heading-sans">
-                        Read More <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <ReviewsSection />
-
-        <YouTubeSection />
-
-        <section ref={blogRef} className="section-white">
-          <div className="container-custom">
-            <h2 className="section-title heading-serif">Latest from Our Blog</h2>
-            <p className="section-subtitle text-lg md:text-xl text-muted-foreground body-text">
-              Expert insights on health, wellness, and homoeopathy
-            </p>
-
-            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 ${blogVisible ? 'animate-fade-in' : 'opacity-0'}`}>
-              {blogArticles.slice(0, 3).map((blog, index) => (
-                <div
-                  key={index}
-                  style={{ animationDelay: `${index * 100}ms` }}
-                  className={blogVisible ? 'animate-slide-up' : 'opacity-0'}
-                >
-                  <BlogCard {...blog} />
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center mt-10 md:mt-12">
-              <Link to="/blog" className="btn-primary w-full sm:w-auto">
-                View All Articles
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        <section ref={appointmentRef} className="section-light">
-          <div className="container-custom">
-            <div className="grid lg:grid-cols-3 gap-10 md:gap-12">
-              <div className="lg:col-span-2">
-                <h2 className="section-title heading-serif mb-6 md:mb-8">Book Your Appointment</h2>
-
-                {!showSuccess ? (
-                  <form onSubmit={handleAppointmentSubmit} className="card">
-                    <div className="flex items-center gap-1 md:gap-2 mb-6 md:mb-8 w-full">
-                      {[1, 2, 3, 4].map((step) => (
-                        <React.Fragment key={step}>
-                          <div
-                            className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-semibold text-sm md:text-base transition-all duration-300 flex-shrink-0 heading-sans ${
-                              step <= currentStep
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-muted text-muted-foreground'
-                            }`}
-                          >
-                            {step}
-                          </div>
-                          {step < 4 && (
-                            <div
-                              className={`flex-1 h-1 rounded transition-all duration-300 ${
-                                step < currentStep ? 'bg-primary' : 'bg-muted'
-                              }`}
-                            />
-                          )}
-                        </React.Fragment>
-                      ))}
-                    </div>
-
-                    {currentStep === 1 && (
-                      <div className="space-y-6 animate-fade-in w-full">
-                        <h3 className="card-title text-xl font-semibold mb-4 text-foreground">Step 1: Consultation Type</h3>
-                        <RadioGroup 
-                          value={formData.consultation_type} 
-                          onValueChange={(val) => setFormData({...formData, consultation_type: val})}
-                          className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-                        >
-                          {['Online Consultation', 'First Consultation', 'Follow-up Visit', 'Emergency'].map((type) => (
-                            <div key={type}>
-                              <RadioGroupItem value={type} id={`type-${type.replace(/\s+/g, '-')}`} name="consultation_type" className="peer sr-only" />
-                              <Label
-                                htmlFor={`type-${type.replace(/\s+/g, '-')}`}
-                                className="flex flex-col items-center justify-between rounded-xl border-2 border-border bg-background p-4 hover:bg-muted hover:text-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer text-center min-h-[60px]"
-                              >
-                                <span className="font-semibold text-base">{type}</span>
-                              </Label>
-                            </div>
-                          ))}
-                        </RadioGroup>
-                      </div>
-                    )}
-
-                    {currentStep === 2 && (
-                      <div className="space-y-6 animate-fade-in w-full">
-                        <h3 className="card-title text-xl font-semibold mb-4 text-foreground">Step 2: Personal Details</h3>
-                        <div className="space-y-4">
-                          <div className="space-y-2">
-                            <Label className="form-label" htmlFor="patient_name">Full Name*</Label>
-                            <Input id="patient_name" name="patient_name" value={formData.patient_name} onChange={(e) => setFormData({...formData, patient_name: e.target.value})} placeholder="Your full name" required />
-                          </div>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <Label className="form-label" htmlFor="phone">Phone Number* (WhatsApp preferred)</Label>
-                              <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} placeholder="10-digit mobile number" required />
-                            </div>
-                            <div className="space-y-2">
-                              <Label className="form-label" htmlFor="email">Email Address</Label>
-                              <Input id="email" name="email" type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} placeholder="Email Address (Optional)" />
-                              <p className="text-xs text-muted-foreground mt-1">Optional — form can be submitted without email</p>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <Label className="form-label" htmlFor="city">City / State*</Label>
-                              <Input id="city" name="city" value={formData.city} onChange={(e) => setFormData({...formData, city: e.target.value})} placeholder="Your city" required />
-                            </div>
-                            <div className="space-y-2">
-                              <Label className="form-label" htmlFor="age">Age*</Label>
-                              <Input 
-                                id="age" 
-                                name="age"
-                                type="number" 
-                                min="1" 
-                                max="120" 
-                                step="1"
-                                value={formData.age} 
-                                onChange={handleAgeChange}
-                                onKeyDown={(e) => {
-                                  if (e.key === '.' || e.key === '-' || e.key === 'e' || e.key === 'E') {
-                                    e.preventDefault();
-                                  }
-                                }}
-                                placeholder="Your age" 
-                                required 
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {currentStep === 3 && (
-                      <div className="space-y-6 animate-fade-in w-full">
-                        <h3 className="card-title text-xl font-semibold mb-4 text-foreground">Step 3: Health Details</h3>
-                        <div className="space-y-4">
-                          <div className="space-y-2">
-                            <Label className="form-label" htmlFor="health_concern">Describe Your Health Concern*</Label>
-                            <textarea
-                              id="health_concern"
-                              name="health_concern"
-                              value={formData.health_concern}
-                              onChange={(e) => setFormData({...formData, health_concern: e.target.value})}
-                              className="w-full px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[100px] resize-y"
-                              placeholder="Please describe your symptoms..."
-                              required
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label className="form-label">How Long Have You Had This Problem?*</Label>
-                            <Select value={formData.problem_duration} onValueChange={(val) => setFormData({...formData, problem_duration: val})}>
-                              <SelectTrigger name="problem_duration">
-                                <SelectValue placeholder="Select duration" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Less than 1 month">Less than 1 month</SelectItem>
-                                <SelectItem value="1-6 months">1-6 months</SelectItem>
-                                <SelectItem value="6 months - 1 year">6 months - 1 year</SelectItem>
-                                <SelectItem value="More than 1 year">More than 1 year</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {currentStep === 4 && (
-                      <div className="space-y-6 animate-fade-in w-full">
-                        <h3 className="card-title text-xl font-semibold mb-4 text-foreground">Step 4: Preferred Time</h3>
-                        <div className="space-y-6">
-                          <div className="space-y-2">
-                            <Label className="form-label" htmlFor="preferred_date">Preferred Date*</Label>
-                            <Input id="preferred_date" name="preferred_date" type="date" value={formData.preferred_date} onChange={(e) => setFormData({...formData, preferred_date: e.target.value})} required />
-                          </div>
-                          <div className="space-y-3">
-                            <Label className="form-label">Preferred Time Slot*</Label>
-                            <RadioGroup value={formData.preferred_time} onValueChange={(val) => setFormData({...formData, preferred_time: val})} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                              {['Morning (10AM–12PM)', 'Afternoon (12PM–5PM)', 'Evening (5PM–7PM)'].map((slot) => (
-                                <div key={slot}>
-                                  <RadioGroupItem value={slot} id={`slot-${slot.replace(/\s+/g, '-')}`} name="preferred_time" className="peer sr-only" />
-                                  <Label
-                                    htmlFor={`slot-${slot.replace(/\s+/g, '-')}`}
-                                    className="flex items-center justify-center rounded-xl border-2 border-border bg-background px-3 py-3 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer text-center text-sm"
-                                  >
-                                    <span className="font-medium">{slot}</span>
-                                  </Label>
-                                </div>
-                              ))}
-                            </RadioGroup>
-                          </div>
-                          <div className="space-y-3">
-                            <Label className="form-label">How Did You Hear About Us?</Label>
-                            <RadioGroup value={formData.heard_from} onValueChange={(val) => setFormData({...formData, heard_from: val})} className="grid grid-cols-2 gap-3">
-                              {['Google Search', 'Social Media', 'Friend / Family', 'Doctor Referral'].map((source) => (
-                                <div key={source}>
-                                  <RadioGroupItem value={source} id={`source-${source.replace(/\s+/g, '-')}`} name="heard_from" className="peer sr-only" />
-                                  <Label
-                                    htmlFor={`source-${source.replace(/\s+/g, '-')}`}
-                                    className="flex items-center justify-center rounded-xl border-2 border-border bg-background px-3 py-3 hover:bg-muted peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer text-center text-sm"
-                                  >
-                                    <span className="font-medium">{source}</span>
-                                  </Label>
-                                </div>
-                              ))}
-                            </RadioGroup>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-8 w-full">
-                      {currentStep > 1 && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setCurrentStep(currentStep - 1)}
-                          className="w-full sm:w-auto h-[44px]"
-                          disabled={isSubmitting}
-                        >
-                          Previous
-                        </Button>
-                      )}
-                      <Button 
-                        type="submit" 
-                        className="flex-1 w-full h-[44px] bg-primary hover:bg-secondary text-primary-foreground"
-                        disabled={isSubmitting}
-                      >
-                        {currentStep === 4 ? (isSubmitting ? 'Sending...' : 'Book Online Consultation →') : 'Next Step'}
-                      </Button>
-                    </div>
-
-                    <div className="mt-6 pt-4 border-t border-border/50 flex flex-col gap-2 text-sm text-muted-foreground font-medium justify-center items-center text-center w-full">
-                      <div className="flex items-center gap-2"><Video className="w-4 h-4 text-primary" /> Consultation via Video Call</div>
-                      <div className="flex items-center gap-2"><Package className="w-4 h-4 text-primary" /> Medicines delivered to your doorstep anywhere in India</div>
-                    </div>
-                  </form>
-                ) : (
-                  <div className="card text-center items-center">
-                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4 md:mb-6">
-                      <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-green-600" />
-                    </div>
-                    <h3 className="card-title text-xl md:text-2xl font-semibold mb-4 text-foreground heading-sans text-center w-full">✅ Thank You for Booking!</h3>
-                    <div className="card-description text-sm md:text-base text-muted-foreground mb-6 body-text leading-relaxed whitespace-pre-line text-center w-full">
-                      Your online consultation request{"\n"}has been received. We will contact{"\n"}you on WhatsApp/Email within{"\n"}24 hours to confirm your appointment.
-                    </div>
-                    <p className="text-sm md:text-base font-semibold text-foreground mb-8">
-                      — <span className="doctor-name">Dr. Shubhangi Maharana</span>
-                    </p>
-                    <button
-                      onClick={() => {
-                        setShowSuccess(false);
-                        setCurrentStep(1);
-                        setFormData({ consultation_type: 'Online Consultation', patient_name: '', phone: '', email: '', city: '', age: '', health_concern: '', problem_duration: '', preferred_date: '', preferred_time: '', heard_from: '' });
-                      }}
-                      className="btn-primary w-full sm:w-auto"
-                    >
-                      Book Another Appointment
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-6">
-                <div className="card">
-                  <h3 className="card-title text-lg font-semibold mb-4 text-foreground heading-sans">Clinic Timings</h3>
-                  <div className="card-content space-y-3 text-sm md:text-base body-text">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Monday - Saturday</span>
-                      <span className="font-medium text-foreground">11:00 AM - 8:00 PM</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Sunday</span>
-                      <span className="font-medium text-destructive">Closed</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card">
-                  <h3 className="card-title text-lg font-semibold mb-4 text-foreground heading-sans">Contact Information</h3>
-                  <div className="card-content space-y-4">
-                    <div className="flex items-start gap-3">
-                      <Phone className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      <div className="text-sm md:text-base body-text">
-                        <div className="font-medium mb-1 text-foreground">Phone</div>
-                        <a href="tel:+919625030958" className="text-muted-foreground hover:text-primary transition-colors duration-300 py-1 inline-block">
-                          9625030958
-                        </a>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <Mail className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      <div className="text-sm md:text-base body-text">
-                        <div className="font-medium mb-1 text-foreground">Email</div>
-                        <a href="mailto:drshubhangi.econsultation@gmail.com" className="text-muted-foreground hover:text-primary transition-colors duration-300 py-1 inline-block break-all">
-                          drshubhangi.econsultation@gmail.com
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <a
-                  href="https://wa.me/919625030958"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full bg-[#075E54] text-white py-3 rounded-xl font-medium text-center hover:bg-[#128C7E] transition-all duration-300 active:scale-[0.98] min-h-[44px] flex items-center justify-center shadow-md heading-sans"
-                >
-                  Chat on WhatsApp
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </main>
-
-      <Footer />
-    </>
-  );
+			<Footer />
+		</>
+	);
 };
 
 export default HomePage;

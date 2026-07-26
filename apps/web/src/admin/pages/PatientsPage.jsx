@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -40,6 +40,20 @@ export default function PatientsPage() {
 	const openCreate = () => {
 		setForm(emptyForm);
 		setDialogOpen(true);
+	};
+
+	const handleDelete = async (e, patient) => {
+		e.preventDefault();
+		e.stopPropagation();
+		if (!window.confirm(`Delete patient "${patient.name}"? This will also delete all their prescriptions.`)) return;
+
+		try {
+			await adminApi.del(`/admin/patients/${patient.id}`);
+			toast.success('Patient deleted');
+			load(search);
+		} catch (err) {
+			toast.error(err.message);
+		}
 	};
 
 	const handleSubmit = async (e) => {
@@ -83,14 +97,15 @@ export default function PatientsPage() {
 							<TableHead>Age</TableHead>
 							<TableHead>Gender</TableHead>
 							<TableHead>Phone</TableHead>
+							<TableHead className="text-right">Actions</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{loading && (
-							<TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-8">Loading...</TableCell></TableRow>
+							<TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">Loading...</TableCell></TableRow>
 						)}
 						{!loading && patients.length === 0 && (
-							<TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-8">No patients yet</TableCell></TableRow>
+							<TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">No patients yet</TableCell></TableRow>
 						)}
 						{patients.map((p) => (
 							<TableRow key={p.id} className="cursor-pointer">
@@ -100,6 +115,11 @@ export default function PatientsPage() {
 								<TableCell>{p.age || '-'}</TableCell>
 								<TableCell>{p.gender || '-'}</TableCell>
 								<TableCell>{p.phone || '-'}</TableCell>
+								<TableCell className="text-right">
+									<Button variant="ghost" size="icon" onClick={(e) => handleDelete(e, p)}>
+										<Trash2 className="h-4 w-4" />
+									</Button>
+								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
@@ -113,22 +133,23 @@ export default function PatientsPage() {
 					</DialogHeader>
 
 					<form onSubmit={handleSubmit} className="space-y-4">
-						<div className="grid grid-cols-2 gap-4">
-							<div className="space-y-1.5">
-								<Label>Name</Label>
-								<Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-							</div>
-							<div className="space-y-1.5">
-								<Label>Age</Label>
-								<Input type="number" value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} />
-							</div>
+						<div className="space-y-1.5">
+							<Label>Name</Label>
+							<Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
 						</div>
 
 						<div className="grid grid-cols-2 gap-4">
 							<div className="space-y-1.5">
+								<Label>Age</Label>
+								<Input type="number" value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} />
+							</div>
+							<div className="space-y-1.5">
 								<Label>Gender</Label>
 								<Input value={form.gender} onChange={(e) => setForm({ ...form, gender: e.target.value })} />
 							</div>
+						</div>
+
+						<div className="grid grid-cols-2 gap-4">
 							<div className="space-y-1.5">
 								<Label>Phone</Label>
 								<Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />

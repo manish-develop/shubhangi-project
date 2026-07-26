@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/SEO.jsx';
 import { ArrowLeft, Calendar, Clock, User, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
@@ -86,10 +86,11 @@ const ServiceArticlePage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{`${service.title} | Maharana Wellness Clinic`}</title>
-        <meta name="description" content={`Learn about our ${service.title} services at Maharana Wellness Clinic.`} />
-      </Helmet>
+      <SEO
+        title={`${service.title} | Maharana Wellness Clinic`}
+        description={`Learn about our ${service.title} services at Maharana Wellness Clinic.`}
+        path={`/service/${serviceId}`}
+      />
 
       <Header />
 

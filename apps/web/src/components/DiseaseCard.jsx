@@ -1,34 +1,43 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ArrowRight, Stethoscope } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-const DiseaseCard = ({ name, description, category, successRate }) => {
-  return (
-    <Link
-      to="/contact"
-      className="group block bg-card rounded-xl p-6 card-shadow hover:card-shadow-xl transition-all duration-300 hover:-translate-y-1 border border-transparent hover:border-primary/20"
-    >
-      <div className="flex items-start justify-between mb-3">
-        <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
-          {name}
-        </h3>
-        <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
-      </div>
-      <p className="text-sm text-muted-foreground mb-4 leading-relaxed line-clamp-2">
-        {description}
-      </p>
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">
-          {category}
-        </span>
-        {successRate && (
-          <span className="text-xs font-medium text-accent">
-            {successRate}% success rate
-          </span>
-        )}
-      </div>
-    </Link>
-  );
+const DiseaseCard = ({ id, name, category, image, className }) => {
+	return (
+		<Link
+			to={`/disease/${id}`}
+			className={cn(
+				'group relative block h-72 w-full overflow-hidden rounded-xl border border-border shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-2xl',
+				className
+			)}
+		>
+			<img
+				src={image}
+				alt={name}
+				className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+			/>
+			<div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+
+			<div className="relative flex h-full flex-col justify-between p-5">
+				<div className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/50 bg-black/20 backdrop-blur-sm">
+					<Stethoscope className="h-5 w-5 text-white/90" />
+				</div>
+
+				<div className="space-y-1 transition-transform duration-500 ease-in-out group-hover:-translate-y-10">
+					<span className="text-xs font-semibold uppercase tracking-wide text-white/70">{category}</span>
+					<h3 className="text-xl font-bold text-white heading-sans">{name}</h3>
+				</div>
+
+				<div className="absolute inset-x-0 -bottom-14 flex items-center justify-between p-5 opacity-0 transition-all duration-500 ease-in-out group-hover:bottom-0 group-hover:opacity-100">
+					<span className="text-sm text-white/80">Homoeopathic treatment available</span>
+					<span className="flex items-center gap-1 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-primary">
+						Learn More <ArrowRight className="h-3.5 w-3.5" />
+					</span>
+				</div>
+			</div>
+		</Link>
+	);
 };
 
 export default DiseaseCard;

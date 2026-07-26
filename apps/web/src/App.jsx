@@ -1,13 +1,15 @@
 import React from 'react';
-import { Route, Routes, BrowserRouter as Router, Outlet } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import { Route, Routes, BrowserRouter as Router, Outlet, useLocation } from 'react-router-dom';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'sonner';
 import ScrollToTop from './components/ScrollToTop.jsx';
+import { SocialLinks } from './components/ui/social-links.jsx';
 import { AdminAuthProvider } from './admin/context/AdminAuthContext.jsx';
 import { ProtectedRoute } from './admin/components/ProtectedRoute.jsx';
 import { AdminLayout } from './admin/components/AdminLayout.jsx';
 import AdminLoginPage from './admin/pages/LoginPage.jsx';
 import AdminDashboardPage from './admin/pages/DashboardPage.jsx';
+import AdminEventManagerPage from './admin/pages/EventManagerPage.jsx';
 import AdminBlogsPage from './admin/pages/BlogsPage.jsx';
 import AdminTestimonialsPage from './admin/pages/TestimonialsAdminPage.jsx';
 import AdminReviewsPage from './admin/pages/ReviewsAdminPage.jsx';
@@ -35,7 +37,8 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage.jsx';
 
 function App() {
   return (
-    <Router>
+    <HelmetProvider>
+      <Router>
       <Helmet>
         <script type="application/ld+json">
           {JSON.stringify({
@@ -62,7 +65,7 @@ function App() {
             "openingHoursSpecification": [
               {
                 "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
                 "opens": "11:00",
                 "closes": "20:00"
               }
@@ -90,6 +93,7 @@ function App() {
       </Helmet>
       <ScrollToTop />
       <Toaster position="top-right" richColors />
+      <PublicSocialLinks />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -103,7 +107,7 @@ function App() {
         <Route path="/testimonials" element={<TestimonialsPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/appointment" element={<AppointmentPage />} />
-        
+
         {/* Legal Pages */}
         <Route path="/disclaimer" element={<DisclaimerPage />} />
         <Route path="/side-effects" element={<SideEffectsPage />} />
@@ -116,6 +120,7 @@ function App() {
           <Route path="login" element={<AdminLoginPage />} />
           <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
             <Route index element={<AdminDashboardPage />} />
+            <Route path="events" element={<AdminEventManagerPage />} />
             <Route path="blogs" element={<AdminBlogsPage />} />
             <Route path="testimonials" element={<AdminTestimonialsPage />} />
             <Route path="reviews" element={<AdminReviewsPage />} />
@@ -136,8 +141,15 @@ function App() {
           </div>
         } />
       </Routes>
-    </Router>
+      </Router>
+    </HelmetProvider>
   );
+}
+
+function PublicSocialLinks() {
+  const location = useLocation();
+  if (location.pathname.startsWith('/admin')) return null;
+  return <SocialLinks />;
 }
 
 export default App;

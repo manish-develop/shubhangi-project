@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/SEO.jsx';
 import { ArrowLeft, Calendar, Clock, User, Share2, Facebook, Twitter, Linkedin, CheckCircle2 } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
@@ -83,10 +83,11 @@ const DiseaseArticlePage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{`Homoeopathic Treatment for ${disease.name} | Maharana Wellness Clinic`}</title>
-        <meta name="description" content={`Learn about the effective, natural homoeopathic treatment for ${disease.name} by Dr. Shubhangi Maharana. Safe, holistic care without side effects.`} />
-      </Helmet>
+      <SEO
+        title={`Homoeopathic Treatment for ${disease.name} | Maharana Wellness Clinic`}
+        description={`Learn about the effective, natural homoeopathic treatment for ${disease.name} by Dr. Shubhangi Maharana. Safe, holistic care without side effects.`}
+        path={`/disease/${diseaseId}`}
+      />
 
       <Header />
 

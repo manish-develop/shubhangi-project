@@ -1,23 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/SEO.jsx';
 import { ArrowLeft, Calendar, Clock, User, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import LazyImage from '@/components/LazyImage.jsx';
 import { blogArticles } from '@/data/blogArticles.js';
+import { fetchBlogBySlug } from '@/lib/blogs.js';
 
 const ArticlePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
-  const article = blogArticles.find(a => a.id === id);
+
+  const staticArticle = blogArticles.find(a => a.id === id);
+  const [dbArticle, setDbArticle] = useState(null);
+  const [checkedDb, setCheckedDb] = useState(false);
+
+  const article = staticArticle || dbArticle;
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
 
+  useEffect(() => {
+    if (staticArticle) return;
+    setCheckedDb(false);
+    fetchBlogBySlug(id).then((blog) => {
+      setDbArticle(blog);
+      setCheckedDb(true);
+    });
+  }, [id, staticArticle]);
+
   if (!article) {
+    if (!checkedDb) return null;
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
@@ -39,14 +54,13 @@ const ArticlePage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{`${article.title} | Maharana Wellness Clinic Blog`}</title>
-        <meta name="description" content={article.excerpt} />
-        <meta property="og:title" content={article.title} />
-        <meta property="og:description" content={article.excerpt} />
-        <meta property="og:image" content={article.imageUrl} />
-        <meta property="og:type" content="article" />
-      </Helmet>
+      <SEO
+        title={`${article.title} | Maharana Wellness Clinic Blog`}
+        description={article.excerpt}
+        image={article.image}
+        type="article"
+        path={`/article/${id}`}
+      />
 
       <Header />
 
@@ -85,9 +99,9 @@ const ArticlePage = () => {
           </div>
 
           <div className="rounded-2xl overflow-hidden mb-10 card-shadow-lg">
-            <LazyImage 
-              src={article.imageUrl} 
-              alt={article.title} 
+            <LazyImage
+              src={article.image}
+              alt={article.title}
               className="w-full h-[300px] md:h-[500px] object-cover"
             />
           </div>
@@ -110,7 +124,53 @@ const ArticlePage = () => {
             </div>
 
             {/* Article Content */}
-            <div className="flex-grow article-content" dangerouslySetInnerHTML={{ __html: article.content.replace(/Homeopathy/gi, 'Homoeopathy').replace(/homeopathy/gi, 'homoeopathy') }} />
+            <div className="flex-grow article-content space-y-8">
+              {article.sections ? (
+                <>
+                  <p className="text-lg text-foreground/90 leading-relaxed">{article.introduction}</p>
+
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground mb-3 heading-serif">What Is It?</h2>
+                    <p className="text-muted-foreground leading-relaxed">{article.sections.whatIs}</p>
+                  </div>
+
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground mb-3 heading-serif">Common Signs to Watch For</h2>
+                    <ul className="space-y-2 list-disc list-inside text-muted-foreground">
+                      {article.sections.symptoms.map((s, i) => (
+                        <li key={i}>{s}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground mb-3 heading-serif">The Homoeopathic Approach</h2>
+                    <p className="text-muted-foreground leading-relaxed">{article.sections.approach}</p>
+                  </div>
+
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground mb-3 heading-serif">Commonly Used Remedies</h2>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {article.sections.remedies.map((r, i) => (
+                        <div key={i} className="rounded-xl border border-border bg-card p-4">
+                          <div className="font-semibold text-foreground">{r.name}</div>
+                          <div className="text-sm text-muted-foreground mt-1">{r.description}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground mb-3 heading-serif">When to See a Homoeopath</h2>
+                    <p className="text-muted-foreground leading-relaxed">{article.sections.whenToSee}</p>
+                  </div>
+                </>
+              ) : (
+                article.content.split(/\n+/).filter(Boolean).map((para, i) => (
+                  <p key={i} className="text-lg text-foreground/90 leading-relaxed">{para}</p>
+                ))
+              )}
+            </div>
           </div>
 
           {/* Author Bio */}

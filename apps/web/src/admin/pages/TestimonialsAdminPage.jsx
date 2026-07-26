@@ -16,8 +16,7 @@ const emptyForm = {
 	category: '',
 	title: '',
 	description: '',
-	rating: 5,
-	display_order: 0,
+	youtube_url: '',
 	published: true,
 };
 
@@ -27,8 +26,7 @@ export default function TestimonialsAdminPage() {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [editing, setEditing] = useState(null);
 	const [form, setForm] = useState(emptyForm);
-	const [beforeImage, setBeforeImage] = useState(null);
-	const [afterImage, setAfterImage] = useState(null);
+	const [image, setImage] = useState(null);
 	const [submitting, setSubmitting] = useState(false);
 
 	const load = () => {
@@ -45,8 +43,7 @@ export default function TestimonialsAdminPage() {
 	const openCreate = () => {
 		setEditing(null);
 		setForm(emptyForm);
-		setBeforeImage(null);
-		setAfterImage(null);
+		setImage(null);
 		setDialogOpen(true);
 	};
 
@@ -57,12 +54,10 @@ export default function TestimonialsAdminPage() {
 			category: item.category || '',
 			title: item.title || '',
 			description: item.description || '',
-			rating: item.rating,
-			display_order: item.display_order,
+			youtube_url: item.youtube_url || '',
 			published: item.published,
 		});
-		setBeforeImage(null);
-		setAfterImage(null);
+		setImage(null);
 		setDialogOpen(true);
 	};
 
@@ -72,8 +67,7 @@ export default function TestimonialsAdminPage() {
 
 		const fd = new FormData();
 		Object.entries(form).forEach(([key, value]) => fd.append(key, value));
-		if (beforeImage) fd.append('before_image', beforeImage);
-		if (afterImage) fd.append('after_image', afterImage);
+		if (image) fd.append('image', image);
 
 		try {
 			if (editing) {
@@ -109,7 +103,7 @@ export default function TestimonialsAdminPage() {
 			<div className="flex items-center justify-between mb-6">
 				<div>
 					<h1 className="text-2xl font-bold text-foreground">Testimonials</h1>
-					<p className="text-muted-foreground">Manage before/after case studies</p>
+					<p className="text-muted-foreground">Manage patient success story cases</p>
 				</div>
 				<Button onClick={openCreate}>
 					<Plus className="h-4 w-4" /> New Testimonial
@@ -122,23 +116,21 @@ export default function TestimonialsAdminPage() {
 						<TableRow>
 							<TableHead>Title</TableHead>
 							<TableHead>Category</TableHead>
-							<TableHead>Order</TableHead>
 							<TableHead>Status</TableHead>
 							<TableHead className="text-right">Actions</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{loading && (
-							<TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">Loading...</TableCell></TableRow>
+							<TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-8">Loading...</TableCell></TableRow>
 						)}
 						{!loading && items.length === 0 && (
-							<TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">No testimonials yet</TableCell></TableRow>
+							<TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-8">No testimonials yet</TableCell></TableRow>
 						)}
 						{items.map((item) => (
 							<TableRow key={item.id}>
 								<TableCell className="font-medium">{item.title}</TableCell>
 								<TableCell>{item.category || '-'}</TableCell>
-								<TableCell>{item.display_order}</TableCell>
 								<TableCell>
 									<Badge variant={item.published ? 'default' : 'secondary'}>
 										{item.published ? 'Shown' : 'Hidden'}
@@ -186,26 +178,19 @@ export default function TestimonialsAdminPage() {
 							<Textarea rows={4} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
 						</div>
 
-						<div className="grid grid-cols-2 gap-4">
-							<div className="space-y-1.5">
-								<Label>Before Image {editing?.before_image && '(leave empty to keep current)'}</Label>
-								<Input type="file" accept="image/*" onChange={(e) => setBeforeImage(e.target.files?.[0] || null)} />
-							</div>
-							<div className="space-y-1.5">
-								<Label>After Image {editing?.after_image && '(leave empty to keep current)'}</Label>
-								<Input type="file" accept="image/*" onChange={(e) => setAfterImage(e.target.files?.[0] || null)} />
-							</div>
+						<div className="space-y-1.5">
+							<Label>Testimonial Picture {editing?.before_image && '(leave empty to keep current)'}</Label>
+							<Input type="file" accept="image/*" onChange={(e) => setImage(e.target.files?.[0] || null)} />
 						</div>
 
-						<div className="grid grid-cols-2 gap-4">
-							<div className="space-y-1.5">
-								<Label>Rating (1-5)</Label>
-								<Input type="number" min={1} max={5} value={form.rating} onChange={(e) => setForm({ ...form, rating: e.target.value })} />
-							</div>
-							<div className="space-y-1.5">
-								<Label>Display Order</Label>
-								<Input type="number" value={form.display_order} onChange={(e) => setForm({ ...form, display_order: e.target.value })} />
-							</div>
+						<div className="space-y-1.5">
+							<Label>YouTube Link (optional)</Label>
+							<Input
+								type="url"
+								value={form.youtube_url}
+								onChange={(e) => setForm({ ...form, youtube_url: e.target.value })}
+								placeholder="https://youtube.com/watch?v=..."
+							/>
 						</div>
 
 						<div className="flex items-center gap-3">

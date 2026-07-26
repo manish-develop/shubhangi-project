@@ -14,7 +14,132 @@ const diseaseImages = {
   'thyroid-disorders': 'https://images.unsplash.com/photo-1612836696857-bf3d0eab59a9?auto=format&fit=crop&q=80&w=800&h=500',
   'hypothyroidism': 'https://images.unsplash.com/photo-1612836696857-bf3d0eab59a9?auto=format&fit=crop&q=80&w=800&h=500',
   'hyperthyroidism': 'https://images.unsplash.com/photo-1612836696857-bf3d0eab59a9?auto=format&fit=crop&q=80&w=800&h=500',
-  'asthma': 'https://images.unsplash.com/photo-1695820633061-8898abd9f3ac?auto=format&fit=crop&q=80&w=800&h=500',
+  'asthma': 'https://images.unsplash.com/photo-1615486510988-2c6ecc66ceba?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Blood pressure / metabolic
+  'blood-pressure-high': 'https://images.unsplash.com/photo-1615486511484-92e172cc4fe0?auto=format&fit=crop&q=80&w=800&h=500',
+  'blood-pressure-low': 'https://images.unsplash.com/photo-1615486511484-92e172cc4fe0?auto=format&fit=crop&q=80&w=800&h=500',
+  'cholesterol-high': 'https://images.unsplash.com/photo-1615486511484-92e172cc4fe0?auto=format&fit=crop&q=80&w=800&h=500',
+  'anemia': 'https://images.unsplash.com/photo-1615486511484-92e172cc4fe0?auto=format&fit=crop&q=80&w=800&h=500',
+  'chronic-fatigue': 'https://images.unsplash.com/photo-1615486511484-92e172cc4fe0?auto=format&fit=crop&q=80&w=800&h=500',
+  'obesity': 'https://images.unsplash.com/photo-1522844990619-4951c40f7eda?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Mental health
+  'anxiety': 'https://images.unsplash.com/photo-1620147461831-a97b99ade1d3?auto=format&fit=crop&q=80&w=800&h=500',
+  'depression': 'https://images.unsplash.com/photo-1512080701059-1cbffe38d1c9?auto=format&fit=crop&q=80&w=800&h=500',
+  'bipolar-disorder': 'https://images.unsplash.com/photo-1512080701059-1cbffe38d1c9?auto=format&fit=crop&q=80&w=800&h=500',
+  'ocd': 'https://images.unsplash.com/photo-1512080701059-1cbffe38d1c9?auto=format&fit=crop&q=80&w=800&h=500',
+  'schizophrenia': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&q=80&w=800&h=500',
+  'insomnia': 'https://images.unsplash.com/photo-1531353826977-0941b4779a1c?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Joint / musculoskeletal
+  'arthritis': 'https://images.unsplash.com/photo-1627738641656-aebd944716cb?auto=format&fit=crop&q=80&w=800&h=500',
+  'rheumatoid-arthritis': 'https://images.unsplash.com/photo-1627738641656-aebd944716cb?auto=format&fit=crop&q=80&w=800&h=500',
+  'osteoarthritis': 'https://images.unsplash.com/photo-1627738641656-aebd944716cb?auto=format&fit=crop&q=80&w=800&h=500',
+  'osteoporosis': 'https://images.unsplash.com/photo-1627738641656-aebd944716cb?auto=format&fit=crop&q=80&w=800&h=500',
+  'fibromyalgia': 'https://images.unsplash.com/photo-1627738641656-aebd944716cb?auto=format&fit=crop&q=80&w=800&h=500',
+  'spondylitis': 'https://images.unsplash.com/photo-1627738641656-aebd944716cb?auto=format&fit=crop&q=80&w=800&h=500',
+  'cervical-spondylosis': 'https://images.unsplash.com/photo-1627738641656-aebd944716cb?auto=format&fit=crop&q=80&w=800&h=500',
+  'gout': 'https://images.unsplash.com/photo-1627738641656-aebd944716cb?auto=format&fit=crop&q=80&w=800&h=500',
+  'lupus': 'https://images.unsplash.com/photo-1627738641656-aebd944716cb?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Women's health
+  'pcos': 'https://images.unsplash.com/photo-1707409066859-a90674383d19?auto=format&fit=crop&q=80&w=800&h=500',
+  'womens-health': 'https://images.unsplash.com/photo-1707409066859-a90674383d19?auto=format&fit=crop&q=80&w=800&h=500',
+  'endometriosis': 'https://images.unsplash.com/photo-1707409066859-a90674383d19?auto=format&fit=crop&q=80&w=800&h=500',
+  'dysmenorrhea': 'https://images.unsplash.com/photo-1707409066859-a90674383d19?auto=format&fit=crop&q=80&w=800&h=500',
+  'menopause': 'https://images.unsplash.com/photo-1707409066859-a90674383d19?auto=format&fit=crop&q=80&w=800&h=500',
+  'infertility-female': 'https://images.unsplash.com/photo-1707409066859-a90674383d19?auto=format&fit=crop&q=80&w=800&h=500',
+  'leucorrhea': 'https://images.unsplash.com/photo-1707409066859-a90674383d19?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Digestive
+  'gastritis': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+  'gerd': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+  'ibs': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+  'ulcerative-colitis': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+  'peptic-ulcer': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+  'appendicitis': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+  'crohns-disease': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+  'fissures': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+  'fistula': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+  'hernia': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+  'diarrhea': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+  'constipation': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Respiratory
+  'bronchitis': 'https://images.unsplash.com/photo-1555708982-8645ec9ce3cc?auto=format&fit=crop&q=80&w=800&h=500',
+  'pneumonia': 'https://images.unsplash.com/photo-1555708982-8645ec9ce3cc?auto=format&fit=crop&q=80&w=800&h=500',
+  'tuberculosis': 'https://images.unsplash.com/photo-1555708982-8645ec9ce3cc?auto=format&fit=crop&q=80&w=800&h=500',
+  'cough': 'https://images.unsplash.com/photo-1555708982-8645ec9ce3cc?auto=format&fit=crop&q=80&w=800&h=500',
+  'whooping-cough': 'https://images.unsplash.com/photo-1555708982-8645ec9ce3cc?auto=format&fit=crop&q=80&w=800&h=500',
+  'sleep-apnea': 'https://images.unsplash.com/photo-1555708982-8645ec9ce3cc?auto=format&fit=crop&q=80&w=800&h=500',
+  'allergic-rhinitis': 'https://images.unsplash.com/photo-1555708982-8645ec9ce3cc?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Eyes / ENT
+  'cataract': 'https://images.unsplash.com/photo-1517948430535-1e2469d314fe?auto=format&fit=crop&q=80&w=800&h=500',
+  'glaucoma': 'https://images.unsplash.com/photo-1517948430535-1e2469d314fe?auto=format&fit=crop&q=80&w=800&h=500',
+  'ear-infection': 'https://images.unsplash.com/photo-1602703651892-7f0e73a14302?auto=format&fit=crop&q=80&w=800&h=500',
+  'tinnitus': 'https://images.unsplash.com/photo-1602703651892-7f0e73a14302?auto=format&fit=crop&q=80&w=800&h=500',
+  'vertigo': 'https://images.unsplash.com/photo-1602703651892-7f0e73a14302?auto=format&fit=crop&q=80&w=800&h=500',
+  'quinsy': 'https://images.unsplash.com/photo-1602703651892-7f0e73a14302?auto=format&fit=crop&q=80&w=800&h=500',
+  'sinusitis': 'https://images.unsplash.com/photo-1602703651892-7f0e73a14302?auto=format&fit=crop&q=80&w=800&h=500',
+  'tonsillitis': 'https://images.unsplash.com/photo-1602703651892-7f0e73a14302?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Skin (beyond the curated set above)
+  'dermatitis': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'urticaria': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'ringworm': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'rosacea': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'fungal-infection': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'keratosis': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'lichen-planus': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'warts': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'keloids': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'xerosis': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'xanthoma': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'dandruff': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'alopecia-areata': 'https://images.unsplash.com/photo-1670347850299-dfd2821b5a1f?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Infectious / fever
+  'dengue': 'https://images.unsplash.com/photo-1580917922805-f8f57e08c0ae?auto=format&fit=crop&q=80&w=800&h=500',
+  'malaria': 'https://images.unsplash.com/photo-1580917922805-f8f57e08c0ae?auto=format&fit=crop&q=80&w=800&h=500',
+  'typhoid': 'https://images.unsplash.com/photo-1580917922805-f8f57e08c0ae?auto=format&fit=crop&q=80&w=800&h=500',
+  'chickenpox': 'https://images.unsplash.com/photo-1580917922805-f8f57e08c0ae?auto=format&fit=crop&q=80&w=800&h=500',
+  'measles': 'https://images.unsplash.com/photo-1580917922805-f8f57e08c0ae?auto=format&fit=crop&q=80&w=800&h=500',
+  'mumps': 'https://images.unsplash.com/photo-1580917922805-f8f57e08c0ae?auto=format&fit=crop&q=80&w=800&h=500',
+  'influenza': 'https://images.unsplash.com/photo-1580917922805-f8f57e08c0ae?auto=format&fit=crop&q=80&w=800&h=500',
+  'yellow-fever': 'https://images.unsplash.com/photo-1580917922805-f8f57e08c0ae?auto=format&fit=crop&q=80&w=800&h=500',
+  'hepatitis': 'https://images.unsplash.com/photo-1580917922805-f8f57e08c0ae?auto=format&fit=crop&q=80&w=800&h=500',
+  'jaundice': 'https://images.unsplash.com/photo-1580917922805-f8f57e08c0ae?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Urinary / reproductive / liver
+  'uti': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=800&h=500',
+  'gallstones': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=800&h=500',
+  'nephritis': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=800&h=500',
+  'prostate-enlargement': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=800&h=500',
+  'erectile-dysfunction': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=800&h=500',
+  'fatty-liver': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=800&h=500',
+  'liver-cirrhosis': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=800&h=500',
+  'infertility-male': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Neurological
+  'epilepsy': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&q=80&w=800&h=500',
+  'parkinsons': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&q=80&w=800&h=500',
+  'multiple-sclerosis': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&q=80&w=800&h=500',
+  'neuralgia': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&q=80&w=800&h=500',
+  'bells-palsy': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Pediatric
+  'child-health': 'https://images.unsplash.com/photo-1632053002928-1919605ee6f7?auto=format&fit=crop&q=80&w=800&h=500',
+  'autism': 'https://images.unsplash.com/photo-1632053002928-1919605ee6f7?auto=format&fit=crop&q=80&w=800&h=500',
+
+  // Generic skin disorders category label
+  'skin-disorders': 'https://images.unsplash.com/photo-1614859137322-20b54ff5d179?auto=format&fit=crop&q=80&w=800&h=500',
+  'yeast-infection': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&q=80&w=800&h=500',
+  'hemorrhoids': 'https://images.unsplash.com/photo-1649073586152-fe7f4accce68?auto=format&fit=crop&q=80&w=800&h=500',
+  'herpes': 'https://images.unsplash.com/photo-1660646463659-df77c1580723?auto=format&fit=crop&q=80&w=800&h=500',
+  'sciatica': 'https://images.unsplash.com/photo-1627738641656-aebd944716cb?auto=format&fit=crop&q=80&w=800&h=500',
+  'varicose-veins': 'https://images.unsplash.com/photo-1615486511484-92e172cc4fe0?auto=format&fit=crop&q=80&w=800&h=500',
 };
 
 const fallbackImages = [

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/SEO.jsx';
 import { Link } from 'react-router-dom';
 import { Sparkles, Heart, Baby, Shield, Activity, Brain, Bone, Stethoscope, Check, X } from 'lucide-react';
 import Header from '@/components/Header.jsx';
@@ -28,6 +28,8 @@ const ServicesPage = () => {
     { id: 'allergies-immunity', icon: Shield, title: 'Allergies & Immunity', description: 'Strengthen immune system and manage allergic reactions, food allergies, and seasonal allergies naturally.' },
     { id: 'lifestyle-diseases', icon: Activity, title: 'Lifestyle Diseases', description: 'Holistic approach to obesity, metabolic syndrome, fatty liver, and other lifestyle-related conditions.' },
   ];
+
+  const cardVariants = ['default', 'primary', 'accent', 'muted'];
 
   const comparisonData = [
     {
@@ -86,13 +88,11 @@ const ServicesPage = () => {
 
   return (
     <>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="author" content="Dr. Shubhangi Maharana" />
-        <title>Homoeopathy Services & Facial Aesthetics Treatments | Maharana Wellness Clinic</title>
-        <meta name="description" content="Explore our specialized services — Women's Health, Facial Aesthetics, Chronic Diseases, Skin Disorders, Hair Treatments, Diet & Nutrition. Expert homoeopathic care by Dr. Shubhangi Maharana." />
-      </Helmet>
+      <SEO
+        title="Homoeopathy Services & Facial Aesthetics Treatments | Maharana Wellness Clinic"
+        description="Explore our specialized services — Women's Health, Facial Aesthetics, Chronic Diseases, Skin Disorders, Hair Treatments, Diet & Nutrition. Expert homoeopathic care by Dr. Shubhangi Maharana."
+        path="/services"
+      />
 
       <Header />
 
@@ -122,7 +122,7 @@ const ServicesPage = () => {
                   style={{ animationDelay: `${index * 50}ms` }}
                   className={servicesVisible ? 'animate-slide-up' : 'opacity-0'}
                 >
-                  <ServiceCard {...service} />
+                  <ServiceCard {...service} variant={cardVariants[index % cardVariants.length]} />
                 </div>
               ))}
             </div>
@@ -213,7 +213,7 @@ const ServicesPage = () => {
             <p className="section-subtitle text-lg md:text-xl text-white/90 mb-6 md:mb-8 mx-auto">
               Book a consultation today and take the first step towards holistic wellness
             </p>
-            <Link to="/contact" className="btn-secondary w-full sm:w-auto bg-white text-[#154360] hover:bg-gray-100 hover:text-[#154360]">
+            <Link to="/contact" className="btn-secondary w-full sm:w-auto bg-white text-primary hover:bg-gray-100 hover:text-primary">
               Book Consultation
             </Link>
           </div>

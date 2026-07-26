@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
 import ReviewsColumn from './ReviewsColumn.jsx';
+import ReviewFeedbackDialog from './ReviewFeedbackDialog.jsx';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -58,6 +59,10 @@ const ReviewsSection = () => {
 							className={i === 1 ? 'hidden md:block' : i === 2 ? 'hidden lg:block' : ''}
 						/>
 					))}
+				</div>
+
+				<div className="mt-10 flex justify-center">
+					<ReviewFeedbackDialog />
 				</div>
 			</div>
 		</section>

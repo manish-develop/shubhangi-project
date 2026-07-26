@@ -1,8 +1,11 @@
 const SUPABASE_MEDIA = 'https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic';
 
 export const ClinicImages = {
-	logo: `${SUPABASE_MEDIA}/maharana-logo-white.jpg`,
+	logo: `${SUPABASE_MEDIA}/maharana-logo-khaki.png`,
 	doctorPortrait: `${SUPABASE_MEDIA}/shubhangi-potrait.jpeg`,
+	aboutConsultation: `${SUPABASE_MEDIA}/about-consultation.jpeg`,
+	aboutSectionBg: 'https://images.unsplash.com/photo-1631014304559-24a497774470?auto=format&fit=crop&q=80&w=1600',
+	heroSection: `${SUPABASE_MEDIA}/hero-section-bg.jpg`,
 	heroBackgroundDesktop: `${SUPABASE_MEDIA}/background-home.webp`,
 	heroBackgroundMobile: `${SUPABASE_MEDIA}/background-home-web.jpg`,
 	specializationsBySlug: {

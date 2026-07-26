@@ -1,218 +1,149 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Helmet } from 'react-helmet';
-import { ChevronRight, Stethoscope } from 'lucide-react';
+import SEO from '@/components/SEO.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
-import ExpandingSearchDock from '@/components/ExpandingSearchDock.jsx';
+import { ActionSearchBar } from '@/components/ui/action-search-bar.jsx';
+import { GradientBarHeroSection } from '@/components/ui/gradient-bar-hero-section.jsx';
+import { Search } from 'lucide-react';
+import DiseaseCard from '@/components/DiseaseCard.jsx';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination.jsx';
 import { diseaseDatabase } from '@/data/diseaseDatabase.js';
 
-const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const PER_PAGE = 24;
 
 const DiseasesPage = () => {
-  const [diseaseSearch, setDiseaseSearch] = useState('');
-  const [activeLetter, setActiveLetter] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Group diseases by first letter
-  const groupedDiseases = useMemo(() => {
-    const groups = {};
-    alphabet.forEach(letter => {
-      groups[letter] = [];
-    });
-    
-    diseaseDatabase.forEach(disease => {
-      const firstLetter = disease.name.charAt(0).toUpperCase();
-      if (groups[firstLetter]) {
-        groups[firstLetter].push(disease);
-      }
-    });
-    
-    // Sort diseases within each group
-    Object.keys(groups).forEach(letter => {
-      groups[letter].sort((a, b) => a.name.localeCompare(b.name));
-    });
-    
-    return groups;
-  }, []);
+  const sortedDiseases = useMemo(
+    () => [...diseaseDatabase].sort((a, b) => a.name.localeCompare(b.name)),
+    []
+  );
 
-  // Filter for search dropdown
-  const searchResults = useMemo(() => {
-    if (!diseaseSearch.trim()) return [];
-    const searchLower = diseaseSearch.toLowerCase();
-    return diseaseDatabase.filter(disease => 
-      disease.name.toLowerCase().includes(searchLower) || 
-      disease.category.toLowerCase().includes(searchLower)
-    ).slice(0, 10); // Limit dropdown results
-  }, [diseaseSearch]);
+  const totalPages = Math.max(1, Math.ceil(sortedDiseases.length / PER_PAGE));
 
-  const scrollToLetter = (letter) => {
-    const element = document.getElementById(`letter-${letter}`);
-    if (element) {
-      const yOffset = -140; // Adjust for sticky header and alphabet bar
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+  const pagedDiseases = useMemo(() => {
+    const start = (currentPage - 1) * PER_PAGE;
+    return sortedDiseases.slice(start, start + PER_PAGE);
+  }, [sortedDiseases, currentPage]);
+
+  const goToPage = (page) => {
+    const clamped = Math.min(Math.max(page, 1), totalPages);
+    setCurrentPage(clamped);
+    const listEl = document.getElementById('disease-list');
+    if (listEl) {
+      const y = listEl.getBoundingClientRect().top + window.pageYOffset - 100;
       window.scrollTo({ top: y, behavior: 'smooth' });
-      setActiveLetter(letter);
     }
   };
 
-  // Update active letter on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = alphabet.map(letter => document.getElementById(`letter-${letter}`)).filter(Boolean);
-      
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i];
-        const rect = section.getBoundingClientRect();
-        if (rect.top <= 160) { // 160px offset
-          setActiveLetter(section.id.replace('letter-', ''));
-          break;
-        }
+  const pageNumbers = useMemo(() => {
+    const pages = [];
+    const windowSize = 2;
+    for (let p = 1; p <= totalPages; p++) {
+      if (p === 1 || p === totalPages || (p >= currentPage - windowSize && p <= currentPage + windowSize)) {
+        pages.push(p);
+      } else if (pages[pages.length - 1] !== '...') {
+        pages.push('...');
       }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const highlightMatch = (text, query) => {
-    if (!query.trim()) return text;
-    const parts = text.split(new RegExp(`(${query})`, 'gi'));
-    return parts.map((part, index) => 
-      part.toLowerCase() === query.toLowerCase() ? 
-        <span key={index} className="bg-primary/20 text-primary font-semibold px-1 rounded">{part}</span> : 
-        part
-    );
-  };
+    }
+    return pages;
+  }, [totalPages, currentPage]);
 
   return (
     <>
-      <Helmet>
-        <title>Diseases Treated with Homoeopathy A-Z | Maharana Wellness Clinic</title>
-        <meta name="description" content="Browse our complete A-Z list of 300+ diseases and conditions treated with homoeopathy by Dr. Shubhangi Maharana. Search your condition and learn about homoeopathic treatment options." />
-      </Helmet>
+      <SEO
+        title="Diseases Treated with Homoeopathy A-Z | Maharana Wellness Clinic"
+        description="Browse our complete A-Z list of 300+ diseases and conditions treated with homoeopathy by Dr. Shubhangi Maharana. Search your condition and learn about homoeopathic treatment options."
+        path="/diseases"
+      />
 
       <Header />
 
       <main className="bg-background min-h-screen">
-        
-        <section className="page-header">
-          <div className="container-custom">
-            <h1 className="section-title heading-serif mb-4">Diseases</h1>
-            <p className="section-subtitle mb-8 mx-auto">
+
+        <GradientBarHeroSection
+          eyebrow={(
+            <>
+              <Search className="w-3.5 h-3.5" />
+              {sortedDiseases.length}+ Conditions Treated
+            </>
+          )}
+          title="Diseases"
+          subtitle={(
+            <>
               Comprehensive homoeopathic treatment by <span className="doctor-name font-medium">Dr. Shubhangi Maharana</span>
+            </>
+          )}
+        >
+          <div className="max-w-2xl mx-auto relative z-10">
+            <ActionSearchBar
+              actions={diseaseDatabase}
+              placeholder="Search any condition..."
+              inputClassName="text-lg"
+              onSelect={(disease) => navigate(`/disease/${disease.id}`)}
+            />
+          </div>
+        </GradientBarHeroSection>
+
+        {/* All Conditions — paginated card grid */}
+        <section id="disease-list" className="section-white scroll-mt-24">
+          <div className="container-custom">
+            <h2 className="section-title heading-serif">All Conditions</h2>
+            <p className="section-subtitle text-lg md:text-xl text-muted-foreground body-text">
+              {sortedDiseases.length} conditions treated — browse A-Z or use search above
             </p>
-          </div>
-        </section>
 
-        <section className="section-white">
-          <div className="container-custom">
-            {/* Search Bar */}
-            <div className="max-w-3xl mx-auto mb-10 relative z-50">
-              <ExpandingSearchDock
-                value={diseaseSearch}
-                onChange={(e) => setDiseaseSearch(e.target.value)}
-                placeholder="Search any condition..."
-                className="mx-auto"
-                inputClassName="text-lg"
-              >
-                {diseaseSearch.trim() && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-xl overflow-hidden max-h-80 overflow-y-auto">
-                    {searchResults.length > 0 ? (
-                      searchResults.map(disease => (
-                        <button
-                          key={`suggest-${disease.id}`}
-                          onClick={() => navigate(`/disease/${disease.id}`)}
-                          className="w-full text-left px-6 py-4 hover:bg-muted border-b border-border last:border-0 flex items-center justify-between group transition-colors"
-                        >
-                          <div>
-                            <div className="font-medium text-lg text-foreground">{highlightMatch(disease.name, diseaseSearch)}</div>
-                            <div className="text-sm text-muted-foreground">{disease.category}</div>
-                          </div>
-                          <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                        </button>
-                      ))
-                    ) : (
-                      <div className="px-6 py-8 text-center text-muted-foreground">
-                        No conditions found matching "{diseaseSearch}"
-                      </div>
+            <div className="max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {pagedDiseases.map((disease) => (
+                  <DiseaseCard key={disease.id} id={disease.id} name={disease.name} category={disease.category} image={disease.image} />
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <Pagination className="mt-10">
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#disease-list"
+                        onClick={(e) => { e.preventDefault(); goToPage(currentPage - 1); }}
+                        className={currentPage === 1 ? 'pointer-events-none opacity-40' : 'cursor-pointer'}
+                      />
+                    </PaginationItem>
+                    {pageNumbers.map((p, i) =>
+                      p === '...' ? (
+                        <PaginationItem key={`ellipsis-${i}`}>
+                          <span className="flex h-9 w-9 items-center justify-center text-muted-foreground">…</span>
+                        </PaginationItem>
+                      ) : (
+                        <PaginationItem key={p}>
+                          <PaginationLink
+                            href="#disease-list"
+                            isActive={p === currentPage}
+                            onClick={(e) => { e.preventDefault(); goToPage(p); }}
+                            className="cursor-pointer"
+                          >
+                            {p}
+                          </PaginationLink>
+                        </PaginationItem>
+                      )
                     )}
-                  </div>
-                )}
-              </ExpandingSearchDock>
-            </div>
-          </div>
-        </section>
-
-        {/* Sticky Alphabet Navigation */}
-        <div className="sticky top-[64px] md:top-[80px] z-40 bg-background/90 backdrop-blur-md border-y border-border py-3 shadow-sm">
-          <div className="container-custom">
-            <div className="flex flex-wrap justify-center gap-1 md:gap-2">
-              {alphabet.map(letter => {
-                const hasDiseases = groupedDiseases[letter].length > 0;
-                return (
-                  <button
-                    key={letter}
-                    onClick={() => hasDiseases && scrollToLetter(letter)}
-                    disabled={!hasDiseases}
-                    className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center text-sm md:text-base font-semibold transition-all duration-200 ${
-                      !hasDiseases 
-                        ? 'text-muted-foreground/40 cursor-not-allowed' 
-                        : activeLetter === letter
-                          ? 'bg-primary text-primary-foreground shadow-md'
-                          : 'text-foreground hover:bg-primary/10 hover:text-primary'
-                    }`}
-                  >
-                    {letter}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* A-Z Disease Sections */}
-        <section className="section-light min-h-[50vh]">
-          <div className="container-custom">
-            <div className="max-w-5xl mx-auto space-y-12 md:space-y-16">
-              {alphabet.map(letter => {
-                const diseases = groupedDiseases[letter];
-                if (diseases.length === 0) return null;
-
-                return (
-                  <div key={letter} id={`letter-${letter}`} className="scroll-mt-40 section">
-                    <div className="flex items-center gap-4 mb-6">
-                      <span className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-primary text-primary-foreground text-2xl md:text-3xl font-bold heading-serif shrink-0">
-                        {letter}
-                      </span>
-                      <div className="h-px bg-border flex-grow"></div>
-                      <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider shrink-0">
-                        {diseases.length} condition{diseases.length !== 1 ? 's' : ''}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-                      {diseases.map(disease => (
-                        <Link
-                          key={disease.id}
-                          to={`/disease/${disease.id}`}
-                          className="group flex items-center justify-between gap-2 px-5 py-3.5 rounded-xl text-sm md:text-base font-medium transition-all duration-300 bg-card text-foreground border border-border hover:border-primary hover:bg-primary hover:text-primary-foreground shadow-sm hover:shadow-md heading-sans"
-                        >
-                          <span className="flex items-center gap-2.5">
-                            <Stethoscope className="w-4 h-4 text-primary group-hover:text-primary-foreground/80 shrink-0" />
-                            {disease.name}
-                          </span>
-                          <ChevronRight className="w-4 h-4 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all shrink-0" />
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#disease-list"
+                        onClick={(e) => { e.preventDefault(); goToPage(currentPage + 1); }}
+                        className={currentPage === totalPages ? 'pointer-events-none opacity-40' : 'cursor-pointer'}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              )}
             </div>
           </div>
         </section>

@@ -29,12 +29,12 @@ const YouTubeSection = () => {
 					Dr. Shubhangi Maharana shares homoeopathy insights and patient guidance on video
 				</p>
 
-				<div className="grid lg:grid-cols-5 gap-8 items-center max-w-6xl mx-auto">
+				<div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center max-w-6xl mx-auto">
 					<div className="lg:col-span-3">
 						<div className="relative rounded-2xl overflow-hidden card-shadow-xl aspect-video border border-border">
 							<iframe
 								key={active.video_id}
-								src={`https://www.youtube-nocookie.com/embed/${active.video_id}`}
+								src={`https://www.youtube.com/embed/${active.video_id}`}
 								title={active.title || 'Dr. Shubhangi Maharana'}
 								className="absolute inset-0 w-full h-full"
 								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -64,7 +64,7 @@ const YouTubeSection = () => {
 										}`}
 									>
 										<Play className="w-4 h-4 shrink-0" />
-										<span className="text-sm font-medium truncate">{v.title || 'Watch video'}</span>
+										<span className="min-w-0 flex-1 truncate text-sm font-medium">{v.title || 'Watch video'}</span>
 									</button>
 								))}
 							</div>

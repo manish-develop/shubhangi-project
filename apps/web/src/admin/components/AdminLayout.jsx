@@ -1,22 +1,30 @@
-import React from 'react';
-import { NavLink, useNavigate, Outlet } from 'react-router-dom';
-import { LayoutDashboard, FileText, Star, Quote, Stethoscope, Youtube, Users, LogOut } from 'lucide-react';
+import React, { useState } from 'react';
+import { useLocation, useNavigate, Outlet } from 'react-router-dom';
+import { LayoutDashboard, FileText, Star, Quote, Stethoscope, Youtube, Users, CalendarDays, LogOut } from 'lucide-react';
+import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/admin-sidebar.jsx';
+import { NotificationBell } from './NotificationBell.jsx';
 import { useAdminAuth } from '../context/AdminAuthContext';
+import { ClinicImages } from '@/constants/clinicImages.js';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-	{ to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
-	{ to: '/admin/blogs', label: 'Blogs', icon: FileText },
-	{ to: '/admin/testimonials', label: 'Testimonials', icon: Star },
-	{ to: '/admin/reviews', label: 'Reviews', icon: Quote },
-	{ to: '/admin/diseases', label: 'Diseases', icon: Stethoscope },
-	{ to: '/admin/videos', label: 'Videos', icon: Youtube },
-	{ to: '/admin/patients', label: 'Patients', icon: Users },
+	{ href: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
+	{ href: '/admin/events', label: 'Schedule', icon: CalendarDays },
+	{ href: '/admin/blogs', label: 'Blogs', icon: FileText },
+	{ href: '/admin/testimonials', label: 'Testimonials', icon: Star },
+	{ href: '/admin/reviews', label: 'Reviews', icon: Quote },
+	{ href: '/admin/diseases', label: 'Diseases', icon: Stethoscope },
+	{ href: '/admin/videos', label: 'Videos', icon: Youtube },
+	{ href: '/admin/patients', label: 'Patients', icon: Users },
 ];
 
 export function AdminLayout() {
 	const { admin, logout } = useAdminAuth();
 	const navigate = useNavigate();
+	const location = useLocation();
+	const [open, setOpen] = useState(false);
+
+	const isActive = (href, end) => (end ? location.pathname === href : location.pathname.startsWith(href));
 
 	const handleLogout = async () => {
 		await logout();
@@ -24,47 +32,58 @@ export function AdminLayout() {
 	};
 
 	return (
-		<div className="min-h-screen flex bg-muted">
-			<aside className="w-64 shrink-0 bg-primary text-primary-foreground flex flex-col">
-				<div className="px-6 py-6 border-b border-white/15">
-					<p className="font-serif font-bold text-lg leading-tight">Maharana Wellness Clinic</p>
-					<p className="text-xs text-white/70">Admin Panel</p>
-				</div>
+		<div className="min-h-screen flex flex-col md:flex-row bg-muted">
+			<Sidebar open={open} setOpen={setOpen}>
+				<SidebarBody className="justify-between gap-10">
+					<div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
+						<div className="mb-6 flex items-center gap-2.5 px-2">
+							<img src={ClinicImages.logo} alt="Maharana Wellness Clinic" className="h-9 w-9 shrink-0 rounded-full object-contain bg-white/10 p-0.5" />
+							{open && (
+								<div className="min-w-0">
+									<p className="truncate font-serif text-base font-bold leading-tight">Maharana Wellness Clinic</p>
+									<p className="text-xs text-primary-foreground/70">Admin Panel</p>
+								</div>
+							)}
+						</div>
 
-				<nav className="flex-1 px-3 py-4 space-y-1">
-					{navItems.map(({ to, label, icon: Icon, end }) => (
-						<NavLink
-							key={to}
-							to={to}
-							end={end}
-							className={({ isActive }) =>
-								cn(
-									'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-									isActive ? 'bg-white/15 text-white' : 'text-white/75 hover:bg-white/10 hover:text-white'
-								)
-							}
-						>
-							<Icon className="h-4 w-4" />
-							{label}
-						</NavLink>
-					))}
-				</nav>
+						<div className="flex flex-col gap-1">
+							{navItems.map((item) => (
+								<SidebarLink
+									key={item.href}
+									link={{ ...item, icon: <item.icon className="h-5 w-5 shrink-0" /> }}
+									className={cn(
+										'transition-colors',
+										isActive(item.href, item.end)
+											? 'bg-white/15 text-white'
+											: 'text-white/75 hover:bg-white/10 hover:text-white'
+									)}
+								/>
+							))}
+						</div>
+					</div>
 
-				<div className="px-3 py-4 border-t border-white/15">
-					<p className="px-3 text-xs text-white/60 mb-2 truncate">{admin?.email}</p>
-					<button
-						onClick={handleLogout}
-						className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-white/75 hover:bg-white/10 hover:text-white transition-colors"
-					>
-						<LogOut className="h-4 w-4" />
-						Logout
-					</button>
-				</div>
-			</aside>
+					<div className="border-t border-white/15 pt-3">
+						{open && <p className="mb-2 truncate px-2 text-xs text-white/60">{admin?.email}</p>}
+						<SidebarLink
+							link={{ href: '#', label: 'Logout', icon: <LogOut className="h-5 w-5 shrink-0" /> }}
+							className="text-white/75 hover:bg-white/10 hover:text-white"
+							onClick={(e) => {
+								e.preventDefault();
+								handleLogout();
+							}}
+						/>
+					</div>
+				</SidebarBody>
+			</Sidebar>
 
-			<main className="flex-1 min-w-0 p-6 md:p-8">
-				<Outlet />
-			</main>
+			<div className="flex min-w-0 flex-1 flex-col">
+				<header className="flex items-center justify-end border-b border-border bg-card px-6 py-3 md:px-8">
+					<NotificationBell />
+				</header>
+				<main className="flex-1 min-w-0 p-6 md:p-8">
+					<Outlet />
+				</main>
+			</div>
 		</div>
 	);
 }

@@ -11,7 +11,7 @@ const InteractiveHoverButton = ({ to, href, children, className, ...props }) => 
 		<Comp
 			{...linkProps}
 			className={cn(
-				'group relative w-fit cursor-pointer overflow-hidden rounded-full border border-primary bg-background px-6 py-3 text-center font-semibold',
+				'group relative inline-flex min-w-[11rem] items-center justify-center cursor-pointer overflow-hidden whitespace-nowrap rounded-full border-2 border-primary bg-background px-7 py-3 text-center font-semibold transition-colors duration-300 hover:border-white',
 				className
 			)}
 			{...props}
@@ -23,7 +23,7 @@ const InteractiveHoverButton = ({ to, href, children, className, ...props }) => 
 				<span>{children}</span>
 				<ArrowRight className="h-4 w-4" />
 			</div>
-			<div className="absolute left-[20%] top-[40%] h-2 w-2 scale-[1] rounded-lg bg-primary transition-all duration-300 group-hover:left-[0%] group-hover:top-[0%] group-hover:h-full group-hover:w-full group-hover:scale-[1.8] group-hover:bg-primary" />
+			<div className="absolute left-3 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-primary transition-all duration-300 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:translate-y-0" />
 		</Comp>
 	);
 };

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/SEO.jsx';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
-import BeforeAfterCard from '@/components/BeforeAfterCard.jsx';
-import LightboxModal from '@/components/LightboxModal.jsx';
+import { ExpandableCardGrid } from '@/components/ui/expandable-card.jsx';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation.js';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -13,9 +12,6 @@ const TestimonialsPage = () => {
   const [galleryRef, galleryVisible] = useScrollAnimation(0.2);
 
   const [activeFilter, setActiveFilter] = useState('All');
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxImage, setLightboxImage] = useState('');
-  const [lightboxTitle, setLightboxTitle] = useState('');
   const [cases, setCases] = useState([]);
 
   useEffect(() => {
@@ -35,18 +31,21 @@ const TestimonialsPage = () => {
     ? cases
     : cases.filter(c => c.category === activeFilter);
 
-  const handleImageClick = (url, title) => {
-    setLightboxImage(url);
-    setLightboxTitle(title);
-    setLightboxOpen(true);
-  };
+  const cardItems = filteredCases.map((c) => ({
+    id: c.id,
+    image: c.before_image || c.after_image,
+    title: c.title,
+    category: c.category,
+    description: c.description,
+  }));
 
   return (
     <>
-      <Helmet>
-        <title>Patient Success Stories & Before After Results | Maharana Wellness Clinic</title>
-        <meta name="description" content="See real before & after results of patients treated by Dr. Shubhangi Maharana. Cases include Eczema, Psoriasis, Acne, Vitiligo, Hair Fall, Fungal Infection and more. Real patients, real results." />
-      </Helmet>
+      <SEO
+        title="Patient Success Stories & Before After Results | Maharana Wellness Clinic"
+        description="See real before & after results of patients treated by Dr. Shubhangi Maharana. Cases include Eczema, Psoriasis, Acne, Vitiligo, Hair Fall, Fungal Infection and more. Real patients, real results."
+        path="/testimonials"
+      />
 
       <Header />
 
@@ -71,8 +70,8 @@ const TestimonialsPage = () => {
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
                   className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 w-full sm:w-auto ${
-                    activeFilter === filter 
-                      ? 'bg-primary text-primary-foreground shadow-md' 
+                    activeFilter === filter
+                      ? 'bg-primary text-primary-foreground shadow-md'
                       : 'bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary border border-border'
                   }`}
                 >
@@ -82,17 +81,8 @@ const TestimonialsPage = () => {
             </div>
 
             {/* Gallery Grid */}
-            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 ${galleryVisible ? 'animate-fade-in' : 'opacity-0'}`}>
-              {filteredCases.map((caseItem, index) => (
-                <div key={caseItem.id} style={{ animationDelay: `${index * 100}ms` }} className="animate-slide-up w-full">
-                  <BeforeAfterCard
-                    beforeImage={caseItem.before_image}
-                    afterImage={caseItem.after_image}
-                    caseTitle={caseItem.title}
-                    onImageClick={handleImageClick}
-                  />
-                </div>
-              ))}
+            <div className={galleryVisible ? 'animate-fade-in' : 'opacity-0'}>
+              <ExpandableCardGrid items={cardItems} />
             </div>
 
             {filteredCases.length === 0 && (
@@ -112,13 +102,6 @@ const TestimonialsPage = () => {
       </main>
 
       <Footer />
-
-      <LightboxModal 
-        isOpen={lightboxOpen} 
-        onClose={() => setLightboxOpen(false)} 
-        imageSrc={lightboxImage} 
-        altText={lightboxTitle} 
-      />
     </>
   );
 };

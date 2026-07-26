@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/SEO.jsx';
 import { ArrowLeft, Calendar, Clock, User, Share2, Facebook, Twitter, Linkedin, CheckCircle2, Activity } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
@@ -39,10 +39,11 @@ const SpecializationArticlePage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{`${specialization?.title || 'Specialization'} | Maharana Wellness Clinic`}</title>
-        <meta name="description" content={specialization?.introduction || 'Specialization details'} />
-      </Helmet>
+      <SEO
+        title={`${specialization?.title || 'Specialization'} | Maharana Wellness Clinic`}
+        description={specialization?.introduction || 'Specialization details'}
+        path={`/specialization/${slug}`}
+      />
 
       <Header />
 

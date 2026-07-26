@@ -47,21 +47,13 @@ adminRouter.get('/:id', async (req, res, next) => {
 	}
 });
 
-const imageFields = upload.fields([
-	{ name: 'before_image', maxCount: 1 },
-	{ name: 'after_image', maxCount: 1 },
-]);
+const imageFields = upload.fields([{ name: 'image', maxCount: 1 }]);
 
 adminRouter.post('/', imageFields, async (req, res, next) => {
 	try {
-		const { patient_name, category, title, description, rating, published, display_order } = req.body;
+		const { patient_name, category, title, description, published, youtube_url } = req.body;
 
-		const before_image = req.files?.before_image?.[0]
-			? await uploadToMedia(req.files.before_image[0], 'testimonials')
-			: null;
-		const after_image = req.files?.after_image?.[0]
-			? await uploadToMedia(req.files.after_image[0], 'testimonials')
-			: null;
+		const image = req.files?.image?.[0] ? await uploadToMedia(req.files.image[0], 'testimonials') : null;
 
 		const { data, error } = await supabase
 			.from('testimonials')
@@ -70,10 +62,11 @@ adminRouter.post('/', imageFields, async (req, res, next) => {
 				category,
 				title,
 				description,
-				rating: rating ? Number(rating) : 5,
-				display_order: display_order ? Number(display_order) : 0,
-				before_image,
-				after_image,
+				youtube_url: youtube_url || null,
+				rating: 5,
+				display_order: 0,
+				before_image: image,
+				after_image: image,
 				published: published === 'false' ? false : true,
 			})
 			.select()
@@ -88,14 +81,15 @@ adminRouter.post('/', imageFields, async (req, res, next) => {
 
 adminRouter.put('/:id', imageFields, async (req, res, next) => {
 	try {
-		const { patient_name, category, title, description, rating, published, display_order } = req.body;
-		const updates = { patient_name, category, title, description };
+		const { patient_name, category, title, description, published, youtube_url } = req.body;
+		const updates = { patient_name, category, title, description, youtube_url: youtube_url || null };
 
-		if (rating !== undefined) updates.rating = Number(rating);
-		if (display_order !== undefined) updates.display_order = Number(display_order);
 		if (published !== undefined) updates.published = published === 'false' ? false : true;
-		if (req.files?.before_image?.[0]) updates.before_image = await uploadToMedia(req.files.before_image[0], 'testimonials');
-		if (req.files?.after_image?.[0]) updates.after_image = await uploadToMedia(req.files.after_image[0], 'testimonials');
+		if (req.files?.image?.[0]) {
+			const image = await uploadToMedia(req.files.image[0], 'testimonials');
+			updates.before_image = image;
+			updates.after_image = image;
+		}
 
 		const { data, error } = await supabase
 			.from('testimonials')

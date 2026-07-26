@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/SEO.jsx';
 import { 
   Calendar, Clock, CheckCircle2, Lock, 
   Video, Package, Activity, MessageCircle, FileText, ArrowRight
@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
-import QuickContactSection from '@/components/QuickContactSection.jsx';
+import { SocialConnect } from '@/components/ui/connect-with-us.jsx';
 import { sendAppointmentEmail } from '@/utils/emailService.js';
 import { validateEmail, validatePhone, validateRequired } from '@/utils/validation.js';
 
@@ -116,10 +116,11 @@ const ContactPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Contact Us & Book Consultation | Maharana Wellness Clinic</title>
-        <meta name="description" content="Book an online or in-clinic homeopathy consultation with Dr. Shubhangi Maharana. Secure booking, flexible timings, and medicine delivery across India." />
-      </Helmet>
+      <SEO
+        title="Contact Us & Book Consultation | Maharana Wellness Clinic"
+        description="Book an online or in-clinic homeopathy consultation with Dr. Shubhangi Maharana. Secure booking, flexible timings, and medicine delivery across India."
+        path="/contact"
+      />
 
       <Header />
 
@@ -136,7 +137,7 @@ const ContactPage = () => {
 
         <section className="section-white">
           <div className="container-custom">
-            <QuickContactSection />
+            <SocialConnect />
           </div>
         </section>
 
@@ -432,6 +433,36 @@ const ContactPage = () => {
                   <img src={img.src} alt={img.alt} className="w-full h-full object-cover" loading="lazy" />
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section-white">
+          <div className="container-custom">
+            <h2 className="section-title heading-serif">Find Us</h2>
+            <p className="section-subtitle text-lg md:text-xl text-muted-foreground body-text">
+              F-42, Block F, Kirti Nagar, New Delhi, Delhi 110015
+            </p>
+
+            <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden card-shadow-xl border border-border">
+              <iframe
+                title="Maharana Wellness Clinic Location"
+                src="https://www.google.com/maps?q=Maharana+Wellness+Clinic,+F-42+Block+F+Kirti+Nagar+New+Delhi+110015&output=embed"
+                className="w-full h-[350px] md:h-[420px] border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <a
+                href="https://www.google.com/maps/dir/?api=1&destination=F-42,+Block+F,+Kirti+Nagar,+New+Delhi,+Delhi+110015"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline inline-flex items-center gap-2"
+              >
+                Get Directions <ArrowRight className="w-4 h-4" />
+              </a>
             </div>
           </div>
         </section>

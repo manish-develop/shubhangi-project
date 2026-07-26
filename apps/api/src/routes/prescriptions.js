@@ -48,7 +48,20 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
 	try {
-		const { patient_id, date, diagnosis, medicines, notes } = req.body;
+		const {
+			patient_id,
+			date,
+			medicines,
+			notes,
+			weight_kg,
+			height_cm,
+			chief_complaints,
+			clinical_findings,
+			diagnosis_points,
+			advice,
+			follow_up_date,
+			with_letterhead,
+		} = req.body;
 
 		if (!patient_id) {
 			return res.status(400).json({ error: 'patient_id is required' });
@@ -65,9 +78,16 @@ router.post('/', async (req, res, next) => {
 
 		const prescriptionDraft = {
 			date: date || new Date().toISOString().slice(0, 10),
-			diagnosis,
 			medicines: medicines || [],
 			notes,
+			weight_kg: weight_kg || null,
+			height_cm: height_cm || null,
+			chief_complaints: chief_complaints || null,
+			clinical_findings: clinical_findings || [],
+			diagnosis_points: diagnosis_points || [],
+			advice: advice || [],
+			follow_up_date: follow_up_date || null,
+			with_letterhead: with_letterhead !== false,
 		};
 
 		const pdfBytes = await generatePrescriptionPdf({ patient, prescription: prescriptionDraft });

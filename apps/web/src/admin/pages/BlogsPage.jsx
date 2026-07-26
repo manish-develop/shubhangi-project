@@ -9,9 +9,10 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { adminApi } from '../lib/adminApi';
 
-const emptyForm = { title: '', excerpt: '', content: '', category: '', published: true };
+const emptyForm = { title: '', excerpt: '', content: '', category: '', published: true, cover_image_url: '' };
 
 export default function BlogsPage() {
 	const [blogs, setBlogs] = useState([]);
@@ -48,6 +49,7 @@ export default function BlogsPage() {
 			content: blog.content,
 			category: blog.category || '',
 			published: blog.published,
+			cover_image_url: '',
 		});
 		setCoverImage(null);
 		setDialogOpen(true);
@@ -171,7 +173,23 @@ export default function BlogsPage() {
 
 						<div className="space-y-1.5">
 							<Label>Cover Image {editing?.cover_image && '(leave empty to keep current)'}</Label>
-							<Input type="file" accept="image/*" onChange={(e) => setCoverImage(e.target.files?.[0] || null)} />
+							<Tabs defaultValue="upload">
+								<TabsList>
+									<TabsTrigger value="upload">Upload a Photo</TabsTrigger>
+									<TabsTrigger value="link">Paste Image Link</TabsTrigger>
+								</TabsList>
+								<TabsContent value="upload" className="pt-2">
+									<Input type="file" accept="image/*" onChange={(e) => setCoverImage(e.target.files?.[0] || null)} />
+								</TabsContent>
+								<TabsContent value="link" className="pt-2">
+									<Input
+										type="url"
+										placeholder="https://..."
+										value={form.cover_image_url}
+										onChange={(e) => setForm({ ...form, cover_image_url: e.target.value })}
+									/>
+								</TabsContent>
+							</Tabs>
 						</div>
 
 						<div className="flex items-center gap-3">

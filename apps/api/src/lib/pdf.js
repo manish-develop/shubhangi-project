@@ -1,101 +1,171 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { Clinic } from '../constants/clinic.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const LETTERHEAD_PATH = path.join(__dirname, '../../assets/letterhead.pdf');
 
 const PAGE_WIDTH = 595.28; // A4
 const PAGE_HEIGHT = 841.89;
-const MARGIN = 50;
+const MARGIN = 48;
+
+const primary = rgb(0.043, 0.294, 0.255); // clinic dark green
+const black = rgb(0.1, 0.1, 0.1);
+const muted = rgb(0.45, 0.45, 0.45);
+
+const formatDate = (d) => {
+	if (!d) return '';
+	const date = new Date(d);
+	if (Number.isNaN(date.getTime())) return d;
+	const dd = String(date.getDate()).padStart(2, '0');
+	const mm = String(date.getMonth() + 1).padStart(2, '0');
+	const yy = String(date.getFullYear());
+	return `${dd}-${mm}-${yy}`;
+};
 
 const generatePrescriptionPdf = async ({ patient, prescription }) => {
 	const doc = await PDFDocument.create();
-	const page = doc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
 	const font = await doc.embedFont(StandardFonts.Helvetica);
 	const bold = await doc.embedFont(StandardFonts.HelveticaBold);
 
-	let y = PAGE_HEIGHT - MARGIN;
+	const page = doc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+	const maxWidth = PAGE_WIDTH - MARGIN * 2;
+	const contentBottom = 75;
 
-	const primary = rgb(0.11, 0.35, 0.32);
-	const muted = rgb(0.4, 0.4, 0.4);
-	const black = rgb(0, 0, 0);
+	const withLetterhead = prescription.with_letterhead !== false;
+	let y;
 
-	// Letterhead
-	page.drawText(Clinic.name, { x: MARGIN, y, size: 18, font: bold, color: primary });
-	y -= 20;
-	page.drawText(`${Clinic.doctorName} — ${Clinic.qualification}`, { x: MARGIN, y, size: 11, font, color: muted });
-	y -= 14;
-	page.drawText(Clinic.address, { x: MARGIN, y, size: 10, font, color: muted });
-	y -= 14;
-	page.drawText(`${Clinic.phone}  |  ${Clinic.email}`, { x: MARGIN, y, size: 10, font, color: muted });
-	y -= 10;
-
-	page.drawLine({
-		start: { x: MARGIN, y },
-		end: { x: PAGE_WIDTH - MARGIN, y },
-		thickness: 1.5,
-		color: primary,
-	});
-	y -= 30;
-
-	// Patient info
-	page.drawText(`Patient: ${patient.name}`, { x: MARGIN, y, size: 12, font: bold, color: black });
-	page.drawText(`Date: ${prescription.date}`, { x: PAGE_WIDTH - MARGIN - 120, y, size: 11, font, color: black });
-	y -= 16;
-
-	const details = [
-		patient.age ? `Age: ${patient.age}` : null,
-		patient.gender ? `Gender: ${patient.gender}` : null,
-		patient.phone ? `Phone: ${patient.phone}` : null,
-	].filter(Boolean).join('    ');
-
-	if (details) {
-		page.drawText(details, { x: MARGIN, y, size: 10, font, color: muted });
-		y -= 20;
+	if (withLetterhead && fs.existsSync(LETTERHEAD_PATH)) {
+		const letterheadBytes = fs.readFileSync(LETTERHEAD_PATH);
+		const letterheadDoc = await PDFDocument.load(letterheadBytes);
+		const [embeddedPage] = await doc.embedPdf(letterheadDoc, [0]);
+		page.drawPage(embeddedPage, { x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT });
+		y = PAGE_HEIGHT - 215;
 	} else {
+		// No letterhead: plain sheet, no clinic branding block — content starts right at the top margin
+		y = PAGE_HEIGHT - MARGIN;
+	}
+
+	const lineHeight = 15;
+
+	const drawLine = (text, { size = 10, color = black, f = font, gap = lineHeight } = {}) => {
+		if (y < contentBottom) return;
+		page.drawText(text, { x: MARGIN, y, size, font: f, color, maxWidth });
+		y -= gap;
+	};
+
+	const drawWrapped = (text, { size = 10, color = black, f = font, gap = 13, indent = 0 } = {}) => {
+		if (!text) return;
+		const words = String(text).split(/\s+/);
+		let line = '';
+		const usableWidth = maxWidth - indent;
+		for (const word of words) {
+			const test = line ? `${line} ${word}` : word;
+			if (f.widthOfTextAtSize(test, size) > usableWidth && line) {
+				if (y < contentBottom) return;
+				page.drawText(line, { x: MARGIN + indent, y, size, font: f, color });
+				y -= gap;
+				line = word;
+			} else {
+				line = test;
+			}
+		}
+		if (line) {
+			if (y < contentBottom) return;
+			page.drawText(line, { x: MARGIN + indent, y, size, font: f, color });
+			y -= gap;
+		}
+	};
+
+	// Reg. No. (fixed clinic/doctor registration number, same on every prescription)
+	drawLine(`Reg. No.: ${Clinic.registrationNo}`, { size: 10 });
+
+	// Name (Sex) / Age
+	const sex = (patient.gender || '').charAt(0).toUpperCase();
+	drawLine(`Name: ${patient.name}  (${sex || '-'})  /  Age: ${patient.age || '-'} Y`, {
+		size: 10,
+		f: bold,
+	});
+
+	drawLine(`Mob. No.: ${patient.phone || '-'}`, { size: 10 });
+	drawLine(`Address: ${patient.address || '-'}`, { size: 10 });
+
+	const vitalsParts = [
+		`Weight (Kg): ${prescription.weight_kg || '-'}`,
+		`Height (Cm): ${prescription.height_cm || '-'}`,
+	];
+	drawLine(vitalsParts.join('   '), { size: 10 });
+
+	drawLine(`Date: ${formatDate(prescription.date)}`, { size: 10, gap: lineHeight + 6 });
+
+	page.drawLine({ start: { x: MARGIN, y: y + 4 }, end: { x: PAGE_WIDTH - MARGIN, y: y + 4 }, thickness: 0.5, color: muted });
+	y -= 6;
+
+	if (prescription.chief_complaints) {
+		drawLine('Chief Complaints', { size: 11, f: bold, color: primary });
+		drawWrapped(prescription.chief_complaints, { size: 10 });
 		y -= 6;
 	}
 
-	if (prescription.diagnosis) {
-		page.drawText('Diagnosis:', { x: MARGIN, y, size: 11, font: bold, color: black });
-		y -= 14;
-		page.drawText(prescription.diagnosis, { x: MARGIN, y, size: 10, font, color: black, maxWidth: PAGE_WIDTH - MARGIN * 2 });
-		y -= 24;
+	const clinicalFindings = (prescription.clinical_findings || []).filter(Boolean);
+	if (clinicalFindings.length) {
+		drawLine('Clinical Findings', { size: 11, f: bold, color: primary });
+		clinicalFindings.forEach((finding) => drawWrapped(`•  ${finding}`, { size: 10 }));
+		y -= 6;
 	}
 
-	// Rx symbol + medicines table
-	page.drawText('Rx', { x: MARGIN, y, size: 16, font: bold, color: primary });
-	y -= 24;
-
-	const medicines = prescription.medicines || [];
-	const colX = { name: MARGIN + 10, dosage: MARGIN + 220, duration: MARGIN + 320, instructions: MARGIN + 400 };
-
-	page.drawText('Medicine', { x: colX.name, y, size: 10, font: bold, color: muted });
-	page.drawText('Dosage', { x: colX.dosage, y, size: 10, font: bold, color: muted });
-	page.drawText('Duration', { x: colX.duration, y, size: 10, font: bold, color: muted });
-	page.drawText('Instructions', { x: colX.instructions, y, size: 10, font: bold, color: muted });
-	y -= 8;
-
-	page.drawLine({ start: { x: MARGIN, y }, end: { x: PAGE_WIDTH - MARGIN, y }, thickness: 0.5, color: muted });
-	y -= 16;
-
-	medicines.forEach((med) => {
-		page.drawText(med.name || '-', { x: colX.name, y, size: 10, font, color: black, maxWidth: 200 });
-		page.drawText(med.dosage || '-', { x: colX.dosage, y, size: 10, font, color: black, maxWidth: 90 });
-		page.drawText(med.duration || '-', { x: colX.duration, y, size: 10, font, color: black, maxWidth: 70 });
-		page.drawText(med.instructions || '-', { x: colX.instructions, y, size: 9, font, color: black, maxWidth: 145 });
-		y -= 20;
-	});
-
-	if (prescription.notes) {
-		y -= 14;
-		page.drawText('Notes:', { x: MARGIN, y, size: 11, font: bold, color: black });
-		y -= 14;
-		page.drawText(prescription.notes, { x: MARGIN, y, size: 10, font, color: black, maxWidth: PAGE_WIDTH - MARGIN * 2 });
+	const diagnosisPoints = (prescription.diagnosis_points || []).filter(Boolean);
+	if (diagnosisPoints.length) {
+		drawLine('Diagnosis:', { size: 11, f: bold, color: primary });
+		diagnosisPoints.forEach((d) => drawWrapped(`•  ${d}`, { size: 10 }));
+		y -= 6;
 	}
 
-	// Signature
-	const sigY = MARGIN + 60;
-	page.drawLine({ start: { x: PAGE_WIDTH - MARGIN - 160, y: sigY }, end: { x: PAGE_WIDTH - MARGIN, y: sigY }, thickness: 0.75, color: muted });
-	page.drawText(Clinic.doctorName, { x: PAGE_WIDTH - MARGIN - 155, y: sigY - 14, size: 10, font: bold, color: black });
-	page.drawText(Clinic.qualification, { x: PAGE_WIDTH - MARGIN - 155, y: sigY - 26, size: 9, font, color: muted });
+	// Medicines table
+	const medicines = (prescription.medicines || []).filter((m) => m?.name);
+	if (medicines.length) {
+		drawLine('Medicines', { size: 15, f: bold, color: primary, gap: 20 });
+
+		const col = { num: MARGIN, name: MARGIN + 22, dosage: MARGIN + 260, duration: MARGIN + 360 };
+		page.drawText('Medicine Name', { x: col.name, y, size: 9, font: bold, color: muted });
+		page.drawText('Dosage', { x: col.dosage, y, size: 9, font: bold, color: muted });
+		page.drawText('Duration', { x: col.duration, y, size: 9, font: bold, color: muted });
+		page.drawLine({
+			start: { x: MARGIN, y: y - 4 },
+			end: { x: PAGE_WIDTH - MARGIN, y: y - 4 },
+			thickness: 0.5,
+			color: muted,
+		});
+		y -= lineHeight;
+
+		medicines.forEach((med, i) => {
+			if (y < contentBottom + 20) return;
+			page.drawText(`${i + 1})`, { x: col.num, y, size: 10, font: bold, color: black });
+			page.drawText(med.name || '-', { x: col.name, y, size: 10, font, color: black, maxWidth: 225 });
+			page.drawText(med.dosage || '-', { x: col.dosage, y, size: 10, font, color: black, maxWidth: 90 });
+			const durationText = med.duration_days ? `${med.duration_days} Days` : '-';
+			page.drawText(durationText, { x: col.duration, y, size: 10, font, color: black });
+			y -= 13;
+			if (med.total_qty) {
+				page.drawText(`(Tot: ${med.total_qty} Tab/Cap)`, { x: col.duration, y, size: 8.5, font, color: muted });
+			}
+			y -= 16;
+		});
+		y -= 6;
+	}
+
+	const advicePoints = (prescription.advice || []).filter(Boolean);
+	if (advicePoints.length) {
+		drawLine('Advice:', { size: 11, f: bold, color: primary });
+		advicePoints.forEach((a) => drawWrapped(`•  ${a}`, { size: 10 }));
+		y -= 6;
+	}
+
+	if (prescription.follow_up_date) {
+		drawLine(`Follow Up: ${formatDate(prescription.follow_up_date)}`, { size: 10, f: bold });
+	}
 
 	return doc.save();
 };

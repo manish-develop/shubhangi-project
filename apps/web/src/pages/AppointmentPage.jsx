@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/SEO.jsx';
 import { Link } from 'react-router-dom';
 import { 
   Calendar, Clock, CheckCircle2, Lock, 
@@ -116,10 +116,11 @@ const AppointmentPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Book Your Consultation | Maharana Wellness Clinic</title>
-        <meta name="description" content="Book an online or in-clinic homeopathy consultation with Dr. Shubhangi Maharana. Secure booking, flexible timings, and medicine delivery across India." />
-      </Helmet>
+      <SEO
+        title="Book Your Consultation | Maharana Wellness Clinic"
+        description="Book an online or in-clinic homeopathy consultation with Dr. Shubhangi Maharana. Secure booking, flexible timings, and medicine delivery across India."
+        path="/appointment"
+      />
 
       <Header />
 
