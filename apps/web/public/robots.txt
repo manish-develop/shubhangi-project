@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: /admin
 
-Sitemap: https://www.maharanawellnessclinic.com/sitemap.xml
+Sitemap: https://drmaharanas.com/sitemap.xml

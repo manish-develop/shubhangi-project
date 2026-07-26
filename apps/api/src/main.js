@@ -37,6 +37,8 @@ process.on('SIGTERM', async () => {
 
 const allowedOrigins = [
 	process.env.CORS_ORIGIN,
+	'https://drmaharanas.com',
+	'https://www.drmaharanas.com',
 	'http://localhost:3000',
 	'http://127.0.0.1:3000',
 ].filter(Boolean);

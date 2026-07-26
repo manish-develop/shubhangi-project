@@ -7,10 +7,13 @@ import { NodeEnv } from '../constants/common.js';
 
 const router = Router();
 
+const isProduction = process.env.NODE_ENV === NodeEnv.Production;
 const cookieOptions = {
 	httpOnly: true,
-	secure: process.env.NODE_ENV === NodeEnv.Production,
-	sameSite: 'lax',
+	// Production serves the frontend and API from different domains, so the
+	// cookie must be sent cross-site — that requires SameSite=None + Secure.
+	secure: isProduction,
+	sameSite: isProduction ? 'none' : 'lax',
 	maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
