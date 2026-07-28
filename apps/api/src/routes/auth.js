@@ -7,11 +7,13 @@ import { NodeEnv } from '../constants/common.js';
 
 const router = Router();
 
-const isProduction = process.env.NODE_ENV === NodeEnv.Production;
+// Vercel always injects VERCEL=1, regardless of whether NODE_ENV is set
+// correctly in the project's dashboard — don't depend on that being right.
+// Frontend and API are on different domains in that environment, so the
+// cookie must be sent cross-site, which requires SameSite=None + Secure.
+const isProduction = process.env.VERCEL === '1' || process.env.NODE_ENV === NodeEnv.Production;
 const cookieOptions = {
 	httpOnly: true,
-	// Production serves the frontend and API from different domains, so the
-	// cookie must be sent cross-site — that requires SameSite=None + Secure.
 	secure: isProduction,
 	sameSite: isProduction ? 'none' : 'lax',
 	maxAge: 7 * 24 * 60 * 60 * 1000,
