@@ -11,6 +11,7 @@ import AdminLoginPage from './admin/pages/LoginPage.jsx';
 import AdminDashboardPage from './admin/pages/DashboardPage.jsx';
 import AdminEventManagerPage from './admin/pages/EventManagerPage.jsx';
 import AdminBlogsPage from './admin/pages/BlogsPage.jsx';
+import AdminBlogFeedbackPage from './admin/pages/BlogFeedbackPage.jsx';
 import AdminTestimonialsPage from './admin/pages/TestimonialsAdminPage.jsx';
 import AdminReviewsPage from './admin/pages/ReviewsAdminPage.jsx';
 import AdminDiseasesPage from './admin/pages/DiseasesAdminPage.jsx';
@@ -120,6 +121,7 @@ function App() {
             <Route index element={<AdminDashboardPage />} />
             <Route path="events" element={<AdminEventManagerPage />} />
             <Route path="blogs" element={<AdminBlogsPage />} />
+            <Route path="blog-feedback" element={<AdminBlogFeedbackPage />} />
             <Route path="testimonials" element={<AdminTestimonialsPage />} />
             <Route path="reviews" element={<AdminReviewsPage />} />
             <Route path="diseases" element={<AdminDiseasesPage />} />

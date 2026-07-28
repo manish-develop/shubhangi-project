@@ -24,3 +24,16 @@ create table if not exists events (
   created_at timestamptz default now()
 );
 alter table events enable row level security;
+
+-- New this round: blog/disease YouTube videos + per-blog visitor feedback
+alter table blogs add column if not exists youtube_url text;
+alter table diseases add column if not exists youtube_url text;
+
+create table if not exists blog_feedback (
+  id uuid primary key default gen_random_uuid(),
+  blog_id uuid references blogs(id) on delete cascade,
+  rating text not null,
+  feedback text not null,
+  created_at timestamptz default now()
+);
+alter table blog_feedback enable row level security;

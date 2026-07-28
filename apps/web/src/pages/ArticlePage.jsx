@@ -7,6 +7,24 @@ import Footer from '@/components/Footer.jsx';
 import LazyImage from '@/components/LazyImage.jsx';
 import { blogArticles } from '@/data/blogArticles.js';
 import { fetchBlogBySlug } from '@/lib/blogs.js';
+import { FeedbackWidget } from '@/components/ui/feedback-widget.jsx';
+
+const extractYouTubeId = (url) => {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes('youtu.be')) {
+      return u.pathname.slice(1) || null;
+    }
+    if (u.hostname.includes('youtube.com')) {
+      if (u.pathname === '/watch') return u.searchParams.get('v');
+      if (u.pathname.startsWith('/embed/')) return u.pathname.split('/embed/')[1] || null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
 
 const ArticlePage = () => {
   const { id } = useParams();
@@ -171,6 +189,24 @@ const ArticlePage = () => {
                 ))
               )}
             </div>
+          </div>
+
+          {extractYouTubeId(article.youtube_url) && (
+            <div className="mt-12">
+              <div className="relative rounded-2xl overflow-hidden card-shadow-lg aspect-video border border-border">
+                <iframe
+                  src={`https://www.youtube.com/embed/${extractYouTubeId(article.youtube_url)}`}
+                  title={article.title}
+                  className="absolute inset-0 w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          )}
+
+          <div className="mt-12">
+            <FeedbackWidget blogId={article.dbId || article.id} />
           </div>
 
           {/* Author Bio */}

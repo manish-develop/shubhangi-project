@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button.jsx';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation.js';
 import { fetchPublishedBlogs, getAllStaticArticles } from '@/lib/blogs.js';
 import { diseaseDatabase } from '@/data/diseaseDatabase.js';
+import { fetchPublishedDiseases } from '@/lib/diseases.js';
 import { specializationDatabase } from '@/data/specializationDatabase.js';
 import { ClinicImages } from '@/constants/clinicImages.js';
 
@@ -31,9 +32,16 @@ const HomePage = () => {
 	const [specializationsRef, specializationsVisible] = useScrollAnimation(0.2);
 	const [blogRef, blogVisible] = useScrollAnimation(0.2);
 	const [dbBlogs, setDbBlogs] = useState([]);
+	const [diseases, setDiseases] = useState(diseaseDatabase);
 
 	useEffect(() => {
 		fetchPublishedBlogs().then(setDbBlogs);
+	}, []);
+
+	useEffect(() => {
+		fetchPublishedDiseases().then((data) => {
+			if (data.length > 0) setDiseases(data);
+		});
 	}, []);
 
 	const latestBlogs = useMemo(
@@ -118,7 +126,7 @@ const HomePage = () => {
 							<h2 className="mb-2 text-2xl font-bold text-foreground heading-serif">Looking for a Condition?</h2>
 							<p className="mb-6 text-muted-foreground body-text">Search 100+ conditions treated homoeopathically</p>
 							<ActionSearchBar
-								actions={diseaseDatabase}
+								actions={diseases}
 								placeholder="Search a condition... (e.g. Migraine, PCOS, Asthma)"
 								onSelect={(disease) => navigate(`/disease/${disease.id}`)}
 							/>

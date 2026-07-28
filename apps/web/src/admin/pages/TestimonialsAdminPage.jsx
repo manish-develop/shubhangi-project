@@ -9,6 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { adminApi } from '../lib/adminApi';
 
 const emptyForm = {
@@ -18,6 +19,7 @@ const emptyForm = {
 	description: '',
 	youtube_url: '',
 	published: true,
+	image_url: '',
 };
 
 export default function TestimonialsAdminPage() {
@@ -56,6 +58,7 @@ export default function TestimonialsAdminPage() {
 			description: item.description || '',
 			youtube_url: item.youtube_url || '',
 			published: item.published,
+			image_url: '',
 		});
 		setImage(null);
 		setDialogOpen(true);
@@ -180,7 +183,23 @@ export default function TestimonialsAdminPage() {
 
 						<div className="space-y-1.5">
 							<Label>Testimonial Picture {editing?.before_image && '(leave empty to keep current)'}</Label>
-							<Input type="file" accept="image/*" onChange={(e) => setImage(e.target.files?.[0] || null)} />
+							<Tabs defaultValue="upload">
+								<TabsList>
+									<TabsTrigger value="upload">Upload a Photo</TabsTrigger>
+									<TabsTrigger value="link">Paste Image Link</TabsTrigger>
+								</TabsList>
+								<TabsContent value="upload" className="pt-2">
+									<Input type="file" accept="image/*" onChange={(e) => setImage(e.target.files?.[0] || null)} />
+								</TabsContent>
+								<TabsContent value="link" className="pt-2">
+									<Input
+										type="url"
+										placeholder="https://..."
+										value={form.image_url}
+										onChange={(e) => setForm({ ...form, image_url: e.target.value })}
+									/>
+								</TabsContent>
+							</Tabs>
 						</div>
 
 						<div className="space-y-1.5">

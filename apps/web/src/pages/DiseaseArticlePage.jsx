@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import SEO from '@/components/SEO.jsx';
 import { ArrowLeft, Calendar, Clock, User, Share2, Facebook, Twitter, Linkedin, CheckCircle2 } from 'lucide-react';
@@ -6,16 +6,60 @@ import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import LazyImage from '@/components/LazyImage.jsx';
 import { diseaseDatabase } from '@/data/diseaseDatabase.js';
+import { fetchDiseaseBySlug } from '@/lib/diseases.js';
+
+const extractYouTubeId = (url) => {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes('youtu.be')) {
+      return u.pathname.slice(1) || null;
+    }
+    if (u.hostname.includes('youtube.com')) {
+      if (u.pathname === '/watch') return u.searchParams.get('v');
+      if (u.pathname.startsWith('/embed/')) return u.pathname.split('/embed/')[1] || null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
 
 const DiseaseArticlePage = () => {
   const { diseaseId } = useParams();
   const navigate = useNavigate();
-  
-  const disease = diseaseDatabase.find(d => d.id === diseaseId);
+
+  const [disease, setDisease] = useState(() => diseaseDatabase.find(d => d.id === diseaseId) || null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    let active = true;
+    setLoading(true);
+
+    fetchDiseaseBySlug(diseaseId).then((data) => {
+      if (!active) return;
+      setDisease(data || diseaseDatabase.find(d => d.id === diseaseId) || null);
+      setLoading(false);
+    });
+
+    return () => {
+      active = false;
+    };
   }, [diseaseId]);
+
+  if (!disease && loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow flex items-center justify-center pt-24">
+          <p className="text-muted-foreground">Loading...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!disease) {
     return (
@@ -34,6 +78,8 @@ const DiseaseArticlePage = () => {
       </div>
     );
   }
+
+  const youtubeId = extractYouTubeId(disease.youtube_url);
 
   const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
 
@@ -122,12 +168,24 @@ const DiseaseArticlePage = () => {
           </div>
 
           <div className="rounded-2xl overflow-hidden mb-10 card-shadow-lg bg-muted">
-            <LazyImage 
-              src={disease.image || `https://loremflickr.com/800/500/medical,health/all?lock=${disease.id.length}`} 
-              alt={`${disease.name} treatment`} 
+            <LazyImage
+              src={disease.image || `https://loremflickr.com/800/500/medical,health/all?lock=${disease.id.length}`}
+              alt={`${disease.name} treatment`}
               className="w-full h-[300px] md:h-[400px] object-cover"
             />
           </div>
+
+          {youtubeId && (
+            <div className="relative rounded-2xl overflow-hidden card-shadow-lg aspect-video border border-border mb-10">
+              <iframe
+                src={`https://www.youtube.com/embed/${youtubeId}`}
+                title={`${disease.name} treatment video`}
+                className="absolute inset-0 w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          )}
 
           <div className="flex flex-col md:flex-row gap-10">
             {/* Social Share Sidebar */}

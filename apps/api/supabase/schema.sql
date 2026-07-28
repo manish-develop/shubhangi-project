@@ -116,6 +116,18 @@ alter table prescriptions add column if not exists follow_up_date date;
 alter table prescriptions add column if not exists with_letterhead boolean default true;
 
 alter table testimonials add column if not exists youtube_url text;
+alter table blogs add column if not exists youtube_url text;
+alter table diseases add column if not exists youtube_url text;
+
+-- ============ BLOG FEEDBACK (visitor feedback per article; doctor keeps or deletes) ============
+create table if not exists blog_feedback (
+  id uuid primary key default gen_random_uuid(),
+  blog_id uuid references blogs(id) on delete cascade,
+  rating text not null,
+  feedback text not null,
+  created_at timestamptz default now()
+);
+alter table blog_feedback enable row level security;
 
 -- ============ EVENTS (doctor's schedule / event manager) ============
 create table if not exists events (

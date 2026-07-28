@@ -10,6 +10,7 @@ import { publicRouter as publicTestimonials, adminRouter as adminTestimonials } 
 import { publicRouter as publicDiseases, adminRouter as adminDiseases } from './diseases.js';
 import { publicRouter as publicYoutube, adminRouter as adminYoutube } from './youtube.js';
 import { publicRouter as publicReviews, adminRouter as adminReviews } from './reviews.js';
+import { publicRouter as publicBlogFeedback, adminRouter as adminBlogFeedback } from './blog-feedback.js';
 
 const router = Router();
 
@@ -23,12 +24,14 @@ export default () => {
 	router.use('/diseases', publicDiseases);
 	router.use('/youtube-videos', publicYoutube);
 	router.use('/reviews', publicReviews);
+	router.use('/blog-feedback', publicBlogFeedback);
 
 	router.use('/admin/blogs', adminBlogs);
 	router.use('/admin/testimonials', adminTestimonials);
 	router.use('/admin/diseases', adminDiseases);
 	router.use('/admin/youtube-videos', adminYoutube);
 	router.use('/admin/reviews', adminReviews);
+	router.use('/admin/blog-feedback', adminBlogFeedback);
 	router.use('/admin/patients', patientRoutes());
 	router.use('/admin/prescriptions', prescriptionRoutes());
 	router.use('/admin/notifications', notificationRoutes());

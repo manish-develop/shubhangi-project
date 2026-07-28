@@ -9,9 +9,10 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { adminApi } from '../lib/adminApi';
 
-const emptyForm = { name: '', category: '', short_description: '', full_description: '', published: true };
+const emptyForm = { name: '', category: '', short_description: '', full_description: '', published: true, image_url: '', youtube_url: '' };
 
 export default function DiseasesAdminPage() {
 	const [items, setItems] = useState([]);
@@ -48,6 +49,8 @@ export default function DiseasesAdminPage() {
 			short_description: item.short_description || '',
 			full_description: item.full_description || '',
 			published: item.published,
+			image_url: '',
+			youtube_url: item.youtube_url || '',
 		});
 		setImage(null);
 		setDialogOpen(true);
@@ -171,8 +174,34 @@ export default function DiseasesAdminPage() {
 						</div>
 
 						<div className="space-y-1.5">
+							<Label>YouTube Video URL (optional)</Label>
+							<Input
+								type="url"
+								placeholder="https://youtube.com/watch?v=..."
+								value={form.youtube_url}
+								onChange={(e) => setForm({ ...form, youtube_url: e.target.value })}
+							/>
+						</div>
+
+						<div className="space-y-1.5">
 							<Label>Image {editing?.image && '(leave empty to keep current)'}</Label>
-							<Input type="file" accept="image/*" onChange={(e) => setImage(e.target.files?.[0] || null)} />
+							<Tabs defaultValue="upload">
+								<TabsList>
+									<TabsTrigger value="upload">Upload a Photo</TabsTrigger>
+									<TabsTrigger value="link">Paste Image Link</TabsTrigger>
+								</TabsList>
+								<TabsContent value="upload" className="pt-2">
+									<Input type="file" accept="image/*" onChange={(e) => setImage(e.target.files?.[0] || null)} />
+								</TabsContent>
+								<TabsContent value="link" className="pt-2">
+									<Input
+										type="url"
+										placeholder="https://..."
+										value={form.image_url}
+										onChange={(e) => setForm({ ...form, image_url: e.target.value })}
+									/>
+								</TabsContent>
+							</Tabs>
 						</div>
 
 						<div className="flex items-center gap-3">

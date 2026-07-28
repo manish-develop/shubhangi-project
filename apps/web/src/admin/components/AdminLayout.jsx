@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { LayoutDashboard, FileText, Star, Quote, Stethoscope, Youtube, Users, CalendarDays, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, MessageSquare, Star, Quote, Stethoscope, Youtube, Users, CalendarDays, LogOut } from 'lucide-react';
 import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/admin-sidebar.jsx';
 import { NotificationBell } from './NotificationBell.jsx';
 import { useAdminAuth } from '../context/AdminAuthContext';
@@ -11,6 +11,7 @@ const navItems = [
 	{ href: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
 	{ href: '/admin/events', label: 'Schedule', icon: CalendarDays },
 	{ href: '/admin/blogs', label: 'Blogs', icon: FileText },
+	{ href: '/admin/blog-feedback', label: 'Feedback', icon: MessageSquare },
 	{ href: '/admin/testimonials', label: 'Testimonials', icon: Star },
 	{ href: '/admin/reviews', label: 'Reviews', icon: Quote },
 	{ href: '/admin/diseases', label: 'Diseases', icon: Stethoscope },

@@ -64,14 +64,14 @@ adminRouter.get('/:id', async (req, res, next) => {
 
 adminRouter.post('/', upload.single('image'), async (req, res, next) => {
 	try {
-		const { name, short_description, full_description, category, published } = req.body;
+		const { name, short_description, full_description, category, published, image_url, youtube_url } = req.body;
 
 		if (!name || !full_description) {
 			return res.status(400).json({ error: 'Name and full description are required' });
 		}
 
 		const slug = await ensureUniqueSlug('diseases', name);
-		const image = req.file ? await uploadToMedia(req.file, 'diseases') : null;
+		const image = req.file ? await uploadToMedia(req.file, 'diseases') : (image_url || null);
 
 		const { data, error } = await supabase
 			.from('diseases')
@@ -82,6 +82,7 @@ adminRouter.post('/', upload.single('image'), async (req, res, next) => {
 				full_description,
 				category,
 				image,
+				youtube_url: youtube_url || null,
 				published: published === 'false' ? false : true,
 			})
 			.select()
@@ -96,11 +97,13 @@ adminRouter.post('/', upload.single('image'), async (req, res, next) => {
 
 adminRouter.put('/:id', upload.single('image'), async (req, res, next) => {
 	try {
-		const { name, short_description, full_description, category, published } = req.body;
+		const { name, short_description, full_description, category, published, image_url, youtube_url } = req.body;
 		const updates = { name, short_description, full_description, category };
 
 		if (published !== undefined) updates.published = published === 'false' ? false : true;
 		if (req.file) updates.image = await uploadToMedia(req.file, 'diseases');
+		else if (image_url) updates.image = image_url;
+		if (youtube_url !== undefined) updates.youtube_url = youtube_url || null;
 
 		const { data, error } = await supabase
 			.from('diseases')

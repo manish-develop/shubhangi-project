@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { adminApi } from '../lib/adminApi';
 
-const emptyForm = { title: '', excerpt: '', content: '', category: '', published: true, cover_image_url: '' };
+const emptyForm = { title: '', excerpt: '', content: '', category: '', published: true, cover_image_url: '', youtube_url: '' };
 
 export default function BlogsPage() {
 	const [blogs, setBlogs] = useState([]);
@@ -50,6 +50,7 @@ export default function BlogsPage() {
 			category: blog.category || '',
 			published: blog.published,
 			cover_image_url: '',
+			youtube_url: blog.youtube_url || '',
 		});
 		setCoverImage(null);
 		setDialogOpen(true);
@@ -169,6 +170,16 @@ export default function BlogsPage() {
 						<div className="space-y-1.5">
 							<Label>Content</Label>
 							<Textarea rows={10} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} required />
+						</div>
+
+						<div className="space-y-1.5">
+							<Label>YouTube Video URL (optional)</Label>
+							<Input
+								type="url"
+								placeholder="https://youtube.com/watch?v=..."
+								value={form.youtube_url}
+								onChange={(e) => setForm({ ...form, youtube_url: e.target.value })}
+							/>
 						</div>
 
 						<div className="space-y-1.5">

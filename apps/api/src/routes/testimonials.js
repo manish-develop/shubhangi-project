@@ -51,9 +51,9 @@ const imageFields = upload.fields([{ name: 'image', maxCount: 1 }]);
 
 adminRouter.post('/', imageFields, async (req, res, next) => {
 	try {
-		const { patient_name, category, title, description, published, youtube_url } = req.body;
+		const { patient_name, category, title, description, published, youtube_url, image_url } = req.body;
 
-		const image = req.files?.image?.[0] ? await uploadToMedia(req.files.image[0], 'testimonials') : null;
+		const image = req.files?.image?.[0] ? await uploadToMedia(req.files.image[0], 'testimonials') : (image_url || null);
 
 		const { data, error } = await supabase
 			.from('testimonials')
@@ -81,7 +81,7 @@ adminRouter.post('/', imageFields, async (req, res, next) => {
 
 adminRouter.put('/:id', imageFields, async (req, res, next) => {
 	try {
-		const { patient_name, category, title, description, published, youtube_url } = req.body;
+		const { patient_name, category, title, description, published, youtube_url, image_url } = req.body;
 		const updates = { patient_name, category, title, description, youtube_url: youtube_url || null };
 
 		if (published !== undefined) updates.published = published === 'false' ? false : true;
@@ -89,6 +89,9 @@ adminRouter.put('/:id', imageFields, async (req, res, next) => {
 			const image = await uploadToMedia(req.files.image[0], 'testimonials');
 			updates.before_image = image;
 			updates.after_image = image;
+		} else if (image_url) {
+			updates.before_image = image_url;
+			updates.after_image = image_url;
 		}
 
 		const { data, error } = await supabase

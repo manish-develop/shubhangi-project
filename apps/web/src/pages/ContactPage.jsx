@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import { SocialConnect } from '@/components/ui/connect-with-us.jsx';
+import { ImagesScrollingAnimation } from '@/components/ui/images-scrolling-animation.jsx';
 import { sendAppointmentEmail } from '@/utils/emailService.js';
 import { validateEmail, validatePhone, validateRequired } from '@/utils/validation.js';
 
@@ -17,6 +18,15 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+
+// Stock clinic-interior photos (Unsplash). Swap for real clinic photography when available.
+const clinicImages = [
+  { src: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80', alt: 'Clinic reception area' },
+  { src: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80', alt: 'Consultation room' },
+  { src: 'https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?auto=format&fit=crop&w=800&q=80', alt: 'Clinic waiting area' },
+  { src: 'https://images.unsplash.com/photo-1758691461957-474a7686e388?auto=format&fit=crop&w=800&q=80', alt: 'Doctor consulting with patient in a modern clinic office' },
+  { src: 'https://images.unsplash.com/photo-1758691462858-f1286e5daf40?auto=format&fit=crop&w=800&q=80', alt: 'Doctor consulting with a patient in the consultation room' },
+];
 
 const ContactPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -418,51 +428,40 @@ const ContactPage = () => {
 
         <section className="section-medium bg-muted/40">
           <div className="container-custom">
-            <h2 className="section-title heading-serif">Our Clinic</h2>
+            <h2 className="section-title heading-serif">Visit Our Clinic</h2>
             <p className="section-subtitle text-lg md:text-xl text-muted-foreground body-text">
               A calm, comfortable space designed for your healing journey
             </p>
 
-            <div className="grid sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              {[
-                { src: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80', alt: 'Clinic reception area' },
-                { src: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80', alt: 'Consultation room' },
-                { src: 'https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?auto=format&fit=crop&w=800&q=80', alt: 'Clinic waiting area' },
-              ].map((img, i) => (
-                <div key={i} className="rounded-2xl overflow-hidden card-shadow-lg border border-border aspect-[4/3] hover-lift">
-                  <img src={img.src} alt={img.alt} className="w-full h-full object-cover" loading="lazy" />
+            <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 max-w-6xl mx-auto items-start">
+              <div className="lg:sticky lg:top-32">
+                <div className="rounded-2xl overflow-hidden card-shadow-xl border border-border">
+                  <iframe
+                    title="Maharana Wellness Clinic Location"
+                    src="https://www.google.com/maps?q=Maharana+Wellness+Clinic,+F-42+Block+F+Kirti+Nagar+New+Delhi+110015&output=embed"
+                    className="w-full h-[350px] md:h-[420px] border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        <section className="section-white">
-          <div className="container-custom">
-            <h2 className="section-title heading-serif">Find Us</h2>
-            <p className="section-subtitle text-lg md:text-xl text-muted-foreground body-text">
-              F-42, Block F, Kirti Nagar, New Delhi, Delhi 110015
-            </p>
+                <p className="mt-5 text-center lg:text-left text-base text-muted-foreground body-text">
+                  F-42, Block F, Kirti Nagar, New Delhi, Delhi 110015
+                </p>
 
-            <div className="max-w-5xl mx-auto rounded-2xl overflow-hidden card-shadow-xl border border-border">
-              <iframe
-                title="Maharana Wellness Clinic Location"
-                src="https://www.google.com/maps?q=Maharana+Wellness+Clinic,+F-42+Block+F+Kirti+Nagar+New+Delhi+110015&output=embed"
-                className="w-full h-[350px] md:h-[420px] border-0"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
+                <div className="mt-4 flex justify-center lg:justify-start">
+                  <a
+                    href="https://www.google.com/maps/dir/?api=1&destination=F-42,+Block+F,+Kirti+Nagar,+New+Delhi,+Delhi+110015"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-outline inline-flex items-center gap-2"
+                  >
+                    Get Directions <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
 
-            <div className="mt-6 flex justify-center">
-              <a
-                href="https://www.google.com/maps/dir/?api=1&destination=F-42,+Block+F,+Kirti+Nagar,+New+Delhi,+Delhi+110015"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-outline inline-flex items-center gap-2"
-              >
-                Get Directions <ArrowRight className="w-4 h-4" />
-              </a>
+              <ImagesScrollingAnimation images={clinicImages} />
             </div>
           </div>
         </section>

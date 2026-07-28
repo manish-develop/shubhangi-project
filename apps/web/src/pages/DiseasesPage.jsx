@@ -9,20 +9,28 @@ import { Search } from 'lucide-react';
 import DiseaseCard from '@/components/DiseaseCard.jsx';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination.jsx';
 import { diseaseDatabase } from '@/data/diseaseDatabase.js';
+import { fetchPublishedDiseases } from '@/lib/diseases.js';
 
 const PER_PAGE = 24;
 
 const DiseasesPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [diseases, setDiseases] = useState(diseaseDatabase);
   const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    fetchPublishedDiseases().then((data) => {
+      if (data.length > 0) setDiseases(data);
+    });
+  }, []);
+
   const sortedDiseases = useMemo(
-    () => [...diseaseDatabase].sort((a, b) => a.name.localeCompare(b.name)),
-    []
+    () => [...diseases].sort((a, b) => a.name.localeCompare(b.name)),
+    [diseases]
   );
 
   const totalPages = Math.max(1, Math.ceil(sortedDiseases.length / PER_PAGE));
@@ -83,7 +91,7 @@ const DiseasesPage = () => {
         >
           <div className="max-w-2xl mx-auto relative z-10">
             <ActionSearchBar
-              actions={diseaseDatabase}
+              actions={diseases}
               placeholder="Search any condition..."
               inputClassName="text-lg"
               onSelect={(disease) => navigate(`/disease/${disease.id}`)}

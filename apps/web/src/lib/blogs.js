@@ -19,6 +19,7 @@ const formatDate = (iso) => {
 
 export const normalizeDbBlog = (b) => ({
 	id: b.slug,
+	dbId: b.id,
 	slug: b.slug,
 	title: b.title,
 	excerpt: b.excerpt || '',
@@ -29,6 +30,7 @@ export const normalizeDbBlog = (b) => ({
 	sortDate: b.created_at,
 	readTime: estimateReadTime(b.content),
 	content: b.content,
+	youtube_url: b.youtube_url || null,
 	isStatic: false,
 });
 
