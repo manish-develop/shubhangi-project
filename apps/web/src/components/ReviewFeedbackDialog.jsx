@@ -3,6 +3,7 @@ import { Star } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from '@/components/ui/dialog.jsx';
 import { Textarea } from '@/components/ui/textarea.jsx';
 import { Button } from '@/components/ui/button.jsx';
+import { ButtonColorful } from '@/components/ui/button-colorful.jsx';
 import { cn } from '@/lib/utils';
 
 const GOOGLE_REVIEW_URL = 'https://search.google.com/local/writereview?placeid=ChIJ1_9GVwEDDTkR9tth_d7368o';
@@ -23,7 +24,7 @@ const ReviewFeedbackDialog = ({ trigger }) => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				{trigger ?? <Button size="lg" className="rounded-full">Share Your Experience</Button>}
+				{trigger ?? <ButtonColorful label="Write a Review" className="rounded-full" />}
 			</DialogTrigger>
 			<DialogContent className="max-w-md">
 				<DialogHeader>

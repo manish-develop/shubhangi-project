@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover.jsx';
 import { Calendar } from '@/components/ui/calendar.jsx';
-import { FlipClock } from '@/components/ui/flip-clock.jsx';
+import { GlassTimeCard } from '@/components/ui/glass-time-card.jsx';
 
 const getIstDate = () => {
 	const parts = new Intl.DateTimeFormat('en-GB', {
@@ -24,7 +24,7 @@ export function DashboardClock() {
 
 	return (
 		<div className="flex flex-col items-center gap-2">
-			<FlipClock size="sm" />
+			<GlassTimeCard />
 			<Popover>
 				<PopoverTrigger asChild>
 					<button

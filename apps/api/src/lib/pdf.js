@@ -44,8 +44,9 @@ const generatePrescriptionPdf = async ({ patient, prescription }) => {
 		page.drawPage(embeddedPage, { x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT });
 		y = PAGE_HEIGHT - 215;
 	} else {
-		// No letterhead: plain sheet, no clinic branding block — content starts right at the top margin
-		y = PAGE_HEIGHT - MARGIN;
+		// No letterhead: leave the same blank space at the top as the letterhead
+		// version, so this can be printed on the clinic's pre-printed letterhead paper.
+		y = PAGE_HEIGHT - 215;
 	}
 
 	const lineHeight = 15;

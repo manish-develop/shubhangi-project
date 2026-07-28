@@ -16,7 +16,7 @@ const DisclaimerPage = () => {
     <>
       <SEO
         title="Disclaimer | Maharana Wellness Clinic"
-        description="Read the legal disclaimer, privacy policy, side effects information, scientific basis and criticism of homoeopathy at Maharana Wellness Clinic by Dr. Shubhangi Maharana."
+        description="Read the legal disclaimer, privacy policy, scientific basis and criticism of homoeopathy at Maharana Wellness Clinic by Dr. Shubhangi Maharana."
         path="/disclaimer"
       />
 
@@ -40,20 +40,22 @@ const DisclaimerPage = () => {
             </button>
 
             <div className="card p-8">
+              <h2 className="text-xl md:text-2xl font-semibold text-foreground mb-4 text-center w-full">Medical Disclaimer</h2>
+
               <p className="mb-4 text-muted-foreground body-text leading-relaxed">
-                We do not claim to cure any disease which is considered 'incurable' on the basis of scientific facts by modern medicine. The website's content is not a substitute for direct, personal, professional medical care and diagnosis.
+                At Maharana's, we are committed to helping you achieve lasting wellness through the gentle, holistic approach of homoeopathy. While we take pride in the results our patients have experienced, homoeopathy — like all forms of medicine — works differently for each individual, and outcomes depend on your unique constitution and condition.
               </p>
-              
+
               <p className="mb-4 text-muted-foreground body-text leading-relaxed">
-                None of the medicines mentioned in the posts, including services mentioned at Drmaharanas.com should be used without clearance from your physician or health care provider.
+                The information shared on this website is meant to educate and inspire, and is not intended to replace a personal consultation with a qualified physician. We encourage you to consult Dr. Shubhangi Maharana or your healthcare provider before starting any treatment or medication mentioned on this site, so we can guide you with a plan best suited to you.
               </p>
-              
-              <h2 className="text-xl md:text-2xl font-semibold text-foreground mt-8 mb-4 text-center w-full">Testimonials Disclaimer</h2>
-              
+
+              <h2 className="text-xl md:text-2xl font-semibold text-foreground mt-8 mb-4 text-center w-full">Testimonials</h2>
+
               <p className="mb-4 text-muted-foreground body-text leading-relaxed">
-                Results may vary, and testimonials are not claimed to represent typical results. The testimonials are real, and these patients have been treated with homoeopathy treatment from our clinic. However, these results are meant as a showcase of what the best homoeopathy can do with their disease conditions and should not be taken as average or typical results.
+                We're grateful to share the real stories and experiences of our patients who have trusted us with their health journey. These testimonials reflect genuine outcomes achieved through homoeopathic treatment at our clinic. As every individual responds differently to treatment, these stories are shared to showcase what's possible with dedicated homoeopathic care — and we'd love the opportunity to understand your condition and discuss what may be possible for you.
               </p>
-              
+
               <p className="mt-8 font-medium text-foreground text-center w-full">
                 — <span className="doctor-name">Dr. Shubhangi Maharana</span>
               </p>

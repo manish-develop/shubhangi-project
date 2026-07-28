@@ -232,13 +232,10 @@ const HomePage = () => {
 					</div>
 				</section>
 
-				{/* 7. Reviews */}
-				<ReviewsSection />
-
-				{/* 8. YouTube */}
+				{/* 7. YouTube */}
 				<YouTubeSection />
 
-				{/* 9. Blog Preview */}
+				{/* 8. Blog Preview */}
 				<section ref={blogRef} className="section-white">
 					<div className="container-custom">
 						<h2 className="section-title heading-serif">Latest from Our Blog</h2>
@@ -265,6 +262,9 @@ const HomePage = () => {
 						</div>
 					</div>
 				</section>
+
+				{/* 9. Reviews */}
+				<ReviewsSection />
 
 				{/* 10. Book Appointment CTA */}
 				<section className="section-light">
@@ -297,56 +297,50 @@ const HomePage = () => {
 				{/* 11. Location / Map */}
 				<section className="section-white">
 					<div className="container-custom">
-						<div className="grid md:grid-cols-2 gap-10 md:gap-12 items-center max-w-6xl mx-auto">
-							<motion.div
-								initial={{ opacity: 0, y: 16 }}
-								whileInView={{ opacity: 1, y: 0 }}
-								viewport={{ once: true }}
-								transition={{ duration: 0.6 }}
-								className="text-center md:text-left"
-							>
-								<div className="flex items-center justify-center md:justify-start gap-2 text-sm font-medium text-muted-foreground mb-3">
+						<motion.div
+							initial={{ opacity: 0, y: 16 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{ duration: 0.6 }}
+							className="group mx-auto flex max-w-5xl flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-shadow duration-300 hover:shadow-xl md:flex-row"
+						>
+							<div className="h-56 w-full overflow-hidden md:h-auto md:w-2/5">
+								<iframe
+									title="Maharana Wellness Clinic Location"
+									src="https://www.google.com/maps?q=Maharana+Wellness+Clinic,+F-42+Block+F+Kirti+Nagar+New+Delhi+110015&output=embed"
+									className="h-full w-full border-0"
+									loading="lazy"
+									referrerPolicy="no-referrer-when-downgrade"
+								/>
+							</div>
+
+							<div className="flex flex-col justify-center gap-3 p-8 text-center md:w-3/5 md:text-left">
+								<div className="flex items-center justify-center gap-2 text-sm font-medium text-muted-foreground md:justify-start">
 									<MapPin className="w-4 h-4 text-primary" />
 									<span>Find Us</span>
 								</div>
-								<h2 className="text-3xl md:text-4xl font-bold text-foreground heading-serif mb-4">
+								<h2 className="text-3xl md:text-4xl font-bold text-foreground heading-serif">
 									Visit Our Clinic
 								</h2>
-								<p className="text-muted-foreground leading-relaxed mb-2">
+								<p className="text-muted-foreground leading-relaxed">
 									F-42, Block F, Kirti Nagar, New Delhi, Delhi 110015
 								</p>
-								<p className="text-muted-foreground leading-relaxed mb-2">
+								<p className="text-muted-foreground leading-relaxed">
 									Mon–Sun: 11:00 AM – 8:00 PM
 								</p>
-								<p className="text-muted-foreground leading-relaxed mb-6">
+								<p className="text-muted-foreground leading-relaxed mb-2">
 									<a href="tel:+919625030958" className="hover:text-primary transition-colors">9625030958</a>
 								</p>
 								<a
 									href="https://www.google.com/maps/dir/?api=1&destination=F-42,+Block+F,+Kirti+Nagar,+New+Delhi,+Delhi+110015"
 									target="_blank"
 									rel="noopener noreferrer"
-									className="btn-primary inline-flex items-center gap-2"
+									className="btn-primary inline-flex w-fit items-center gap-2 mx-auto md:mx-0"
 								>
 									Get Directions <ArrowRight className="w-4 h-4" />
 								</a>
-							</motion.div>
-
-							<motion.div
-								initial={{ opacity: 0, scale: 0.96 }}
-								whileInView={{ opacity: 1, scale: 1 }}
-								viewport={{ once: true }}
-								transition={{ duration: 0.6, delay: 0.15 }}
-								className="rounded-2xl overflow-hidden card-shadow-xl border border-border"
-							>
-								<iframe
-									title="Maharana Wellness Clinic Location"
-									src="https://www.google.com/maps?q=Maharana+Wellness+Clinic,+F-42+Block+F+Kirti+Nagar+New+Delhi+110015&output=embed"
-									className="w-full h-[350px] md:h-[420px] border-0"
-									loading="lazy"
-									referrerPolicy="no-referrer-when-downgrade"
-								/>
-							</motion.div>
-						</div>
+							</div>
+						</motion.div>
 					</div>
 				</section>
 			</main>

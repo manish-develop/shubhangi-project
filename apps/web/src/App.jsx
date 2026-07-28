@@ -30,7 +30,6 @@ import TestimonialsPage from './pages/TestimonialsPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import AppointmentPage from './pages/AppointmentPage.jsx';
 import DisclaimerPage from './pages/DisclaimerPage.jsx';
-import SideEffectsPage from './pages/SideEffectsPage.jsx';
 import ScientificBasisPage from './pages/ScientificBasisPage.jsx';
 import CriticismPage from './pages/CriticismPage.jsx';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage.jsx';
@@ -110,7 +109,6 @@ function App() {
 
         {/* Legal Pages */}
         <Route path="/disclaimer" element={<DisclaimerPage />} />
-        <Route path="/side-effects" element={<SideEffectsPage />} />
         <Route path="/scientific-basis" element={<ScientificBasisPage />} />
         <Route path="/criticism" element={<CriticismPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />

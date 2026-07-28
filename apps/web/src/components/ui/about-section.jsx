@@ -36,7 +36,7 @@ export default function AboutSection() {
 
 	return (
 		<section
-			className="relative overflow-hidden py-12 md:py-16"
+			className="relative overflow-hidden pt-28 pb-12 md:pt-36 md:pb-16"
 			ref={heroRef}
 		>
 			<div

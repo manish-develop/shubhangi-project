@@ -19,7 +19,6 @@ const navLinks = [
 
 const legalLinks = [
 	{ path: '/disclaimer', label: 'Disclaimer' },
-	{ path: '/side-effects', label: 'Side Effects of Homoeopathy' },
 	{ path: '/scientific-basis', label: 'Scientific Basis of Homoeopathy' },
 	{ path: '/criticism', label: 'Criticism of Homoeopathy' },
 	{ path: '/privacy-policy', label: 'Privacy Policy' },
