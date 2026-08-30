@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Phone, Linkedin, Youtube, Instagram, Facebook, Plus, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { LiquidMetalButton } from '@/components/ui/liquid-metal-button.jsx';
 
 const WHATSAPP_ICON = 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg';
 
@@ -98,17 +99,25 @@ export const SocialLinks = () => {
 						))}
 				</AnimatePresence>
 
-				<button
-					type="button"
-					onClick={() => setMobileOpen((o) => !o)}
-					aria-label={mobileOpen ? 'Close quick contact menu' : 'Open quick contact menu'}
-					className={cn(
-						'flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl transition-transform duration-300',
-						mobileOpen && 'rotate-45'
-					)}
-				>
-					{mobileOpen ? <X className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
-				</button>
+				<div className={cn('leading-none transition-transform duration-300', mobileOpen && 'rotate-45')}>
+					<LiquidMetalButton
+						label={mobileOpen ? 'Close quick contact menu' : 'Open quick contact menu'}
+						viewMode="icon"
+						width={56}
+						height={56}
+						tintColor="hsl(170 60% 22%)"
+						tintColorDark="hsl(170 74% 10%)"
+						shaderFilter="hue-rotate(140deg) saturate(1.5) brightness(0.95)"
+						icon={
+							mobileOpen ? (
+								<X size={22} style={{ color: '#ffffff', filter: 'drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.5))' }} />
+							) : (
+								<Plus size={22} style={{ color: '#ffffff', filter: 'drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.5))' }} />
+							)
+						}
+						onClick={() => setMobileOpen((o) => !o)}
+					/>
+				</div>
 			</div>
 		</>
 	);

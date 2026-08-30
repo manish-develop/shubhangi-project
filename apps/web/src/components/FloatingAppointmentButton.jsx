@@ -11,7 +11,7 @@ export const FloatingAppointmentButton = () => {
 			<LiquidMetalButton
 				label="Book Your Appointment"
 				viewMode="text"
-				width={240}
+				width={270}
 				height={56}
 				tintColor="hsl(170 60% 22%)"
 				tintColorDark="hsl(170 74% 10%)"
