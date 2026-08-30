@@ -19,13 +19,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
-// Stock clinic-interior photos (Unsplash). Swap for real clinic photography when available.
+// Real clinic photos, in the exact order requested.
+const SUPABASE_MEDIA = 'https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic';
 const clinicImages = [
-  { src: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80', alt: 'Clinic reception area' },
-  { src: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80', alt: 'Consultation room' },
-  { src: 'https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?auto=format&fit=crop&w=800&q=80', alt: 'Clinic waiting area' },
-  { src: 'https://images.unsplash.com/photo-1758691461957-474a7686e388?auto=format&fit=crop&w=800&q=80', alt: 'Doctor consulting with patient in a modern clinic office' },
-  { src: 'https://images.unsplash.com/photo-1758691462858-f1286e5daf40?auto=format&fit=crop&w=800&q=80', alt: 'Doctor consulting with a patient in the consultation room' },
+  { src: `${SUPABASE_MEDIA}/clinic-5pic.jpeg`, alt: 'Maharana Wellness Clinic storefront signage' },
+  { src: `${SUPABASE_MEDIA}/clinic-1pic.jpeg`, alt: 'Clinic reception desk' },
+  { src: `${SUPABASE_MEDIA}/clinic-3pic.jpeg`, alt: "Doctor's consultation room" },
+  { src: `${SUPABASE_MEDIA}/clinic-2pic.jpeg`, alt: 'Facial aesthetics treatment room' },
 ];
 
 const ContactPage = () => {

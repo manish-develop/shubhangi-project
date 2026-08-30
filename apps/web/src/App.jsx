@@ -4,6 +4,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'sonner';
 import ScrollToTop from './components/ScrollToTop.jsx';
 import { SocialLinks } from './components/ui/social-links.jsx';
+import { FloatingAppointmentButton } from './components/FloatingAppointmentButton.jsx';
 import { AdminAuthProvider } from './admin/context/AdminAuthContext.jsx';
 import { ProtectedRoute } from './admin/components/ProtectedRoute.jsx';
 import { AdminLayout } from './admin/components/AdminLayout.jsx';
@@ -149,7 +150,12 @@ function App() {
 function PublicSocialLinks() {
   const location = useLocation();
   if (location.pathname.startsWith('/admin')) return null;
-  return <SocialLinks />;
+  return (
+    <>
+      <SocialLinks />
+      <FloatingAppointmentButton />
+    </>
+  );
 }
 
 export default App;
