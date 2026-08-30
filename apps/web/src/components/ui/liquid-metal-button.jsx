@@ -1,7 +1,18 @@
 import { liquidMetalFragmentShader, ShaderMount } from '@paper-design/shaders';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-export function LiquidMetalButton({ label = 'Get Started', onClick, viewMode = 'text', icon }) {
+export function LiquidMetalButton({
+	label = 'Get Started',
+	onClick,
+	viewMode = 'text',
+	icon,
+	width,
+	height = 46,
+	tintColor = '#202020',
+	tintColorDark = '#000000',
+	textColor = '#666666',
+	shaderFilter,
+}) {
 	const [isHovered, setIsHovered] = useState(false);
 	const [isPressed, setIsPressed] = useState(false);
 	const [ripples, setRipples] = useState([]);
@@ -11,25 +22,18 @@ export function LiquidMetalButton({ label = 'Get Started', onClick, viewMode = '
 	const rippleId = useRef(0);
 
 	const dimensions = useMemo(() => {
-		if (viewMode === 'icon') {
-			return {
-				width: 46,
-				height: 46,
-				innerWidth: 42,
-				innerHeight: 42,
-				shaderWidth: 46,
-				shaderHeight: 46,
-			};
-		}
+		const w = width ?? (viewMode === 'icon' ? 46 : 142);
+		const h = height;
+		const pad = 4;
 		return {
-			width: 142,
-			height: 46,
-			innerWidth: 138,
-			innerHeight: 42,
-			shaderWidth: 142,
-			shaderHeight: 46,
+			width: w,
+			height: h,
+			innerWidth: w - pad,
+			innerHeight: h - pad,
+			shaderWidth: w,
+			shaderHeight: h,
 		};
-	}, [viewMode]);
+	}, [viewMode, width, height]);
 
 	useEffect(() => {
 		const styleId = 'liquid-metal-shader-style';
@@ -148,7 +152,7 @@ export function LiquidMetalButton({ label = 'Get Started', onClick, viewMode = '
 							display: 'flex',
 							alignItems: 'center',
 							justifyContent: 'center',
-							gap: '6px',
+							gap: '10px',
 							transformStyle: 'preserve-3d',
 							transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s ease, height 0.4s ease, gap 0.4s ease',
 							transform: 'translateZ(20px)',
@@ -156,13 +160,13 @@ export function LiquidMetalButton({ label = 'Get Started', onClick, viewMode = '
 							pointerEvents: 'none',
 						}}
 					>
-						{viewMode === 'icon' && icon}
+						{icon}
 						{viewMode === 'text' && (
 							<span
 								style={{
 									fontSize: '14px',
-									color: '#666666',
-									fontWeight: 400,
+									color: textColor,
+									fontWeight: 600,
 									textShadow: '0px 1px 2px rgba(0, 0, 0, 0.5)',
 									transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)',
 									whiteSpace: 'nowrap',
@@ -192,7 +196,7 @@ export function LiquidMetalButton({ label = 'Get Started', onClick, viewMode = '
 								height: `${dimensions.innerHeight}px`,
 								margin: '2px',
 								borderRadius: '100px',
-								background: 'linear-gradient(180deg, #202020 0%, #000000 100%)',
+								background: `linear-gradient(180deg, ${tintColor} 0%, ${tintColorDark} 100%)`,
 								boxShadow: isPressed
 									? 'inset 0px 2px 4px rgba(0, 0, 0, 0.4), inset 0px 1px 2px rgba(0, 0, 0, 0.3)'
 									: 'none',
@@ -240,7 +244,8 @@ export function LiquidMetalButton({ label = 'Get Started', onClick, viewMode = '
 									width: `${dimensions.shaderWidth}px`,
 									maxWidth: `${dimensions.shaderWidth}px`,
 									height: `${dimensions.shaderHeight}px`,
-									transition: 'width 0.4s ease, height 0.4s ease',
+									transition: 'width 0.4s ease, height 0.4s ease, filter 0.4s ease',
+									filter: shaderFilter,
 								}}
 							/>
 						</div>
