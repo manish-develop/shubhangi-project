@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { Route, Routes, BrowserRouter as Router, Outlet, useLocation } from 'react-router-dom';
+import { Route, Routes, BrowserRouter as Router, Outlet, useLocation, Navigate } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'sonner';
 import ScrollToTop from './components/ScrollToTop.jsx';
@@ -30,8 +30,6 @@ const ServiceArticlePage = lazy(() => import('./pages/ServiceArticlePage.jsx'));
 const DiseasesPage = lazy(() => import('./pages/DiseasesPage.jsx'));
 const DiseaseArticlePage = lazy(() => import('./pages/DiseaseArticlePage.jsx'));
 const SpecializationArticlePage = lazy(() => import('./pages/SpecializationArticlePage.jsx'));
-const BlogPage = lazy(() => import('./pages/BlogPage.jsx'));
-const ArticlePage = lazy(() => import('./pages/ArticlePage.jsx'));
 const BlogsPage = lazy(() => import('./pages/BlogsPage.jsx'));
 const BlogArticlePage = lazy(() => import('./pages/BlogArticlePage.jsx'));
 const TestimonialsPage = lazy(() => import('./pages/TestimonialsPage.jsx'));
@@ -118,8 +116,8 @@ function App() {
         <Route path="/diseases" element={<DiseasesPage />} />
         <Route path="/disease/:diseaseId" element={<DiseaseArticlePage />} />
         <Route path="/specialization/:slug" element={<SpecializationArticlePage />} />
-        <Route path="/blog" element={<BlogPage />} />
-        <Route path="/article/:id" element={<ArticlePage />} />
+        <Route path="/blog" element={<Navigate to="/blogs" replace />} />
+        <Route path="/article/:id" element={<Navigate to="/blogs" replace />} />
         <Route path="/blogs" element={<BlogsPage />} />
         <Route path="/blogs/:slug" element={<BlogArticlePage />} />
         <Route path="/testimonials" element={<TestimonialsPage />} />

@@ -5,6 +5,7 @@ import { ArrowLeft, Calendar, Clock, User, Facebook, Twitter, Linkedin } from 'l
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import LazyImage from '@/components/LazyImage.jsx';
+import BlogComments from '@/components/BlogComments.jsx';
 import { fetchWpPostBySlug } from '@/lib/wordpress.js';
 
 const BlogArticlePage = () => {
@@ -139,6 +140,8 @@ const BlogArticlePage = () => {
 							</Link>
 						</div>
 					</div>
+
+					<BlogComments postId={article.wpId} />
 				</article>
 			</main>
 

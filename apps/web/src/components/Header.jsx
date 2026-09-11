@@ -12,7 +12,7 @@ const navLinks = [
 	{ path: '/about', label: 'About', icon: User },
 	{ path: '/services', label: 'Services', icon: Stethoscope },
 	{ path: '/diseases', label: 'Diseases', icon: Activity },
-	{ path: '/blog', label: 'Blog', icon: FileText },
+	{ path: '/blogs', label: 'Blog', icon: FileText },
 	{ path: '/testimonials', label: 'Testimonials', icon: Star },
 	{ path: '/contact', label: 'Contact', icon: PhoneIcon },
 ];

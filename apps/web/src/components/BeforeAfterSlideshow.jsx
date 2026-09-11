@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import LazyImage from './LazyImage.jsx';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+import { fetchWpTestimonials } from '@/lib/wordpress.js';
 
 const BeforeAfterSlideshow = () => {
 	const [cases, setCases] = useState([]);
 
 	useEffect(() => {
-		fetch(`${API_URL}/testimonials`)
-			.then((res) => (res.ok ? res.json() : []))
-			.then((data) => setCases(Array.isArray(data) ? data : []))
-			.catch(() => setCases([]));
+		fetchWpTestimonials().then(setCases);
 	}, []);
 
 	if (cases.length === 0) return null;
@@ -47,7 +43,7 @@ const BeforeAfterSlideshow = () => {
 							className="flex-shrink-0 w-48 h-48 md:w-64 md:h-64 rounded-xl overflow-hidden shadow-2xl transition-transform duration-300 hover:scale-105"
 						>
 							<LazyImage
-								src={item.before_image || item.after_image}
+								src={item.image}
 								alt={item.title}
 								className="w-full h-full object-cover"
 							/>

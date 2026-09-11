@@ -6,7 +6,7 @@ import { Award, Users, Heart, Star, Phone, Mail, ChevronRight, Shield, Clock, Ma
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import StatCounter from '@/components/StatCounter.jsx';
-import BlogCard from '@/components/BlogCard.jsx';
+import WpBlogCard from '@/components/WpBlogCard.jsx';
 import DoctorPortrait from '@/components/DoctorPortrait.jsx';
 import LazySection from '@/components/LazySection.jsx';
 import { ActionSearchBar } from '@/components/ui/action-search-bar.jsx';
@@ -261,13 +261,13 @@ const HomePage = () => {
 									style={{ animationDelay: `${index * 100}ms` }}
 									className={blogVisible ? 'animate-slide-up' : 'opacity-0'}
 								>
-									<BlogCard {...blog} />
+									<WpBlogCard {...blog} />
 								</div>
 							))}
 						</div>
 
 						<div className="text-center mt-10 md:mt-12">
-							<Link to="/blog" className="btn-primary w-full sm:w-auto">
+							<Link to="/blogs" className="btn-primary w-full sm:w-auto">
 								View All Articles
 							</Link>
 						</div>

@@ -32,6 +32,7 @@ const normalizeWpPost = (post) => {
 
 	return {
 		id: post.slug,
+		wpId: post.id,
 		slug: post.slug,
 		title: stripHtml(post.title?.rendered || ''),
 		excerpt: stripHtml(post.excerpt?.rendered || ''),
@@ -82,6 +83,47 @@ const normalizeWpTestimonial = (post) => {
 		sortDate: post.date,
 	};
 };
+
+const normalizeWpComment = (c) => ({
+	id: c.id,
+	parent: c.parent || 0,
+	author: c.author_name || 'Anonymous',
+	avatar: c.author_avatar_urls?.['48'] || null,
+	content: stripHtml(c.content?.rendered || ''),
+	date: formatDate(c.date),
+});
+
+export async function fetchWpComments(postId) {
+	try {
+		const res = await fetch(`${WP_BASE}/comments?post=${postId}&per_page=100&order=asc`);
+		if (!res.ok) return [];
+		const data = await res.json();
+		return Array.isArray(data) ? data.map(normalizeWpComment) : [];
+	} catch {
+		return [];
+	}
+}
+
+// This WordPress install requires an authenticated request to create a
+// comment, so anonymous visitors can't post straight to the WP REST API —
+// and the Application Password that could authenticate can never be
+// shipped to the browser. Instead this goes through our own backend
+// (apps/api/src/routes/wp-comments.js), which holds that credential and
+// proxies the request server-side.
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+export async function submitWpComment({ postId, authorName, authorEmail, content }) {
+	const res = await fetch(`${API_URL}/wp-comments`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ postId, name: authorName, email: authorEmail, content }),
+	});
+	const data = await res.json();
+	if (!res.ok) {
+		throw new Error(data?.error || 'Could not post comment');
+	}
+	return data;
+}
 
 export async function fetchWpTestimonials({ perPage = 30 } = {}) {
 	try {
