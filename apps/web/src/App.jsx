@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Route, Routes, BrowserRouter as Router, Outlet, useLocation } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'sonner';
@@ -8,33 +8,47 @@ import { FloatingAppointmentButton } from './components/FloatingAppointmentButto
 import { AdminAuthProvider } from './admin/context/AdminAuthContext.jsx';
 import { ProtectedRoute } from './admin/components/ProtectedRoute.jsx';
 import { AdminLayout } from './admin/components/AdminLayout.jsx';
-import AdminLoginPage from './admin/pages/LoginPage.jsx';
-import AdminDashboardPage from './admin/pages/DashboardPage.jsx';
-import AdminEventManagerPage from './admin/pages/EventManagerPage.jsx';
-import AdminBlogsPage from './admin/pages/BlogsPage.jsx';
-import AdminBlogFeedbackPage from './admin/pages/BlogFeedbackPage.jsx';
-import AdminTestimonialsPage from './admin/pages/TestimonialsAdminPage.jsx';
-import AdminReviewsPage from './admin/pages/ReviewsAdminPage.jsx';
-import AdminDiseasesPage from './admin/pages/DiseasesAdminPage.jsx';
-import AdminVideosPage from './admin/pages/VideosAdminPage.jsx';
-import AdminPatientsPage from './admin/pages/PatientsPage.jsx';
-import AdminPatientDetailPage from './admin/pages/PatientDetailPage.jsx';
+// Home is the most common landing page — load it eagerly so the very first
+// paint isn't waiting on an extra chunk round-trip. Everything else below
+// (including the whole admin panel, which visitors never touch) is
+// lazy-loaded, so it's not part of the public bundle at all.
 import HomePage from './pages/HomePage.jsx';
-import AboutPage from './pages/AboutPage.jsx';
-import ServicesPage from './pages/ServicesPage.jsx';
-import ServiceArticlePage from './pages/ServiceArticlePage.jsx';
-import DiseasesPage from './pages/DiseasesPage.jsx';
-import DiseaseArticlePage from './pages/DiseaseArticlePage.jsx';
-import SpecializationArticlePage from './pages/SpecializationArticlePage.jsx';
-import BlogPage from './pages/BlogPage.jsx';
-import ArticlePage from './pages/ArticlePage.jsx';
-import TestimonialsPage from './pages/TestimonialsPage.jsx';
-import ContactPage from './pages/ContactPage.jsx';
-import AppointmentPage from './pages/AppointmentPage.jsx';
-import DisclaimerPage from './pages/DisclaimerPage.jsx';
-import ScientificBasisPage from './pages/ScientificBasisPage.jsx';
-import CriticismPage from './pages/CriticismPage.jsx';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage.jsx';
+
+const AdminLoginPage = lazy(() => import('./admin/pages/LoginPage.jsx'));
+const AdminDashboardPage = lazy(() => import('./admin/pages/DashboardPage.jsx'));
+const AdminEventManagerPage = lazy(() => import('./admin/pages/EventManagerPage.jsx'));
+const AdminBlogsPage = lazy(() => import('./admin/pages/BlogsPage.jsx'));
+const AdminBlogFeedbackPage = lazy(() => import('./admin/pages/BlogFeedbackPage.jsx'));
+const AdminTestimonialsPage = lazy(() => import('./admin/pages/TestimonialsAdminPage.jsx'));
+const AdminReviewsPage = lazy(() => import('./admin/pages/ReviewsAdminPage.jsx'));
+const AdminDiseasesPage = lazy(() => import('./admin/pages/DiseasesAdminPage.jsx'));
+const AdminVideosPage = lazy(() => import('./admin/pages/VideosAdminPage.jsx'));
+const AdminPatientsPage = lazy(() => import('./admin/pages/PatientsPage.jsx'));
+const AdminPatientDetailPage = lazy(() => import('./admin/pages/PatientDetailPage.jsx'));
+
+const AboutPage = lazy(() => import('./pages/AboutPage.jsx'));
+const ServicesPage = lazy(() => import('./pages/ServicesPage.jsx'));
+const ServiceArticlePage = lazy(() => import('./pages/ServiceArticlePage.jsx'));
+const DiseasesPage = lazy(() => import('./pages/DiseasesPage.jsx'));
+const DiseaseArticlePage = lazy(() => import('./pages/DiseaseArticlePage.jsx'));
+const SpecializationArticlePage = lazy(() => import('./pages/SpecializationArticlePage.jsx'));
+const BlogPage = lazy(() => import('./pages/BlogPage.jsx'));
+const ArticlePage = lazy(() => import('./pages/ArticlePage.jsx'));
+const TestimonialsPage = lazy(() => import('./pages/TestimonialsPage.jsx'));
+const ContactPage = lazy(() => import('./pages/ContactPage.jsx'));
+const AppointmentPage = lazy(() => import('./pages/AppointmentPage.jsx'));
+const DisclaimerPage = lazy(() => import('./pages/DisclaimerPage.jsx'));
+const ScientificBasisPage = lazy(() => import('./pages/ScientificBasisPage.jsx'));
+const CriticismPage = lazy(() => import('./pages/CriticismPage.jsx'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage.jsx'));
+
+function RouteLoadingFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+    </div>
+  );
+}
 
 function App() {
   return (
@@ -95,6 +109,7 @@ function App() {
       <ScrollToTop />
       <Toaster position="top-right" richColors />
       <PublicSocialLinks />
+      <Suspense fallback={<RouteLoadingFallback />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -142,6 +157,7 @@ function App() {
           </div>
         } />
       </Routes>
+      </Suspense>
       </Router>
     </HelmetProvider>
   );

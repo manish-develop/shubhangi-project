@@ -7,10 +7,8 @@ import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import StatCounter from '@/components/StatCounter.jsx';
 import BlogCard from '@/components/BlogCard.jsx';
-import ReviewsSection from '@/components/ReviewsSection.jsx';
 import DoctorPortrait from '@/components/DoctorPortrait.jsx';
-import BeforeAfterSlideshow from '@/components/BeforeAfterSlideshow.jsx';
-import YouTubeSection from '@/components/YouTubeSection.jsx';
+import LazySection from '@/components/LazySection.jsx';
 import { ActionSearchBar } from '@/components/ui/action-search-bar.jsx';
 import { DiaTextReveal } from '@/components/ui/dia-text.jsx';
 import { VariableFontCursorProximity } from '@/components/ui/m-variable-font-cursor-proximity.jsx';
@@ -30,13 +28,16 @@ const HomePage = () => {
 	const [conditionsRef, conditionsVisible] = useScrollAnimation(0.2);
 	const [aboutRef, aboutVisible] = useScrollAnimation(0.2);
 	const [specializationsRef, specializationsVisible] = useScrollAnimation(0.2);
-	const [blogRef, blogVisible] = useScrollAnimation(0.2);
+	const [blogRef, blogVisible] = useScrollAnimation(0.2, '400px 0px');
 	const [dbBlogs, setDbBlogs] = useState([]);
 	const [diseases, setDiseases] = useState(diseaseDatabase);
 
 	useEffect(() => {
+		// Deferred until the blog section is nearly in view, so this fetch
+		// doesn't compete with the initial page load (see PageSpeed report).
+		if (!blogVisible) return;
 		fetchPublishedBlogs().then(setDbBlogs);
-	}, []);
+	}, [blogVisible]);
 
 	useEffect(() => {
 		fetchPublishedDiseases().then((data) => {
@@ -135,7 +136,7 @@ const HomePage = () => {
 				</section>
 
 				{/* 3. Before / After Results */}
-				<BeforeAfterSlideshow />
+				<LazySection loader={() => import('@/components/BeforeAfterSlideshow.jsx')} />
 
 				{/* 4. Stats Strip */}
 				<section className="stats-strip">
@@ -241,7 +242,7 @@ const HomePage = () => {
 				</section>
 
 				{/* 7. YouTube */}
-				<YouTubeSection />
+				<LazySection loader={() => import('@/components/YouTubeSection.jsx')} />
 
 				{/* 8. Blog Preview */}
 				<section ref={blogRef} className="section-white">
@@ -272,7 +273,7 @@ const HomePage = () => {
 				</section>
 
 				{/* 9. Reviews */}
-				<ReviewsSection />
+				<LazySection loader={() => import('@/components/ReviewsSection.jsx')} />
 
 				{/* 10. Book Appointment CTA */}
 				<section className="section-light">

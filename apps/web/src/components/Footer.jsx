@@ -80,7 +80,7 @@ const Footer = () => {
           </div>
 
           <div className="col-span-3 w-full md:col-span-1">
-            <span className="mb-1 text-xs text-white/50">Conditions</span>
+            <span className="mb-1 text-xs text-white/70">Conditions</span>
             <div className="flex flex-col gap-1">
               {conditions.map(({ title }, i) => (
                 <Link key={i} to="/diseases" className="w-max py-1 text-sm text-white/70 duration-200 hover:text-white hover:underline">
@@ -91,7 +91,7 @@ const Footer = () => {
           </div>
 
           <div className="col-span-3 w-full md:col-span-1">
-            <span className="mb-1 text-xs text-white/50">Company</span>
+            <span className="mb-1 text-xs text-white/70">Company</span>
             <div className="flex flex-col gap-1">
               {company.map(({ path, title }, i) => (
                 <Link key={i} to={path} className="w-max py-1 text-sm text-white/70 duration-200 hover:text-white hover:underline">
@@ -104,7 +104,7 @@ const Footer = () => {
 
         <div className="h-px w-full bg-white/10" />
 
-        <div className="flex flex-col items-center justify-between gap-3 px-4 pb-6 pt-4 text-xs text-white/50 sm:flex-row">
+        <div className="flex flex-col items-center justify-between gap-3 px-4 pb-6 pt-4 text-xs text-white/70 sm:flex-row">
           <p>&copy; {year} Maharana Wellness Clinic. All rights reserved.</p>
           <div className="flex gap-5">
             <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
