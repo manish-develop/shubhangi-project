@@ -19,6 +19,16 @@
     <meta name="theme-color" content="#0b4b41" />
     <title>Maharana Wellness Clinic | Dr. Shubhangi Maharana</title>
     <link rel="preconnect" href="https://gvmdrttrwesitnqgaedl.supabase.co" />
+    <!-- LCP image: the hero section's CSS background-image. Preloading it (as
+         a fetchpriority=high <link>, since a CSS background can't carry that
+         hint itself) lets the browser start the request immediately instead
+         of waiting for the stylesheet to be parsed. -->
+    <link
+      rel="preload"
+      as="image"
+      href="https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/hero-section-bg.jpg"
+      fetchpriority="high"
+    />
 
     <!-- Fonts: preload + non-blocking swap so this never delays first paint -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

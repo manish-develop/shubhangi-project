@@ -116,6 +116,8 @@ export const CircularShowcase = ({ items, autoplay = true, onSelect }) => {
 							key={item.slug}
 							src={item.image}
 							alt={item.title}
+							loading="lazy"
+							decoding="async"
 							className="absolute h-full w-full rounded-2xl object-cover shadow-2xl"
 							style={getImageStyle(index)}
 						/>

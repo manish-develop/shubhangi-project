@@ -11,6 +11,8 @@ export default function ImagePreview({ src, alt = 'Preview image', className }) 
 			<img
 				src={src}
 				alt={alt}
+				loading="lazy"
+				decoding="async"
 				onClick={() => setIsOpen(true)}
 				className={cn('cursor-pointer rounded-lg transition-opacity hover:opacity-90', className)}
 			/>

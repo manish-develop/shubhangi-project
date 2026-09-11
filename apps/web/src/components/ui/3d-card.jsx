@@ -41,7 +41,7 @@ export const InteractiveTravelCard = React.forwardRef(
 					style={{ transform: 'translateZ(50px)', transformStyle: 'preserve-3d' }}
 					className="absolute inset-4 grid h-[calc(100%-2rem)] w-[calc(100%-2rem)] grid-rows-[1fr_auto] rounded-xl shadow-lg"
 				>
-					<img src={imageUrl} alt={`${title}, ${subtitle}`} className="absolute inset-0 h-full w-full rounded-xl object-cover" />
+					<img src={imageUrl} alt={`${title}, ${subtitle}`} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full rounded-xl object-cover" />
 					<div className="absolute inset-0 h-full w-full rounded-xl bg-gradient-to-b from-black/20 via-transparent to-black/70" />
 
 					<div className="relative flex flex-col justify-between rounded-xl p-4 text-white">
