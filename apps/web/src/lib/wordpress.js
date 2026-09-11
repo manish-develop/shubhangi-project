@@ -42,6 +42,7 @@ const normalizeWpPost = (post) => {
 		date: formatDate(post.date),
 		sortDate: post.date,
 		readTime: estimateReadTime(post.content?.rendered),
+		isStatic: false,
 	};
 };
 

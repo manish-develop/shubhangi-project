@@ -17,9 +17,7 @@ import HomePage from './pages/HomePage.jsx';
 const AdminLoginPage = lazy(() => import('./admin/pages/LoginPage.jsx'));
 const AdminDashboardPage = lazy(() => import('./admin/pages/DashboardPage.jsx'));
 const AdminEventManagerPage = lazy(() => import('./admin/pages/EventManagerPage.jsx'));
-const AdminBlogsPage = lazy(() => import('./admin/pages/BlogsPage.jsx'));
 const AdminBlogFeedbackPage = lazy(() => import('./admin/pages/BlogFeedbackPage.jsx'));
-const AdminTestimonialsPage = lazy(() => import('./admin/pages/TestimonialsAdminPage.jsx'));
 const AdminReviewsPage = lazy(() => import('./admin/pages/ReviewsAdminPage.jsx'));
 const AdminDiseasesPage = lazy(() => import('./admin/pages/DiseasesAdminPage.jsx'));
 const AdminVideosPage = lazy(() => import('./admin/pages/VideosAdminPage.jsx'));
@@ -140,9 +138,7 @@ function App() {
           <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
             <Route index element={<AdminDashboardPage />} />
             <Route path="events" element={<AdminEventManagerPage />} />
-            <Route path="blogs" element={<AdminBlogsPage />} />
             <Route path="blog-feedback" element={<AdminBlogFeedbackPage />} />
-            <Route path="testimonials" element={<AdminTestimonialsPage />} />
             <Route path="reviews" element={<AdminReviewsPage />} />
             <Route path="diseases" element={<AdminDiseasesPage />} />
             <Route path="videos" element={<AdminVideosPage />} />

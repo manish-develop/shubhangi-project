@@ -6,7 +6,8 @@ import BlogCard from '@/components/BlogCard.jsx';
 import { FluidDropdown } from '@/components/ui/fluid-dropdown.jsx';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination.jsx';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation.js';
-import { fetchPublishedBlogs, getAllStaticArticles } from '@/lib/blogs.js';
+import { getAllStaticArticles } from '@/lib/blogs.js';
+import { fetchWpPosts } from '@/lib/wordpress.js';
 
 const PER_PAGE = 9;
 
@@ -14,15 +15,19 @@ const BlogPage = () => {
   const [heroRef, heroVisible] = useScrollAnimation(0.2);
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
-  const [dbBlogs, setDbBlogs] = useState([]);
+  const [wpBlogs, setWpBlogs] = useState([]);
 
   useEffect(() => {
-    fetchPublishedBlogs().then(setDbBlogs);
+    // Blog content now lives in WordPress (blog.drmaharanas.com) — the
+    // doctor posts there and it shows up here automatically, no admin
+    // upload step. Static built-in articles (deep disease guides) are
+    // separate, hand-authored content and stay merged in below.
+    fetchWpPosts().then(setWpBlogs);
   }, []);
 
   const sortedBlogs = useMemo(
-    () => [...dbBlogs, ...getAllStaticArticles()].sort((a, b) => new Date(b.sortDate) - new Date(a.sortDate)),
-    [dbBlogs]
+    () => [...wpBlogs, ...getAllStaticArticles()].sort((a, b) => new Date(b.sortDate) - new Date(a.sortDate)),
+    [wpBlogs]
   );
 
   const categories = ['All', ...new Set(sortedBlogs.map((blog) => blog.category))];

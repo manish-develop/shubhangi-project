@@ -2,10 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import LazyImage from '@/components/LazyImage.jsx';
 
-const BlogCard = ({ id, image, category, title, excerpt, readTime, author, date }) => {
+const BlogCard = ({ id, image, category, title, excerpt, readTime, author, date, isStatic }) => {
+	const href = isStatic === false ? `/blogs/${id}` : `/article/${id}`;
 	return (
 		<Link
-			to={`/article/${id}`}
+			to={href}
 			className="group flex flex-col gap-3 rounded-lg p-2 duration-200 hover:bg-accent/60 active:bg-accent"
 		>
 			<div className="relative aspect-video w-full overflow-hidden rounded-lg border border-border">

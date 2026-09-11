@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Star, Quote, Stethoscope, Youtube, Users, CalendarClock, CalendarDays } from 'lucide-react';
+import { Quote, Stethoscope, Youtube, Users, CalendarClock, CalendarDays } from 'lucide-react';
 import { adminApi } from '../lib/adminApi';
 import { DashboardClock } from '../components/DashboardClock.jsx';
 
+// Blogs and testimonials are managed in WordPress (blog.drmaharanas.com)
+// now, not here — see /admin/reviews onward for what's still local.
 const cards = [
 	{ key: 'events', label: 'Schedule', icon: CalendarDays, path: '/admin/events' },
-	{ key: 'blogs', label: 'Blogs', icon: FileText, path: '/admin/blogs' },
-	{ key: 'testimonials', label: 'Testimonials', icon: Star, path: '/admin/testimonials' },
 	{ key: 'reviews', label: 'Reviews', icon: Quote, path: '/admin/reviews' },
 	{ key: 'diseases', label: 'Diseases', icon: Stethoscope, path: '/admin/diseases' },
 	{ key: 'youtube-videos', label: 'Videos', icon: Youtube, path: '/admin/videos' },

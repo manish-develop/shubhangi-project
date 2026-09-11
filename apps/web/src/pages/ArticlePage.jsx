@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import SEO from '@/components/SEO.jsx';
 import { ArrowLeft, Calendar, Clock, User, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
@@ -6,7 +6,6 @@ import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import LazyImage from '@/components/LazyImage.jsx';
 import { blogArticles } from '@/data/blogArticles.js';
-import { fetchBlogBySlug } from '@/lib/blogs.js';
 import { FeedbackWidget } from '@/components/ui/feedback-widget.jsx';
 
 const extractYouTubeId = (url) => {
@@ -30,27 +29,16 @@ const ArticlePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const staticArticle = blogArticles.find(a => a.id === id);
-  const [dbArticle, setDbArticle] = useState(null);
-  const [checkedDb, setCheckedDb] = useState(false);
-
-  const article = staticArticle || dbArticle;
+  // This page now only serves the static, hand-authored deep-dive articles
+  // (data/blogArticles.js). Everything else lives in WordPress and is
+  // served at /blogs/:slug instead.
+  const article = blogArticles.find(a => a.id === id);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
 
-  useEffect(() => {
-    if (staticArticle) return;
-    setCheckedDb(false);
-    fetchBlogBySlug(id).then((blog) => {
-      setDbArticle(blog);
-      setCheckedDb(true);
-    });
-  }, [id, staticArticle]);
-
   if (!article) {
-    if (!checkedDb) return null;
     return (
       <div className="min-h-screen flex flex-col">
         <Header />

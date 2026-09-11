@@ -17,7 +17,8 @@ import InteractiveHoverButton from '@/components/InteractiveHoverButton.jsx';
 import { CircularShowcase } from '@/components/ui/circular-showcase.jsx';
 import { Button } from '@/components/ui/button.jsx';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation.js';
-import { fetchPublishedBlogs, getAllStaticArticles } from '@/lib/blogs.js';
+import { getAllStaticArticles } from '@/lib/blogs.js';
+import { fetchWpPosts } from '@/lib/wordpress.js';
 import { diseaseDatabase } from '@/data/diseaseDatabase.js';
 import { fetchPublishedDiseases } from '@/lib/diseases.js';
 import { specializationDatabase } from '@/data/specializationDatabase.js';
@@ -29,14 +30,15 @@ const HomePage = () => {
 	const [aboutRef, aboutVisible] = useScrollAnimation(0.2);
 	const [specializationsRef, specializationsVisible] = useScrollAnimation(0.2);
 	const [blogRef, blogVisible] = useScrollAnimation(0.2, '400px 0px');
-	const [dbBlogs, setDbBlogs] = useState([]);
+	const [wpBlogs, setWpBlogs] = useState([]);
 	const [diseases, setDiseases] = useState(diseaseDatabase);
 
 	useEffect(() => {
 		// Deferred until the blog section is nearly in view, so this fetch
 		// doesn't compete with the initial page load (see PageSpeed report).
+		// Blog content now lives in WordPress, not the old Supabase admin panel.
 		if (!blogVisible) return;
-		fetchPublishedBlogs().then(setDbBlogs);
+		fetchWpPosts().then(setWpBlogs);
 	}, [blogVisible]);
 
 	useEffect(() => {
@@ -46,8 +48,8 @@ const HomePage = () => {
 	}, []);
 
 	const latestBlogs = useMemo(
-		() => [...dbBlogs, ...getAllStaticArticles()].sort((a, b) => new Date(b.sortDate) - new Date(a.sortDate)).slice(0, 3),
-		[dbBlogs]
+		() => [...wpBlogs, ...getAllStaticArticles()].sort((a, b) => new Date(b.sortDate) - new Date(a.sortDate)).slice(0, 3),
+		[wpBlogs]
 	);
 
 	return (
