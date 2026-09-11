@@ -6,8 +6,7 @@ import Footer from '@/components/Footer.jsx';
 import { FluidDropdown } from '@/components/ui/fluid-dropdown.jsx';
 import { MasonryGrid } from '@/components/ui/image-testimonial-grid.jsx';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation.js';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+import { fetchWpTestimonials } from '@/lib/wordpress.js';
 
 // Extracts the video ID from either a youtu.be/ID short link or a full
 // youtube.com/watch?v=ID (or /embed/ID) link. Returns null when it can't parse.
@@ -103,25 +102,24 @@ const TestimonialsPage = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${API_URL}/testimonials`)
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => setCases(Array.isArray(data) ? data : []))
-      .catch(() => setCases([]));
+    // Testimonials are now managed in WordPress (the "testimonial" custom
+    // post type), same as blog posts — no more Supabase admin panel.
+    fetchWpTestimonials().then(setCases);
   }, []);
 
-  const filters = ['All', ...new Set(cases.map((c) => c.category).filter(Boolean))];
+  const filters = ['All', ...new Set(cases.map((c) => c.condition).filter(Boolean))];
 
   const filteredCases = activeFilter === 'All'
     ? cases
-    : cases.filter(c => c.category === activeFilter);
+    : cases.filter(c => c.condition === activeFilter);
 
   const cardItems = filteredCases.map((c) => ({
     id: c.id,
-    image: c.before_image || c.after_image,
+    image: c.image,
     title: c.title,
-    category: c.category,
-    description: c.description,
-    youtube_url: c.youtube_url,
+    category: c.condition,
+    description: c.content,
+    youtube_url: null,
   }));
 
   return (
