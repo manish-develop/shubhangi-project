@@ -63,6 +63,21 @@ async function uploadImageToWp(imageUrl, filename) {
 	}
 }
 
+// WP's title.rendered keeps HTML entities (e.g. an apostrophe comes back as
+// "&#8217;"), while Supabase titles have the literal character — decode
+// before comparing or titles that differ only by punctuation encoding will
+// never match and get duplicated on a re-run.
+const decodeEntities = (str) =>
+	str
+		.replace(/&#8217;/g, '’')
+		.replace(/&#8216;/g, '‘')
+		.replace(/&#8220;/g, '“')
+		.replace(/&#8221;/g, '”')
+		.replace(/&amp;/g, '&')
+		.replace(/&#038;/g, '&');
+
+const normalizeTitle = (str) => decodeEntities(str || '').trim().toLowerCase();
+
 async function getExistingTitles(postType) {
 	const titles = new Set();
 	let page = 1;
@@ -73,7 +88,7 @@ async function getExistingTitles(postType) {
 		if (!res.ok) break;
 		const items = await res.json();
 		if (!Array.isArray(items) || items.length === 0) break;
-		items.forEach((item) => titles.add(item.title.rendered.trim().toLowerCase()));
+		items.forEach((item) => titles.add(normalizeTitle(item.title.rendered)));
 		if (items.length < 100) break;
 		page += 1;
 	}
@@ -103,7 +118,7 @@ async function migrateBlogs() {
 	const existingTitles = APPLY ? await getExistingTitles('posts') : new Set();
 
 	for (const blog of blogs) {
-		const key = (blog.title || '').trim().toLowerCase();
+		const key = normalizeTitle(blog.title);
 		if (existingTitles.has(key)) {
 			console.log(`  - skip (already in WP): "${blog.title}"`);
 			continue;
@@ -146,7 +161,7 @@ async function migrateTestimonials() {
 
 	for (const t of testimonials) {
 		const title = t.title || t.patient_name || 'Testimonial';
-		const key = title.trim().toLowerCase();
+		const key = normalizeTitle(title);
 		if (existingTitles.has(key)) {
 			console.log(`  - skip (already in WP): "${title}"`);
 			continue;
