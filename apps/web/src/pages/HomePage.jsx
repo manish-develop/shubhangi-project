@@ -42,9 +42,19 @@ const HomePage = () => {
 	}, [blogVisible]);
 
 	useEffect(() => {
-		fetchPublishedDiseases().then((data) => {
-			if (data.length > 0) setDiseases(data);
+		// The search bar already has the static diseaseDatabase to work with
+		// immediately, so this live refresh isn't needed for first paint —
+		// idle-defer it so it doesn't compete with critical resources on the
+		// initial load (it was showing up in the PageSpeed network dependency
+		// chain otherwise).
+		const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
+		const cancelIdle = window.cancelIdleCallback || clearTimeout;
+		const handle = idle(() => {
+			fetchPublishedDiseases().then((data) => {
+				if (data.length > 0) setDiseases(data);
+			});
 		});
+		return () => cancelIdle(handle);
 	}, []);
 
 	const latestBlogs = useMemo(
@@ -98,7 +108,7 @@ const HomePage = () => {
 									</Link>
 								</Button>
 								<Button asChild size="lg" variant="ghost" className="h-12 rounded-full px-5 text-base">
-									<Link to="/about">
+									<Link to="/about" aria-label="Learn more about Dr. Shubhangi Maharana">
 										<span className="text-nowrap">Learn More</span>
 									</Link>
 								</Button>

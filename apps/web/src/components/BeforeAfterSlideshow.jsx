@@ -6,7 +6,17 @@ const BeforeAfterSlideshow = () => {
 	const [cases, setCases] = useState([]);
 
 	useEffect(() => {
-		fetchWpTestimonials().then(setCases);
+		// This section sits high enough on the homepage that LazySection's
+		// generous rootMargin mounts it almost immediately, so without this
+		// the WP testimonials fetch was landing on the page's critical
+		// network path (see PageSpeed report, Sep 13 2026). Idle-defer it —
+		// nothing above the fold depends on this data.
+		const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
+		const cancelIdle = window.cancelIdleCallback || clearTimeout;
+		const handle = idle(() => {
+			fetchWpTestimonials().then(setCases);
+		});
+		return () => cancelIdle(handle);
 	}, []);
 
 	if (cases.length === 0) return null;

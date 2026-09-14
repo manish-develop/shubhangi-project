@@ -45,6 +45,8 @@ const TestimonialCard = ({ item }) => {
         <img
           src={item.image}
           alt={item.title}
+          width={600}
+          height={600}
           loading="lazy"
           onLoad={() => setImageLoaded(true)}
           className={`block w-full h-auto transition-all duration-500 group-hover:scale-105 ${

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 
-const LazyImage = ({ src, alt, className, ...props }) => {
+// width/height default to a 1:1 intrinsic box — every call site here sizes
+// the image with CSS (aspect-square, object-cover, etc.), so the exact
+// numbers don't matter, but Lighthouse's CLS-prevention audit wants the
+// attributes present so the browser can reserve space before the image loads.
+const LazyImage = ({ src, alt, className, width = 800, height = 800, ...props }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
@@ -10,6 +14,8 @@ const LazyImage = ({ src, alt, className, ...props }) => {
       <img
         src={src}
         alt={alt}
+        width={width}
+        height={height}
         loading="lazy"
         onLoad={() => setIsLoaded(true)}
         className={cn(

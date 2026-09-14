@@ -1,0 +1,29 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	# Canonicalize to the bare (non-www) domain — without this, www and
+	# non-www both served the same content with no redirect between them,
+	# which is a duplicate-content issue for SEO.
+	RewriteCond %{HTTP_HOST} ^www\.drmaharanas\.com$ [NC]
+	RewriteRule ^(.*)$ https://drmaharanas.com/$1 [R=301,L]
+
+	RewriteBase /
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+	# index.html (and any other non-asset file) references content-hashed
+	# asset filenames, so it must never be cached long on the CDN — a 7-day
+	# cache here was the reason a fresh deploy didn't show up on the live
+	# site until the CDN cache expired or was purged.
+	Header set Cache-Control "public, s-maxage=60, max-age=0, must-revalidate"
+
+	# Vite content-hashes every filename under /assets/ (a new build always
+	# gets new filenames), so these can be cached for a full year without
+	# ever serving stale content after a deploy.
+	<If "%{REQUEST_URI} =~ m#^/assets/.*$#">
+		Header set Cache-Control "public, max-age=31536000, immutable"
+	</If>
+</IfModule>
