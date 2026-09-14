@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import SEO from '@/components/SEO.jsx';
+import BreadcrumbSchema from '@/components/BreadcrumbSchema.jsx';
 import { ArrowLeft, Calendar, Clock, User, Share2, Facebook, Twitter, Linkedin, CheckCircle2 } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
@@ -134,6 +135,7 @@ const DiseaseArticlePage = () => {
         description={`Learn about the effective, natural homoeopathic treatment for ${disease.name} by Dr. Shubhangi Maharana. Safe, holistic care without side effects.`}
         path={`/disease/${diseaseId}`}
       />
+      <BreadcrumbSchema items={[{ name: 'Home', path: '/' }, { name: 'Diseases', path: '/diseases' }, { name: disease.name }]} />
 
       <Header />
 

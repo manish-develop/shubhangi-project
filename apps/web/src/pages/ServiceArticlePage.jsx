@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import SEO from '@/components/SEO.jsx';
+import BreadcrumbSchema from '@/components/BreadcrumbSchema.jsx';
 import { ArrowLeft, Calendar, Clock, User, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
@@ -91,6 +92,7 @@ const ServiceArticlePage = () => {
         description={`Learn about our ${service.title} services at Maharana Wellness Clinic.`}
         path={`/service/${serviceId}`}
       />
+      <BreadcrumbSchema items={[{ name: 'Home', path: '/' }, { name: 'Services', path: '/services' }, { name: service.title }]} />
 
       <Header />
 

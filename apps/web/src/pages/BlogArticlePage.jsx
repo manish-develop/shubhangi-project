@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import SEO from '@/components/SEO.jsx';
+import BreadcrumbSchema from '@/components/BreadcrumbSchema.jsx';
 import { ArrowLeft, Calendar, Clock, User, Facebook, Twitter, Linkedin } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
@@ -55,6 +56,7 @@ const BlogArticlePage = () => {
 				type="article"
 				path={`/blogs/${slug}`}
 			/>
+			<BreadcrumbSchema items={[{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blogs' }, { name: article.title }]} />
 
 			<Header />
 

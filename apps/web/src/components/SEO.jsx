@@ -1,32 +1,32 @@
-import React from 'react';
-import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
 import { SITE_URL, SITE_NAME } from '@/constants/site.js';
 import { ClinicImages } from '@/constants/clinicImages.js';
+import { setDocumentTitle, setMetaTag, setLinkTag } from '@/lib/seo.js';
 
 const SEO = ({ title, description, path = '/', image, type = 'website' }) => {
-	const url = `${SITE_URL}${path === '/' ? '' : path}`;
-	const ogImage = image || ClinicImages.heroSection;
+	useEffect(() => {
+		const url = `${SITE_URL}${path === '/' ? '' : path}`;
+		const ogImage = image || ClinicImages.heroSection;
 
-	return (
-		<Helmet>
-			<title>{title}</title>
-			<meta name="description" content={description} />
-			<meta name="author" content="Dr. Shubhangi Maharana" />
-			<link rel="canonical" href={url} />
+		setDocumentTitle(title);
+		setMetaTag('name', 'description', description);
+		setMetaTag('name', 'author', 'Dr. Shubhangi Maharana');
+		setLinkTag('canonical', url);
 
-			<meta property="og:type" content={type} />
-			<meta property="og:site_name" content={SITE_NAME} />
-			<meta property="og:title" content={title} />
-			<meta property="og:description" content={description} />
-			<meta property="og:url" content={url} />
-			<meta property="og:image" content={ogImage} />
+		setMetaTag('property', 'og:type', type);
+		setMetaTag('property', 'og:site_name', SITE_NAME);
+		setMetaTag('property', 'og:title', title);
+		setMetaTag('property', 'og:description', description);
+		setMetaTag('property', 'og:url', url);
+		setMetaTag('property', 'og:image', ogImage);
 
-			<meta name="twitter:card" content="summary_large_image" />
-			<meta name="twitter:title" content={title} />
-			<meta name="twitter:description" content={description} />
-			<meta name="twitter:image" content={ogImage} />
-		</Helmet>
-	);
+		setMetaTag('name', 'twitter:card', 'summary_large_image');
+		setMetaTag('name', 'twitter:title', title);
+		setMetaTag('name', 'twitter:description', description);
+		setMetaTag('name', 'twitter:image', ogImage);
+	}, [title, description, path, image, type]);
+
+	return null;
 };
 
 export default SEO;

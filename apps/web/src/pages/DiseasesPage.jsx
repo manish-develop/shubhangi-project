@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import SEO from '@/components/SEO.jsx';
+import BreadcrumbSchema from '@/components/BreadcrumbSchema.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
@@ -70,6 +71,7 @@ const DiseasesPage = () => {
         description="Browse our complete A-Z list of 300+ diseases and conditions treated with homoeopathy by Dr. Shubhangi Maharana. Search your condition and learn about homoeopathic treatment options."
         path="/diseases"
       />
+      <BreadcrumbSchema items={[{ name: 'Home', path: '/' }, { name: 'Diseases' }]} />
 
       <Header />
 

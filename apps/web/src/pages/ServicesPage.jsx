@@ -1,5 +1,6 @@
 import React from 'react';
 import SEO from '@/components/SEO.jsx';
+import BreadcrumbSchema from '@/components/BreadcrumbSchema.jsx';
 import { Link } from 'react-router-dom';
 import { Sparkles, Heart, Baby, Shield, Activity, Brain, Bone, Stethoscope, Check, X } from 'lucide-react';
 import Header from '@/components/Header.jsx';
@@ -93,6 +94,7 @@ const ServicesPage = () => {
         description="Explore our specialized services — Women's Health, Facial Aesthetics, Chronic Diseases, Skin Disorders, Hair Treatments, Diet & Nutrition. Expert homoeopathic care by Dr. Shubhangi Maharana."
         path="/services"
       />
+      <BreadcrumbSchema items={[{ name: 'Home', path: '/' }, { name: 'Services' }]} />
 
       <Header />
 

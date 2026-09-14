@@ -1,7 +1,7 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Route, Routes, BrowserRouter as Router, Outlet, useLocation, Navigate } from 'react-router-dom';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'sonner';
+import { setJsonLd } from '@/lib/seo.js';
 import ScrollToTop from './components/ScrollToTop.jsx';
 import { SocialLinks } from './components/ui/social-links.jsx';
 import { FloatingAppointmentButton } from './components/FloatingAppointmentButton.jsx';
@@ -48,62 +48,68 @@ function RouteLoadingFallback() {
   );
 }
 
+const CLINIC_ADDRESS = {
+  "@type": "PostalAddress",
+  "streetAddress": "F-42, Block F, Kirti Nagar",
+  "addressLocality": "New Delhi",
+  "addressRegion": "Delhi",
+  "postalCode": "110015",
+  "addressCountry": "IN"
+};
+const CLINIC_IMAGE = "https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/shubhangi-potrait.jpeg";
+const CLINIC_TELEPHONE = "+919625030958";
+const CLINIC_PRICE_RANGE = "₹₹";
+
 function App() {
+  useEffect(() => {
+    setJsonLd('schema-local-business', {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Maharana Wellness Clinic",
+      "image": CLINIC_IMAGE,
+      "description": "Homoeopathy clinic specializing in chronic diseases, women's health, and facial aesthetics. 8+ years experience, 1000+ patients treated.",
+      "address": CLINIC_ADDRESS,
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 28.6519,
+        "longitude": 77.1414
+      },
+      "telephone": CLINIC_TELEPHONE,
+      "email": "drshubhangi.econsultation@gmail.com",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "11:00",
+          "closes": "20:00"
+        }
+      ],
+      "priceRange": CLINIC_PRICE_RANGE
+    });
+
+    setJsonLd('schema-physician', {
+      "@context": "https://schema.org",
+      "@type": "Physician",
+      "name": "Dr. Shubhangi Maharana",
+      "medicalSpecialty": "Homoeopathy",
+      "description": "BHMS, MD Homoeopathy specialist with 8+ years experience in homoeopathy",
+      "image": CLINIC_IMAGE,
+      "telephone": CLINIC_TELEPHONE,
+      "address": CLINIC_ADDRESS,
+      "priceRange": CLINIC_PRICE_RANGE,
+      "alumniOf": {
+        "@type": "EducationalOrganization",
+        "name": "Mumbai Homoeopathic Medical College"
+      },
+      "memberOf": {
+        "@type": "Organization",
+        "name": "Central Council of Homoeopathy"
+      }
+    });
+  }, []);
+
   return (
-    <HelmetProvider>
       <Router>
-      <Helmet>
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "LocalBusiness",
-            "name": "Maharana Wellness Clinic",
-            "image": "https://images.unsplash.com/photo-1675270714610-11a5cadcc7b3",
-            "description": "Homoeopathy clinic specializing in chronic diseases, women's health, and facial aesthetics. 8+ years experience, 1000+ patients treated.",
-            "address": {
-              "@type": "PostalAddress",
-              "streetAddress": "F-42, Block F, Kirti Nagar",
-              "addressLocality": "New Delhi",
-              "addressRegion": "Delhi",
-              "postalCode": "110015",
-              "addressCountry": "IN"
-            },
-            "geo": {
-              "@type": "GeoCoordinates",
-              "latitude": 28.6519,
-              "longitude": 77.1414
-            },
-            "telephone": "+919625030958",
-            "email": "drshubhangi.econsultation@gmail.com",
-            "openingHoursSpecification": [
-              {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-                "opens": "11:00",
-                "closes": "20:00"
-              }
-            ],
-            "priceRange": "₹₹"
-          })}
-        </script>
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Physician",
-            "name": "Dr. Shubhangi Maharana",
-            "medicalSpecialty": "Homoeopathy",
-            "description": "BHMS, MD Homoeopathy specialist with 8+ years experience in homoeopathy",
-            "alumniOf": {
-              "@type": "EducationalOrganization",
-              "name": "Mumbai Homoeopathic Medical College"
-            },
-            "memberOf": {
-              "@type": "Organization",
-              "name": "Central Council of Homoeopathy"
-            }
-          })}
-        </script>
-      </Helmet>
       <ScrollToTop />
       <Toaster position="top-right" richColors />
       <PublicSocialLinks />
@@ -157,7 +163,6 @@ function App() {
       </Routes>
       </Suspense>
       </Router>
-    </HelmetProvider>
   );
 }
 

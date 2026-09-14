@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import SEO from '@/components/SEO.jsx';
+import BreadcrumbSchema from '@/components/BreadcrumbSchema.jsx';
 import { ArrowLeft, Calendar, Clock, User, Share2, Facebook, Twitter, Linkedin, CheckCircle2, Activity } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
@@ -44,6 +45,7 @@ const SpecializationArticlePage = () => {
         description={specialization?.introduction || 'Specialization details'}
         path={`/specialization/${slug}`}
       />
+      <BreadcrumbSchema items={[{ name: 'Home', path: '/' }, { name: specialization.title }]} />
 
       <Header />
 

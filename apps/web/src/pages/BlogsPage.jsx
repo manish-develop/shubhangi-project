@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SEO from '@/components/SEO.jsx';
+import BreadcrumbSchema from '@/components/BreadcrumbSchema.jsx';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import WpBlogCard from '@/components/WpBlogCard.jsx';
@@ -25,6 +26,7 @@ const BlogsPage = () => {
 				description="Read expert health articles and insights by Dr. Shubhangi Maharana on homoeopathic treatments, women's health, skin care, hair care, chronic diseases and holistic wellness."
 				path="/blogs"
 			/>
+			<BreadcrumbSchema items={[{ name: 'Home', path: '/' }, { name: 'Blog' }]} />
 
 			<Header />
 
