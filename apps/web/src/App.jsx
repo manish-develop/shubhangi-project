@@ -32,6 +32,7 @@ const DiseaseArticlePage = lazy(() => import('./pages/DiseaseArticlePage.jsx'));
 const SpecializationArticlePage = lazy(() => import('./pages/SpecializationArticlePage.jsx'));
 const BlogsPage = lazy(() => import('./pages/BlogsPage.jsx'));
 const BlogArticlePage = lazy(() => import('./pages/BlogArticlePage.jsx'));
+const BlogCategoryPage = lazy(() => import('./pages/BlogCategoryPage.jsx'));
 const TestimonialsPage = lazy(() => import('./pages/TestimonialsPage.jsx'));
 const ContactPage = lazy(() => import('./pages/ContactPage.jsx'));
 const AppointmentPage = lazy(() => import('./pages/AppointmentPage.jsx'));
@@ -125,6 +126,8 @@ function App() {
         <Route path="/blog" element={<Navigate to="/blogs" replace />} />
         <Route path="/article/:id" element={<Navigate to="/blogs" replace />} />
         <Route path="/blogs" element={<BlogsPage />} />
+        <Route path="/blogs/category/:slug" element={<BlogCategoryPage taxonomy="category" />} />
+        <Route path="/blogs/tag/:slug" element={<BlogCategoryPage taxonomy="tag" />} />
         <Route path="/blogs/:slug" element={<BlogArticlePage />} />
         <Route path="/testimonials" element={<TestimonialsPage />} />
         <Route path="/contact" element={<ContactPage />} />

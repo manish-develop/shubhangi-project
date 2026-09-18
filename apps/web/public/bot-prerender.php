@@ -46,7 +46,7 @@ if ($slug !== '') {
 
 	if ($post) {
 		$yoast = $post['yoast_head_json'] ?? null;
-		$rawTitle = preg_replace('/<[^>]*>/', '', $post['title']['rendered'] ?? '');
+		$rawTitle = html_entity_decode(preg_replace('/<[^>]*>/', '', $post['title']['rendered'] ?? ''), ENT_QUOTES, 'UTF-8');
 		$title = $rawTitle !== '' ? "$rawTitle | Maharana Wellness Clinic Blog" : $fallbackTitle;
 		$description = $yoast['og_description'] ?? $fallbackDescription;
 		$image = $yoast['og_image'][0]['url'] ?? $fallbackImage;

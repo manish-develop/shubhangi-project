@@ -5,7 +5,17 @@ const WP_BASE = 'https://blog.drmaharanas.com/wp-json/wp/v2';
 
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&q=80&w=800&h=500';
 
-const stripHtml = (html = '') => html.replace(/<[^>]*>/g, '').replace(/&hellip;/g, '…').replace(/&#8217;/g, "'").trim();
+// Decodes HTML entities the reliable way — via the browser's own parser —
+// rather than a hand-maintained list of entity codes, so every named entity
+// (&amp;, &hellip;, &#8217;...) and every numeric one (&#8211;...) that WP
+// puts in title.rendered/excerpt.rendered comes out as the real character.
+const decodeEntities = (html = '') => {
+	const el = document.createElement('textarea');
+	el.innerHTML = html;
+	return el.value;
+};
+
+const stripHtml = (html = '') => decodeEntities(html.replace(/<[^>]*>/g, '')).trim();
 
 const estimateReadTime = (html = '') => {
 	const words = stripHtml(html).split(/\s+/).filter(Boolean).length;
@@ -104,6 +114,46 @@ export async function fetchWpPostBySlug(slug) {
 		return Array.isArray(data) && data.length > 0 ? normalizeWpPost(data[0]) : null;
 	} catch {
 		return null;
+	}
+}
+
+// Resolves a taxonomy term's slug (as it appears in the URL,
+// /blogs/category/<slug>) to WordPress's numeric term id, which the posts
+// endpoint filters by.
+async function resolveTermId(taxonomy, slug) {
+	try {
+		const res = await fetch(`${WP_BASE}/${taxonomy}?slug=${encodeURIComponent(slug)}`);
+		if (!res.ok) return null;
+		const data = await res.json();
+		return Array.isArray(data) && data.length > 0 ? data[0] : null;
+	} catch {
+		return null;
+	}
+}
+
+export async function fetchWpPostsByCategory(categorySlug, { perPage = 30 } = {}) {
+	const term = await resolveTermId('categories', categorySlug);
+	if (!term) return { term: null, posts: [] };
+	try {
+		const res = await fetch(`${WP_BASE}/posts?_embed&categories=${term.id}&per_page=${perPage}`);
+		if (!res.ok) return { term, posts: [] };
+		const data = await res.json();
+		return { term, posts: Array.isArray(data) ? data.map(normalizeWpPost) : [] };
+	} catch {
+		return { term, posts: [] };
+	}
+}
+
+export async function fetchWpPostsByTag(tagSlug, { perPage = 30 } = {}) {
+	const term = await resolveTermId('tags', tagSlug);
+	if (!term) return { term: null, posts: [] };
+	try {
+		const res = await fetch(`${WP_BASE}/posts?_embed&tags=${term.id}&per_page=${perPage}`);
+		if (!res.ok) return { term, posts: [] };
+		const data = await res.json();
+		return { term, posts: Array.isArray(data) ? data.map(normalizeWpPost) : [] };
+	} catch {
+		return { term, posts: [] };
 	}
 }
 
