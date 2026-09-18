@@ -8,6 +8,18 @@
 	RewriteRule ^(.*)$ https://drmaharanas.com/$1 [R=301,L]
 
 	RewriteBase /
+
+	# Social-media link-preview crawlers (WhatsApp, Facebook, Twitter/X,
+	# LinkedIn, Slack, Telegram, Discord...) don't execute JavaScript, so
+	# they'd otherwise only ever see this SPA's generic index.html shell —
+	# no per-post title/image/description in the link card. Send just
+	# those user agents, just for blog post URLs, to a small PHP script
+	# that fetches the real post's data from WordPress/Yoast and renders
+	# proper tags server-side. Everyone else (real visitors, Googlebot,
+	# which does run JS) gets the normal React app, untouched.
+	RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|TelegramBot|Discordbot|Pinterest|redditbot|SkypeUriPreview) [NC]
+	RewriteRule ^blogs/([a-zA-Z0-9-]+)/?$ /bot-prerender.php?slug=$1 [L,QSA]
+
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^ index.html [L]
