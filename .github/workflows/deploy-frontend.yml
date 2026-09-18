@@ -23,6 +23,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
 
@@ -33,11 +34,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build
+      # build:ssg = vite build, then a headless-browser pass over every
+      # route (static pages + every disease/blog/service, fetched live
+      # from WordPress/Supabase) that bakes real rendered content into a
+      # static HTML file per route. Fixes both the "meta/schema only after
+      # JS runs" gap and, more importantly, mobile PageSpeed — a cold
+      # visit no longer has to download+run the JS bundle and then fetch
+      # data before anything paints.
+      - name: Build (with static prerendering)
         working-directory: apps/web
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
-        run: npm run build
+        run: npm run build:ssg
 
       - name: Deploy to Hostinger
         uses: appleboy/scp-action@v0.1.7
