@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import SEO from '@/components/SEO.jsx';
 import BreadcrumbSchema from '@/components/BreadcrumbSchema.jsx';
+import ArticleSchema from '@/components/ArticleSchema.jsx';
 import { ArrowLeft, Calendar, Clock, User, Facebook, Twitter, Linkedin } from 'lucide-react';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import LazyImage from '@/components/LazyImage.jsx';
 import BlogComments from '@/components/BlogComments.jsx';
-import { fetchWpPostBySlug } from '@/lib/wordpress.js';
+import { fetchWpPostBySlug, buildBlogArticleSchema } from '@/lib/wordpress.js';
+import { SITE_URL } from '@/constants/site.js';
 
 const BlogArticlePage = () => {
 	const { slug } = useParams();
@@ -57,6 +59,7 @@ const BlogArticlePage = () => {
 				path={`/blogs/${slug}`}
 			/>
 			<BreadcrumbSchema items={[{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blogs' }, { name: article.title }]} />
+			<ArticleSchema schema={buildBlogArticleSchema(article, `${SITE_URL}/blogs/${slug}`)} />
 
 			<Header />
 

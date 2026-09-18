@@ -30,22 +30,60 @@ const normalizeWpPost = (post) => {
 	// that on the public site.
 	const author = rawAuthor && !rawAuthor.includes('@') ? rawAuthor : 'Dr. Shubhangi Maharana';
 
+	// Yoast SEO exposes its computed title/description/schema for this exact
+	// post on every REST response (yoast_head_json) — this is what lets the
+	// per-post SEO tags stay live and correct for any future post with zero
+	// extra code, instead of us re-deriving/hardcoding them.
+	const yoast = post.yoast_head_json || null;
+
 	return {
 		id: post.slug,
 		wpId: post.id,
 		slug: post.slug,
 		title: stripHtml(post.title?.rendered || ''),
-		excerpt: stripHtml(post.excerpt?.rendered || ''),
+		// Yoast's computed description reflects whatever the doctor actually
+		// set in the Yoast metabox for this post (or Yoast's own excerpt
+		// fallback logic) — prefer it over the raw WP excerpt when present.
+		excerpt: yoast?.og_description || stripHtml(post.excerpt?.rendered || ''),
 		content: post.content?.rendered || '',
-		image: featuredMedia?.source_url || FALLBACK_IMAGE,
+		image: yoast?.og_image?.[0]?.url || featuredMedia?.source_url || FALLBACK_IMAGE,
 		category,
 		author,
 		date: formatDate(post.date),
 		sortDate: post.date,
+		modified: post.modified,
 		readTime: estimateReadTime(post.content?.rendered),
 		isStatic: false,
+		yoast,
 	};
 };
+
+// Builds a self-contained BlogPosting JSON-LD block from Yoast's live data
+// for this post, pointed at our own URL (drmaharanas.com/blogs/:slug) —
+// not blog.drmaharanas.com's. Yoast's own graph cross-references other
+// nodes (author, publisher, image) by @id on its own domain, which would
+// be dangling references here, so this pulls just the fields and rebuilds
+// a flat, self-contained node instead of re-emitting that graph as-is.
+export function buildBlogArticleSchema(post, url) {
+	const article = post.yoast?.schema?.['@graph']?.find((n) => n['@type'] === 'Article');
+
+	return {
+		'@context': 'https://schema.org',
+		'@type': 'BlogPosting',
+		'headline': article?.headline || post.title,
+		'description': post.excerpt,
+		'datePublished': article?.datePublished || post.sortDate,
+		'dateModified': post.modified || article?.datePublished || post.sortDate,
+		'author': { '@type': 'Person', 'name': post.author },
+		'publisher': { '@type': 'Organization', 'name': 'Maharana Wellness Clinic' },
+		'image': post.image,
+		'mainEntityOfPage': { '@type': 'WebPage', '@id': url },
+		'url': url,
+		...(article?.wordCount ? { wordCount: article.wordCount } : {}),
+		...(article?.articleSection ? { articleSection: article.articleSection } : {}),
+		'inLanguage': 'en-US',
+	};
+}
 
 export async function fetchWpPosts({ perPage = 30 } = {}) {
 	try {
