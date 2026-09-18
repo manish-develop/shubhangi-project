@@ -12,6 +12,9 @@
  * dynamic kinds, so new content is covered automatically with zero
  * deploys — nothing here is hardcoded per post/disease/service.
  *
+ * Deploys to this file (and the rest of apps/web) go out automatically
+ * via .github/workflows/deploy-frontend.yml on push to main.
+ *
  * Query params: kind (blog|disease|service|static, required), slug (for
  * blog/disease/service), page (for static: home|diseases|services)
  */
