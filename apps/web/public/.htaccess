@@ -13,12 +13,28 @@
 	# LinkedIn, Slack, Telegram, Discord...) don't execute JavaScript, so
 	# they'd otherwise only ever see this SPA's generic index.html shell —
 	# no per-post title/image/description in the link card. Send just
-	# those user agents, just for blog post URLs, to a small PHP script
-	# that fetches the real post's data from WordPress/Yoast and renders
-	# proper tags server-side. Everyone else (real visitors, Googlebot,
-	# which does run JS) gets the normal React app, untouched.
+	# those user agents to a small PHP script that fetches the real page's
+	# data (from WordPress/Yoast for blog posts, our own API for diseases,
+	# static values for everything else) and renders proper tags
+	# server-side. Everyone else (real visitors, Googlebot, which does run
+	# JS) gets the normal React app, untouched.
 	RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|TelegramBot|Discordbot|Pinterest|redditbot|SkypeUriPreview) [NC]
-	RewriteRule ^blogs/([a-zA-Z0-9-]+)/?$ /bot-prerender.php?slug=$1 [L,QSA]
+	RewriteRule ^blogs/([a-zA-Z0-9-]+)/?$ /bot-prerender.php?kind=blog&slug=$1 [L,QSA]
+
+	RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|TelegramBot|Discordbot|Pinterest|redditbot|SkypeUriPreview) [NC]
+	RewriteRule ^disease/([a-zA-Z0-9-]+)/?$ /bot-prerender.php?kind=disease&slug=$1 [L,QSA]
+
+	RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|TelegramBot|Discordbot|Pinterest|redditbot|SkypeUriPreview) [NC]
+	RewriteRule ^service/([a-zA-Z0-9-]+)/?$ /bot-prerender.php?kind=service&slug=$1 [L,QSA]
+
+	RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|TelegramBot|Discordbot|Pinterest|redditbot|SkypeUriPreview) [NC]
+	RewriteRule ^diseases/?$ /bot-prerender.php?kind=static&page=diseases [L,QSA]
+
+	RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|TelegramBot|Discordbot|Pinterest|redditbot|SkypeUriPreview) [NC]
+	RewriteRule ^services/?$ /bot-prerender.php?kind=static&page=services [L,QSA]
+
+	RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|TelegramBot|Discordbot|Pinterest|redditbot|SkypeUriPreview) [NC]
+	RewriteRule ^$ /bot-prerender.php?kind=static&page=home [L,QSA]
 
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
