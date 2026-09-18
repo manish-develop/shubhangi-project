@@ -1,0 +1,51 @@
+name: Deploy frontend to Hostinger
+
+# Replaces Hostinger's own "hbuilds" auto-deploy, which stopped triggering
+# on new commits (confirmed via its deploy logs on the server — no run
+# since Sep 14, despite many commits since). This workflow does the same
+# job ourselves: build, then upload dist/ over SFTP.
+#
+# Also serves as the rebuild trigger for static-generation: repository_dispatch
+# lets an external system (a WordPress publish webhook, or our own admin
+# panel after a Supabase content change) kick off a fresh build+deploy
+# on demand, not just on a code push.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/web/**'
+      - '.github/workflows/deploy-frontend.yml'
+  repository_dispatch:
+    types: [rebuild-frontend]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        working-directory: apps/web
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+        run: npm run build
+
+      - name: Deploy to Hostinger
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOSTINGER_HOST }}
+          port: ${{ secrets.HOSTINGER_PORT }}
+          username: ${{ secrets.HOSTINGER_USERNAME }}
+          password: ${{ secrets.HOSTINGER_PASSWORD }}
+          source: 'apps/web/dist/*,apps/web/dist/.htaccess'
+          target: ${{ secrets.HOSTINGER_WEB_ROOT }}
+          strip_components: 3
