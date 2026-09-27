@@ -198,7 +198,7 @@ function maharana_blog_register_testimonial_cpt() {
 		'has_archive'  => true,
 		'show_in_menu' => true,
 		'menu_icon'    => 'dashicons-format-quote',
-		'supports'     => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
+		'supports'     => array( 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields' ),
 		'show_in_rest' => true,
 		'rest_base'    => 'testimonials',
 	) );
@@ -291,6 +291,175 @@ function maharana_blog_save_testimonial_meta( $post_id ) {
 	}
 }
 add_action( 'save_post_testimonial', 'maharana_blog_save_testimonial_meta' );
+
+/**
+ * Generic custom-post-type + meta-fields registration, shared by
+ * Diseases, YouTube Videos, and Reviews below — same pattern as the
+ * Testimonial CPT above, factored out since it's now used four times
+ * with nothing but field lists differing.
+ *
+ * $fields is an array of [key, type, label, input_type, extra_attrs],
+ * where input_type is 'text' | 'number' | 'textarea' | 'checkbox'.
+ */
+function maharana_register_cpt_with_meta( $post_type, $args, $fields ) {
+	add_action( 'init', function () use ( $post_type, $args ) {
+		register_post_type( $post_type, $args );
+	} );
+
+	add_action( 'init', function () use ( $post_type, $fields ) {
+		foreach ( $fields as $field ) {
+			register_post_meta( $post_type, $field[0], array(
+				'type'          => $field[1],
+				'single'        => true,
+				'show_in_rest'  => true,
+				'auth_callback' => function () {
+					return current_user_can( 'edit_posts' );
+				},
+			) );
+		}
+	} );
+
+	add_action( 'add_meta_boxes', function () use ( $post_type, $args, $fields ) {
+		add_meta_box(
+			"maharana_{$post_type}_details",
+			$args['labels']['name'] . ' ' . __( 'Details', 'maharana-blog' ),
+			function ( $post ) use ( $post_type, $fields ) {
+				wp_nonce_field( "maharana_{$post_type}_meta", "maharana_{$post_type}_meta_nonce" );
+				foreach ( $fields as $field ) {
+					list( $key, $type, $label, $input_type ) = $field;
+					$value = get_post_meta( $post->ID, $key, true );
+					$name  = "maharana_{$post_type}_{$key}";
+					echo '<p><label for="' . esc_attr( $name ) . '"><strong>' . esc_html( $label ) . '</strong></label><br>';
+					if ( 'checkbox' === $input_type ) {
+						echo '<input type="checkbox" id="' . esc_attr( $name ) . '" name="' . esc_attr( $name ) . '" value="1"' . checked( $value, '1', false ) . ' />';
+					} elseif ( 'textarea' === $input_type ) {
+						echo '<textarea id="' . esc_attr( $name ) . '" name="' . esc_attr( $name ) . '" class="widefat" rows="3">' . esc_textarea( $value ) . '</textarea>';
+					} else {
+						echo '<input type="' . esc_attr( $input_type ) . '" id="' . esc_attr( $name ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="widefat" />';
+					}
+					echo '</p>';
+				}
+			},
+			$post_type,
+			'side',
+			'default'
+		);
+	} );
+
+	add_action( "save_post_{$post_type}", function ( $post_id ) use ( $post_type, $fields ) {
+		$nonce_field = "maharana_{$post_type}_meta_nonce";
+		if ( ! isset( $_POST[ $nonce_field ] ) || ! wp_verify_nonce( $_POST[ $nonce_field ], "maharana_{$post_type}_meta" ) ) {
+			return;
+		}
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+
+		foreach ( $fields as $field ) {
+			list( $key, $type, $label, $input_type ) = $field;
+			$name = "maharana_{$post_type}_{$key}";
+			if ( 'checkbox' === $input_type ) {
+				update_post_meta( $post_id, $key, isset( $_POST[ $name ] ) ? '1' : '' );
+			} elseif ( isset( $_POST[ $name ] ) ) {
+				$value = 'integer' === $type ? (int) $_POST[ $name ] : sanitize_text_field( $_POST[ $name ] );
+				update_post_meta( $post_id, $key, $value );
+			}
+		}
+	} );
+}
+
+/**
+ * Disease custom post type — replaces the Supabase-backed diseases table.
+ * Title = disease name, content = full description, excerpt = short
+ * description, featured image = disease image.
+ */
+maharana_register_cpt_with_meta(
+	'disease',
+	array(
+		'labels' => array(
+			'name'          => __( 'Diseases', 'maharana-blog' ),
+			'singular_name' => __( 'Disease', 'maharana-blog' ),
+			'add_new_item'  => __( 'Add New Disease', 'maharana-blog' ),
+			'edit_item'     => __( 'Edit Disease', 'maharana-blog' ),
+			'all_items'     => __( 'Diseases', 'maharana-blog' ),
+			'menu_name'     => __( 'Diseases', 'maharana-blog' ),
+		),
+		'public'       => true,
+		'has_archive'  => true,
+		'show_in_menu' => true,
+		'menu_icon'    => 'dashicons-clipboard',
+		'supports'     => array( 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields' ),
+		'show_in_rest' => true,
+		'rest_base'    => 'diseases',
+	),
+	array(
+		array( 'category', 'string', 'Category', 'text' ),
+		array( 'youtube_url', 'string', 'YouTube URL', 'text' ),
+	)
+);
+
+/**
+ * YouTube Video custom post type — replaces the Supabase youtube_videos
+ * table used by the homepage video section.
+ */
+maharana_register_cpt_with_meta(
+	'youtube_video',
+	array(
+		'labels' => array(
+			'name'          => __( 'YouTube Videos', 'maharana-blog' ),
+			'singular_name' => __( 'YouTube Video', 'maharana-blog' ),
+			'add_new_item'  => __( 'Add New Video', 'maharana-blog' ),
+			'edit_item'     => __( 'Edit Video', 'maharana-blog' ),
+			'all_items'     => __( 'YouTube Videos', 'maharana-blog' ),
+			'menu_name'     => __( 'YouTube Videos', 'maharana-blog' ),
+		),
+		'public'       => true,
+		'has_archive'  => true,
+		'show_in_menu' => true,
+		'menu_icon'    => 'dashicons-video-alt3',
+		'supports'     => array( 'title', 'editor', 'custom-fields' ),
+		'show_in_rest' => true,
+		'rest_base'    => 'youtube_videos',
+	),
+	array(
+		array( 'video_id', 'string', 'YouTube Video ID', 'text' ),
+		array( 'featured', 'boolean', 'Featured on homepage', 'checkbox' ),
+		array( 'display_order', 'integer', 'Display order', 'number' ),
+	)
+);
+
+/**
+ * Review custom post type — replaces the Supabase reviews table used by
+ * the homepage Google-reviews-style section.
+ */
+maharana_register_cpt_with_meta(
+	'review',
+	array(
+		'labels' => array(
+			'name'          => __( 'Reviews', 'maharana-blog' ),
+			'singular_name' => __( 'Review', 'maharana-blog' ),
+			'add_new_item'  => __( 'Add New Review', 'maharana-blog' ),
+			'edit_item'     => __( 'Edit Review', 'maharana-blog' ),
+			'all_items'     => __( 'Reviews', 'maharana-blog' ),
+			'menu_name'     => __( 'Reviews', 'maharana-blog' ),
+		),
+		'public'       => true,
+		'has_archive'  => true,
+		'show_in_menu' => true,
+		'menu_icon'    => 'dashicons-star-filled',
+		'supports'     => array( 'title', 'editor', 'custom-fields' ),
+		'show_in_rest' => true,
+		'rest_base'    => 'reviews',
+	),
+	array(
+		array( 'location', 'string', 'Location', 'text' ),
+		array( 'rating', 'integer', 'Rating (1-5)', 'number' ),
+		array( 'display_order', 'integer', 'Display order', 'number' ),
+	)
+);
 
 /**
  * Estimated reading time for the current post, in whole minutes (minimum 1).

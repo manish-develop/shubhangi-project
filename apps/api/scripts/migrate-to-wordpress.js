@@ -193,10 +193,136 @@ async function migrateTestimonials() {
 	}
 }
 
+async function migrateDiseases() {
+	console.log('\n=== Diseases ===');
+	const { data: diseases, error } = await supabase.from('diseases').select('*').order('name', { ascending: true });
+	if (error) throw error;
+
+	console.log(`Found ${diseases.length} disease(s) in Supabase.`);
+
+	const existingTitles = APPLY ? await getExistingTitles('diseases') : new Set();
+
+	for (const d of diseases) {
+		const key = normalizeTitle(d.name);
+		if (existingTitles.has(key)) {
+			console.log(`  - skip (already in WP): "${d.name}"`);
+			continue;
+		}
+
+		console.log(`  - ${APPLY ? 'creating' : '[dry run] would create'}: "${d.name}"`);
+		if (!APPLY) continue;
+
+		const mediaId = await uploadImageToWp(d.image, `${d.slug || 'disease'}.jpg`);
+
+		const payload = {
+			title: d.name,
+			slug: d.slug || undefined,
+			content: d.full_description || '',
+			excerpt: d.short_description || '',
+			status: d.published === false ? 'draft' : 'publish',
+			featured_media: mediaId || undefined,
+			meta: {
+				category: d.category || '',
+				youtube_url: d.youtube_url || '',
+			},
+		};
+
+		const created = await wpFetch('/diseases', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(payload),
+		});
+		console.log(`    -> created disease #${created.id} (${created.link})`);
+	}
+}
+
+async function migrateYoutubeVideos() {
+	console.log('\n=== YouTube Videos ===');
+	const { data: videos, error } = await supabase.from('youtube_videos').select('*').order('display_order', { ascending: true });
+	if (error) throw error;
+
+	console.log(`Found ${videos.length} video(s) in Supabase.`);
+
+	const existingTitles = APPLY ? await getExistingTitles('youtube_videos') : new Set();
+
+	for (const v of videos) {
+		const title = v.title || v.video_id;
+		const key = normalizeTitle(title);
+		if (existingTitles.has(key)) {
+			console.log(`  - skip (already in WP): "${title}"`);
+			continue;
+		}
+
+		console.log(`  - ${APPLY ? 'creating' : '[dry run] would create'}: "${title}"`);
+		if (!APPLY) continue;
+
+		const payload = {
+			title,
+			content: v.description || '',
+			status: 'publish',
+			meta: {
+				video_id: v.video_id || '',
+				featured: v.featured ? '1' : '',
+				display_order: v.display_order || 0,
+			},
+		};
+
+		const created = await wpFetch('/youtube_videos', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(payload),
+		});
+		console.log(`    -> created video #${created.id} (${created.link})`);
+	}
+}
+
+async function migrateReviews() {
+	console.log('\n=== Reviews ===');
+	const { data: reviews, error } = await supabase.from('reviews').select('*').order('display_order', { ascending: true });
+	if (error) throw error;
+
+	console.log(`Found ${reviews.length} review(s) in Supabase.`);
+
+	const existingTitles = APPLY ? await getExistingTitles('reviews') : new Set();
+
+	for (const r of reviews) {
+		const title = r.reviewer_name || 'Review';
+		const key = normalizeTitle(title);
+		if (existingTitles.has(key)) {
+			console.log(`  - skip (already in WP): "${title}"`);
+			continue;
+		}
+
+		console.log(`  - ${APPLY ? 'creating' : '[dry run] would create'}: "${title}"`);
+		if (!APPLY) continue;
+
+		const payload = {
+			title,
+			content: r.review_text || '',
+			status: r.published === false ? 'draft' : 'publish',
+			meta: {
+				location: r.location || '',
+				rating: r.rating || 5,
+				display_order: r.display_order || 0,
+			},
+		};
+
+		const created = await wpFetch('/reviews', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(payload),
+		});
+		console.log(`    -> created review #${created.id} (${created.link})`);
+	}
+}
+
 async function main() {
 	console.log(APPLY ? 'Running migration in APPLY mode — this will create content in WordPress.' : 'Running migration in DRY RUN mode — pass --apply to actually create content.');
 	await migrateBlogs();
 	await migrateTestimonials();
+	await migrateDiseases();
+	await migrateYoutubeVideos();
+	await migrateReviews();
 	console.log('\nDone.');
 }
 
