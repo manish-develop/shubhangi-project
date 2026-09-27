@@ -223,3 +223,100 @@ export async function fetchWpTestimonials({ perPage = 30 } = {}) {
 		return [];
 	}
 }
+
+// --- Diseases (replaces the Supabase-backed diseases table) ---
+
+const normalizeWpDisease = (post) => {
+	const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0];
+	return {
+		id: post.slug,
+		slug: post.slug,
+		name: stripHtml(post.title?.rendered || ''),
+		category: post.meta?.category || '',
+		image: featuredMedia?.source_url || FALLBACK_IMAGE,
+		short_description: stripHtml(post.excerpt?.rendered || ''),
+		full_description: post.content?.rendered || '',
+		youtube_url: post.meta?.youtube_url || null,
+		isStatic: false,
+	};
+};
+
+// WP caps per_page at 100 regardless of what's requested, and there are
+// 115+ diseases, so this has to paginate rather than fetch "all" in one go.
+export async function fetchWpDiseases() {
+	const diseases = [];
+	let page = 1;
+	try {
+		while (true) {
+			const res = await fetch(`${WP_BASE}/diseases?_embed&per_page=100&page=${page}`);
+			if (!res.ok) break;
+			const data = await res.json();
+			if (!Array.isArray(data) || data.length === 0) break;
+			diseases.push(...data.map(normalizeWpDisease));
+			if (data.length < 100) break;
+			page += 1;
+		}
+	} catch {
+		// fall through and return whatever was fetched so far
+	}
+	return diseases;
+}
+
+export async function fetchWpDiseaseBySlug(slug) {
+	try {
+		const res = await fetch(`${WP_BASE}/diseases?_embed&slug=${encodeURIComponent(slug)}`);
+		if (!res.ok) return null;
+		const data = await res.json();
+		return Array.isArray(data) && data.length > 0 ? normalizeWpDisease(data[0]) : null;
+	} catch {
+		return null;
+	}
+}
+
+// --- YouTube Videos (homepage video section) ---
+
+const normalizeWpYoutubeVideo = (post) => ({
+	id: post.slug,
+	title: stripHtml(post.title?.rendered || ''),
+	description: stripHtml(post.content?.rendered || ''),
+	video_id: post.meta?.video_id || '',
+	featured: !!post.meta?.featured,
+	display_order: Number(post.meta?.display_order) || 0,
+});
+
+export async function fetchWpYoutubeVideos({ perPage = 30 } = {}) {
+	try {
+		const res = await fetch(`${WP_BASE}/youtube_videos?per_page=${perPage}`);
+		if (!res.ok) return [];
+		const data = await res.json();
+		return Array.isArray(data)
+			? data.map(normalizeWpYoutubeVideo).filter((v) => v.featured).sort((a, b) => a.display_order - b.display_order)
+			: [];
+	} catch {
+		return [];
+	}
+}
+
+// --- Reviews (homepage Google-reviews-style section) ---
+
+const normalizeWpReview = (post) => ({
+	id: post.slug,
+	reviewer_name: stripHtml(post.title?.rendered || ''),
+	location: post.meta?.location || '',
+	rating: Number(post.meta?.rating) || 5,
+	review_text: stripHtml(post.content?.rendered || ''),
+	display_order: Number(post.meta?.display_order) || 0,
+});
+
+export async function fetchWpReviews({ perPage = 30 } = {}) {
+	try {
+		const res = await fetch(`${WP_BASE}/reviews?per_page=${perPage}`);
+		if (!res.ok) return [];
+		const data = await res.json();
+		return Array.isArray(data)
+			? data.map(normalizeWpReview).sort((a, b) => a.display_order - b.display_order)
+			: [];
+	} catch {
+		return [];
+	}
+}

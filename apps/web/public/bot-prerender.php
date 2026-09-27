@@ -26,7 +26,6 @@ $slug = isset($_GET['slug']) ? preg_replace('/[^a-z0-9\-]/', '', strtolower($_GE
 $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-]/', '', strtolower($_GET['page'])) : '';
 
 $siteUrl = 'https://drmaharanas.com';
-$apiUrl = 'https://shubhangi-project-web-wxdf.vercel.app';
 $fallbackTitle = 'Maharana Wellness Clinic | Dr. Shubhangi Maharana';
 $fallbackDescription = "Expert homoeopathic treatment and facial aesthetics by Dr. Shubhangi Maharana. Personalized treatment for chronic conditions, women's health, and holistic wellness.";
 $fallbackImage = 'https://gvmdrttrwesitnqgaedl.supabase.co/storage/v1/object/public/media/clinic/hero-section-bg.jpg';
@@ -94,16 +93,20 @@ if ($kind === 'blog' && $slug !== '') {
 		if (isset($articleNode['articleSection'])) $extraSchema['articleSection'] = $articleNode['articleSection'];
 	}
 } elseif ($kind === 'disease' && $slug !== '') {
-	// Diseases are admin-managed content in Supabase, served through our
-	// own API (the same one the React app calls) — never duplicated here.
+	// Diseases now live in WordPress (the "disease" CPT), same as
+	// blogs/testimonials -- fetched live here too, never duplicated.
 	$canonical = "$siteUrl/disease/$slug";
-	$disease = fetch_json("$apiUrl/diseases/" . urlencode($slug));
+	$diseases = fetch_json('https://blog.drmaharanas.com/wp-json/wp/v2/diseases?slug=' . urlencode($slug) . '&_embed');
+	$disease = (is_array($diseases) && count($diseases) > 0) ? $diseases[0] : null;
 
-	if ($disease && !empty($disease['name'])) {
-		$name = $disease['name'];
-		$title = "Homoeopathic Treatment for $name | Maharana Wellness Clinic";
-		$description = "Learn about the effective, natural homoeopathic treatment for $name by Dr. Shubhangi Maharana. Safe, holistic care without side effects.";
-		if (!empty($disease['image'])) $image = $disease['image'];
+	if ($disease) {
+		$name = decode_title($disease['title']['rendered'] ?? '');
+		if ($name !== '') {
+			$title = "Homoeopathic Treatment for $name | Maharana Wellness Clinic";
+			$description = "Learn about the effective, natural homoeopathic treatment for $name by Dr. Shubhangi Maharana. Safe, holistic care without side effects.";
+			$featuredImage = $disease['_embedded']['wp:featuredmedia'][0]['source_url'] ?? null;
+			if ($featuredImage) $image = $featuredImage;
+		}
 	}
 } elseif ($kind === 'service' && $slug !== '') {
 	// Service detail content is small and hand-authored directly in

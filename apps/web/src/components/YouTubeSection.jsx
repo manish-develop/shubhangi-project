@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Youtube, ArrowUpRight, Play } from 'lucide-react';
+import { fetchWpYoutubeVideos } from '@/lib/wordpress.js';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 const CHANNEL_URL = 'https://www.youtube.com/@dr.shubhangimaharana';
 
 const YouTubeSection = () => {
@@ -9,14 +9,10 @@ const YouTubeSection = () => {
 	const [active, setActive] = useState(null);
 
 	useEffect(() => {
-		fetch(`${API_URL}/youtube-videos`)
-			.then((res) => (res.ok ? res.json() : []))
-			.then((data) => {
-				const list = Array.isArray(data) ? data : [];
-				setVideos(list);
-				setActive(list[0] || null);
-			})
-			.catch(() => setVideos([]));
+		fetchWpYoutubeVideos().then((list) => {
+			setVideos(list);
+			setActive(list[0] || null);
+		});
 	}, []);
 
 	if (!active) return null;

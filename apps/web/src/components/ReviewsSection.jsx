@@ -3,17 +3,13 @@ import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
 import ReviewsColumn from './ReviewsColumn.jsx';
 import ReviewFeedbackDialog from './ReviewFeedbackDialog.jsx';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+import { fetchWpReviews } from '@/lib/wordpress.js';
 
 const ReviewsSection = () => {
 	const [reviews, setReviews] = useState([]);
 
 	useEffect(() => {
-		fetch(`${API_URL}/reviews`)
-			.then((res) => (res.ok ? res.json() : []))
-			.then((data) => setReviews(Array.isArray(data) ? data : []))
-			.catch(() => setReviews([]));
+		fetchWpReviews().then(setReviews);
 	}, []);
 
 	if (reviews.length === 0) return null;

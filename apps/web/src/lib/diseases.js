@@ -1,45 +1,21 @@
 import { diseaseDatabase } from '@/data/diseaseDatabase.js';
+import { fetchWpDiseases, fetchWpDiseaseBySlug } from '@/lib/wordpress.js';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-
-export const normalizeDbDisease = (d) => ({
-	id: d.slug,
-	slug: d.slug,
-	name: d.name,
-	category: d.category || '',
-	image: d.image || '',
-	short_description: d.short_description || '',
-	full_description: d.full_description || '',
-	youtube_url: d.youtube_url || null,
-	isStatic: false,
-});
+// Diseases now live in WordPress (the "disease" custom post type), not the
+// old Supabase table — these keep the same names/shapes the pages already
+// use, so nothing downstream had to change, just the source.
 
 export async function fetchPublishedDiseases() {
-	try {
-		const res = await fetch(`${API_URL}/diseases`);
-		if (!res.ok) return [];
-		const data = await res.json();
-		return Array.isArray(data) ? data.map(normalizeDbDisease) : [];
-	} catch {
-		return [];
-	}
+	return fetchWpDiseases();
 }
 
 export async function fetchDiseaseBySlug(slug) {
-	try {
-		const res = await fetch(`${API_URL}/diseases/${slug}`);
-		if (!res.ok) return null;
-		const data = await res.json();
-		return normalizeDbDisease(data);
-	} catch {
-		return null;
-	}
+	return fetchWpDiseaseBySlug(slug);
 }
 
-// Fetch from the API, falling back to the static array if the request
-// fails or returns no rows (e.g. before the diseases table has been
-// migrated/populated), so the site never shows a blank list.
+// Falls back to the static bundled array if WordPress is unreachable or
+// not yet populated, so the site never shows a blank list.
 export async function getDiseasesWithFallback() {
-	const dbDiseases = await fetchPublishedDiseases();
-	return dbDiseases.length > 0 ? dbDiseases : diseaseDatabase;
+	const wpDiseases = await fetchWpDiseases();
+	return wpDiseases.length > 0 ? wpDiseases : diseaseDatabase;
 }

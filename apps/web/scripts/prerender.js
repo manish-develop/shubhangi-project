@@ -35,7 +35,6 @@ const DIST_DIR = join(__dirname, '..', 'dist');
 // at runtime work here too, with no separate CORS carve-out needed.
 const PORT = 3000;
 const LOCAL_ORIGIN = `http://localhost:${PORT}`;
-const API_URL = process.env.VITE_API_URL || 'http://localhost:3001';
 const WP_BASE = 'https://blog.drmaharanas.com/wp-json/wp/v2';
 const CONCURRENCY = 5;
 
@@ -83,9 +82,18 @@ async function buildRouteList() {
 		'/criticism', '/privacy-policy', '/blogs',
 	];
 
-	const diseases = (await fetchJson(`${API_URL}/diseases`)) || [];
-	for (const d of diseases) {
-		if (d.slug) routes.push(`/disease/${d.slug}`);
+	// Diseases now live in WordPress (the "disease" CPT), not the old
+	// Supabase-backed API. WP caps per_page at 100 and there are 115+, so
+	// this paginates rather than assuming one request gets everything.
+	let diseasePage = 1;
+	while (true) {
+		const batch = (await fetchJson(`${WP_BASE}/diseases?per_page=100&page=${diseasePage}`)) || [];
+		if (batch.length === 0) break;
+		for (const d of batch) {
+			if (d.slug) routes.push(`/disease/${d.slug}`);
+		}
+		if (batch.length < 100) break;
+		diseasePage += 1;
 	}
 
 	const posts = (await fetchJson(`${WP_BASE}/posts?per_page=100`)) || [];

@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Quote, Stethoscope, Youtube, Users, CalendarDays, LogOut } from 'lucide-react';
+import { LayoutDashboard, CalendarDays, LogOut } from 'lucide-react';
 import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/admin-sidebar.jsx';
-import { NotificationBell } from './NotificationBell.jsx';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import { ClinicImages } from '@/constants/clinicImages.js';
 import { cn } from '@/lib/utils';
 
+// Diseases/Videos/Reviews/Testimonials/Blogs now live in WordPress, not
+// here — managed at blog.drmaharanas.com/wp-admin. Patients/Prescriptions/
+// Notifications were dropped as unused.
 const navItems = [
 	{ href: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
 	{ href: '/admin/events', label: 'Schedule', icon: CalendarDays },
-	{ href: '/admin/blog-feedback', label: 'Feedback', icon: MessageSquare },
-	{ href: '/admin/reviews', label: 'Reviews', icon: Quote },
-	{ href: '/admin/diseases', label: 'Diseases', icon: Stethoscope },
-	{ href: '/admin/videos', label: 'Videos', icon: Youtube },
-	{ href: '/admin/patients', label: 'Patients', icon: Users },
 ];
 
 export function AdminLayout() {
@@ -76,9 +73,6 @@ export function AdminLayout() {
 			</Sidebar>
 
 			<div className="flex min-w-0 flex-1 flex-col">
-				<header className="flex items-center justify-end border-b border-border bg-card px-6 py-3 md:px-8">
-					<NotificationBell />
-				</header>
 				<main className="flex-1 min-w-0 p-6 md:p-8">
 					<Outlet />
 				</main>
